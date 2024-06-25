@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Tag } from 'vant'
+// import { Tag } from 'vant'
 </script>
 
 <template>
   <van-button type="primary">ewewe</van-button>
   <br />
-  <Tag type="success">cheng</Tag>
+  <van-tag type="success">cheng</van-tag>
 </template>
