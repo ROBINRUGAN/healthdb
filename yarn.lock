@@ -844,6 +844,11 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@vant/area-data@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@vant/area-data/-/area-data-1.5.1.tgz#bdd943b9b569476cb04133a8323bd04aa35be2c2"
+  integrity sha512-gR5TPEzTbxN1cTK1aDhCoyikSCLX7DAacxyXoKyI4SAsYYTZrDl/nLgQFIm9vLsvWzlPIda8xV8/U3x7M9k6ww==
+
 "@vant/auto-import-resolver@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@vant/auto-import-resolver/-/auto-import-resolver-1.2.1.tgz#5848d6ffb5876c9c1dd2d1ec06d062ef45b57844"
