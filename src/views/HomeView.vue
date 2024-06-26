@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import router from '@/router'
 import { RouterView, RouterLink } from 'vue-router'
-import { showToast } from 'vant'
+import { showToast, showLoadingToast } from 'vant'
 import { areaList } from '@vant/area-data'
 import BarLine from '@/components/BarLine.vue'
 import CardItem from '@/components/CardItem.vue'
+import 'vant/es/toast/style'
 const images = [
   'https://t11.baidu.com/it/u=3118089460,219689805&fm=30&app=106&f=JPEG?w=640&h=427&s=5452578C1572739CDEA00553030080F2',
   'https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2024%2F0512%2Ffa19bf4bj00sdclk9001ud000xc00m6m.jpg&thumbnail=660x2147483647&quality=80&type=jpg'
@@ -12,8 +14,17 @@ const images = [
 const showPopup = ref(false)
 const areaCode = ref('')
 const value = ref('')
-const onSearch = (val: any) => showToast(val)
-const onCancel = () => showToast('取消')
+const onSearch = (val: any) => {
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000,
+    onOpened() {
+      // router.push('/search')
+      router.push({ path: 'search', query: { keyword: value.value } })
+    }
+  })
+}
 
 const onConfirm = (result: any) => {
   console.log('Selected area:', result)
@@ -52,6 +63,7 @@ const onConfirm = (result: any) => {
         background="transparent"
         placeholder="请输入搜索关键词"
         style="width: 87%; font-size: 13px; padding: 0; padding-left: 6px"
+        @search="onSearch"
       />
     </div>
 
