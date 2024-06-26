@@ -99,6 +99,7 @@ const onConfirm = (result: any) => {
   background-image: url('@/assets/home/back.png');
   background-size: contain;
   background-repeat: no-repeat;
+  background-color: rgb(245, 240, 250);
   padding-bottom: 60px;
 }
 .twobtn {
