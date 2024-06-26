@@ -51,7 +51,11 @@ const router = createRouter({
       path: '/register',
       component: RegisterView
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    // 总是滚动到顶部
+    return { top: 0 }
+  }
 })
 
 export default router

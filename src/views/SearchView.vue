@@ -4,9 +4,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import router from '@/router'
-onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-})
+
 const route = useRoute()
 // 确保value始终为字符串类型，如果route.query.keyword是数组或未定义，则默认为空字符串
 const value = ref(typeof route.query.keyword === 'string' ? route.query.keyword : '')

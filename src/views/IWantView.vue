@@ -5,9 +5,7 @@ const serviceResult = ref('')
 const patientResult = ref('')
 const dateResult = ref('')
 const endDateResult = ref('')
-onMounted(() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-})
+
 const showServicePicker = ref(false)
 const ServiceColumns = [
   { text: '普通服务', value: 'normal' },
@@ -101,6 +99,7 @@ const onSubmit = (values: any) => {
         />
         <van-popup v-model:show="showServicePicker" position="bottom">
           <van-picker
+            title="服务类型"
             :columns="ServiceColumns"
             @confirm="onServiceConfirm"
             @cancel="showServicePicker = false"
@@ -185,7 +184,7 @@ const onSubmit = (values: any) => {
         />
       </van-cell-group>
       <div style="margin: 16px">
-        <van-button round block type="primary" native-type="submit"> 提交 </van-button>
+        <button @click="onSubmit" class="select">提交</button>
       </div>
     </van-form>
   </div>
@@ -206,5 +205,20 @@ const onSubmit = (values: any) => {
 h3 {
   margin-top: 10px;
   margin-bottom: 20px;
+}
+.select {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to bottom, rgb(130, 123, 252), rgb(74, 75, 183));
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+:deep(.van-popup) {
+  border-radius: 20px 20px 0 0 !important;
 }
 </style>
