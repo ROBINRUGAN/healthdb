@@ -38,10 +38,6 @@ const onSearch = (val: any) => {
     }
   })
 }
-onMounted(() => {
-  showNotify({ type: 'success', message: '登录成功！您好，' + userStore.username || '游客' })
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-})
 const onConfirm = (result: any) => {
   console.log('Selected area:', result)
   showPopup.value = false // Optionally close the popup after selection
