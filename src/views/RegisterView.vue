@@ -2,6 +2,9 @@
 import { ref, onMounted } from 'vue'
 import router from '@/router'
 import { showLoadingToast } from 'vant'
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
 const phone = ref('')
 const password = ref('')
 const register = () => {

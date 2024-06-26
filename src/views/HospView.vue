@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import router from '@/router'
+import { onMounted } from 'vue'
+onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
 </script>
 <template>
+  <van-nav-bar title="医院详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
   <div class="all">
     <h3>福建医科大学附属协和医院</h3>
     <img src="@/assets/hosp/info.jpg" alt="" />
