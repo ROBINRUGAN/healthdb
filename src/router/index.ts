@@ -8,6 +8,7 @@ import HospView from '@/views/HospView.vue'
 import IWantView from '@/views/IWantView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import CompView from '@/views/CompView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -50,6 +51,10 @@ const router = createRouter({
     {
       path: '/register',
       component: RegisterView
+    },
+    {
+      path: '/company',
+      component: CompView
     }
   ],
   scrollBehavior(to, from, savedPosition) {
