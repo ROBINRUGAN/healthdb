@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import router from '@/router'
-import { showLoadingToast, type FormInstance, showNotify, type FieldRule, showFailToast, showSuccessToast } from 'vant'
+import {
+  showLoadingToast,
+  type FormInstance,
+  showNotify,
+  type FieldRule,
+  showFailToast,
+  showSuccessToast
+} from 'vant'
 import type { RegisterParams, registerResponseData } from '@/api/user/type'
 import { useAuthStore } from '@/stores/auth'
 import { reqRegister } from '@/api/user'
@@ -31,7 +38,7 @@ const register = async () => {
       }
       await useAuthStore().login(loginParams)
     } else {
-      showFailToast(res.message||'注册失败！')
+      showFailToast(res.message || '注册失败！')
     }
   } catch (error) {
     showFailToast('注册失败！')

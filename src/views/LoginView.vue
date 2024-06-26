@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import router from '@/router'
-import { showLoadingToast, type FieldRule, showNotify, type FormInstance, showFailToast } from 'vant'
+import {
+  showLoadingToast,
+  type FieldRule,
+  showNotify,
+  type FormInstance,
+  showFailToast
+} from 'vant'
 import { useAuthStore } from '@/stores/auth'
 import type { LoginParams } from '@/api/user/type'
 const phone = ref('')
@@ -12,6 +18,7 @@ const login = async () => {
   await formRef.value?.validate()
   const loadingToast = showLoadingToast({
     message: '正在登录...',
+    duration: 3000,
     forbidClick: true
   })
 
@@ -23,8 +30,6 @@ const login = async () => {
     await useAuthStore().login(loginParams)
   } catch (error) {
     showFailToast('登录失败！')
-  } finally {
-    loadingToast.close()
   }
 }
 
@@ -32,9 +37,7 @@ const phoneRules: FieldRule[] = [
   { required: true, message: '请输入手机号', trigger: 'onBlur' },
   { pattern: /^1[3456789]\d{9}$/, message: '手机号格式错误', trigger: 'onChange' }
 ]
-const passwordRules: FieldRule[] = [
-  { required: true, message: '请输入密码', trigger: 'onBlur' }
-]
+const passwordRules: FieldRule[] = [{ required: true, message: '请输入密码', trigger: 'onBlur' }]
 </script>
 
 <template>

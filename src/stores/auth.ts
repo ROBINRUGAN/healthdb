@@ -39,7 +39,7 @@ export const useAuthStore = defineStore(
     // }
     const login = async (data: LoginParams) => {
       try {
-        let res: LoginResponseData = await reqLogin(data)
+        const res: LoginResponseData = await reqLogin(data)
         if (res.code === 200) {
           showSuccessToast('登录成功')
           setToken(res.data.token)
@@ -48,6 +48,10 @@ export const useAuthStore = defineStore(
           setIsCompanion(res.data.isCompanion)
           setIsIdentified(res.data.isIdentified)
           router.push({ path: '/home' })
+          showNotify({
+            type: 'success',
+            message: '登录成功！您好，' + username.value || '游客'
+          })
         } else {
           showFailToast(res.message || '登录失败！')
         }
@@ -56,7 +60,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    return { token, username, id, isCompanion, isIdentified, setToken, login}
+    return { token, username, id, isCompanion, isIdentified, setToken, login }
   },
   {
     // 启用持久化
