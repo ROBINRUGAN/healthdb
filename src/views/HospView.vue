@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import router from '@/router'
+</script>
 <template>
   <div class="all">
     <h3>福建医科大学附属协和医院</h3>
@@ -23,7 +25,7 @@
         <p>福建省福州市新店路29号</p>
       </div>
     </div>
-    <button class="select">选择该医院陪诊服务</button>
+    <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>
   </div>
 </template>
 <style scoped>
@@ -72,7 +74,6 @@ h4 {
   border: none;
   border-radius: 20px;
   text-align: center;
-  cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

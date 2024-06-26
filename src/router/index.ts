@@ -5,6 +5,8 @@ import JoinView from '@/views/JoinView.vue'
 import MeView from '@/views/MeView.vue'
 import SearchView from '@/views/SearchView.vue'
 import HospView from '@/views/HospView.vue'
+import IWantView from '@/views/IWantView.vue'
+import LoginView from '@/views/LoginView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,6 +37,14 @@ const router = createRouter({
     {
       path: '/hospital',
       component: HospView
+    },
+    {
+      path: '/iwant',
+      component: IWantView
+    },
+    {
+      path: '/login',
+      component: LoginView
     }
   ]
 })

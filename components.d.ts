@@ -16,6 +16,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     VanArea: typeof import('vant/es')['Area']
     VanButton: typeof import('vant/es')['Button']
+    VanCellGroup: typeof import('vant/es')['CellGroup']
+    VanField: typeof import('vant/es')['Field']
     VanIcon: typeof import('vant/es')['Icon']
     VanPopup: typeof import('vant/es')['Popup']
     VanSearch: typeof import('vant/es')['Search']
