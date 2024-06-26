@@ -24,7 +24,7 @@ const register = async () => {
     let res: registerResponseData = await reqRegister(registerParams)
     console.log(res)
     if (res.code === 200) {
-      showSuccessToast('登录成功')
+      showSuccessToast('注册成功')
       const loginParams = {
         telephone: phone.value,
         password: password.value
