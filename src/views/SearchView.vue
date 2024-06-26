@@ -27,6 +27,7 @@ function detail(item: any) {
 </template>
 <style scoped>
 .all {
+  min-height: 100vh;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 15px;

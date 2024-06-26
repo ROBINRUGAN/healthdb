@@ -97,7 +97,7 @@ const onSubmit = (values: any) => {
           placeholder="选择陪诊服务类型"
           @click="showServicePicker = true"
         />
-        <van-popup v-model:show="showServicePicker" position="bottom">
+        <van-popup round v-model:show="showServicePicker" position="bottom">
           <van-picker
             title="服务类型"
             :columns="ServiceColumns"
@@ -137,7 +137,7 @@ const onSubmit = (values: any) => {
           @click="showDatePicker = true"
         />
 
-        <van-popup v-model:show="showDatePicker" position="bottom">
+        <van-popup round v-model:show="showDatePicker" position="bottom">
           <van-picker-group
             title="开始日期"
             :tabs="['选择日期', '选择时间']"
@@ -159,7 +159,7 @@ const onSubmit = (values: any) => {
           @click="showEndDatePicker = true"
         />
 
-        <van-popup v-model:show="showEndDatePicker" position="bottom">
+        <van-popup round v-model:show="showEndDatePicker" position="bottom">
           <van-picker-group
             title="结束日期"
             :tabs="['选择日期', '选择时间']"
@@ -191,7 +191,7 @@ const onSubmit = (values: any) => {
 </template>
 <style scoped>
 .all {
-  height: 80vh;
+  min-height: 90vh;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 15px;
@@ -217,8 +217,5 @@ h3 {
   border-radius: 20px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-:deep(.van-popup) {
-  border-radius: 20px 20px 0 0 !important;
 }
 </style>
