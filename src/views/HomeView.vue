@@ -1,15 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import router from '@/router'
+import { showNotify, showSuccessToast } from 'vant'
 import { RouterView, RouterLink } from 'vue-router'
 import { showToast, showLoadingToast } from 'vant'
 import { areaList } from '@vant/area-data'
 import BarLine from '@/components/BarLine.vue'
 import CardItem from '@/components/CardItem.vue'
+const count = ref(0)
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
+
 const images = [
   'https://t11.baidu.com/it/u=3118089460,219689805&fm=30&app=106&f=JPEG?w=640&h=427&s=5452578C1572739CDEA00553030080F2',
   'https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2024%2F0512%2Ffa19bf4bj00sdclk9001ud000xc00m6m.jpg&thumbnail=660x2147483647&quality=80&type=jpg'
 ]
+
 const showPopup = ref(false)
 const areaCode = ref('')
 const value = ref('')
@@ -24,7 +36,9 @@ const onSearch = (val: any) => {
     }
   })
 }
-
+onMounted(() => {
+  showNotify({ type: 'success', message: '登录成功！晚上好，邓新国～' })
+})
 const onConfirm = (result: any) => {
   console.log('Selected area:', result)
   showPopup.value = false // Optionally close the popup after selection
@@ -32,58 +46,60 @@ const onConfirm = (result: any) => {
 </script>
 
 <template>
-  <div class="all">
-    <div class="top">
-      <div style="width: 13%">
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 6px;
-            margin-top: 10px;
-          "
-        >
-          <van-icon name="location-o" @click="showPopup = true" size="20px" />
-          <span style="font-size: 13px; margin-top: 3px">福州</span>
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <div class="top">
+        <div style="width: 13%">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              padding: 6px;
+              margin-top: 10px;
+            "
+          >
+            <van-icon name="location-o" @click="showPopup = true" size="20px" />
+            <span style="font-size: 13px; margin-top: 3px">福州</span>
+          </div>
+          <van-popup v-model:show="showPopup" round position="bottom">
+            <van-area
+              title="选择地区"
+              :area-list="areaList"
+              @confirm="onConfirm"
+              @cancel="showPopup = false"
+            />
+          </van-popup>
         </div>
-        <van-popup v-model:show="showPopup" round position="bottom">
-          <van-area
-            title="选择地区"
-            :area-list="areaList"
-            @confirm="onConfirm"
-            @cancel="showPopup = false"
-          />
-        </van-popup>
+        <van-search
+          v-model="value"
+          shape="round"
+          background="transparent"
+          placeholder="请输入搜索关键词"
+          style="width: 87%; font-size: 13px; padding: 0; padding-left: 6px"
+          @search="onSearch"
+        />
       </div>
-      <van-search
-        v-model="value"
-        shape="round"
-        background="transparent"
-        placeholder="请输入搜索关键词"
-        style="width: 87%; font-size: 13px; padding: 0; padding-left: 6px"
-        @search="onSearch"
+
+      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+        <van-swipe-item v-for="image in images" :key="image">
+          <img :src="image" />
+        </van-swipe-item>
+      </van-swipe>
+
+      <div class="twobtn">
+        <img class="img1" src="@/assets/home/img1.png" alt="" />
+        <img class="img2" src="@/assets/home/img2.png" alt="" />
+      </div>
+
+      <BarLine style="width: 90%; margin: auto" />
+      <CardItem
+        v-for="(item, index) in 5"
+        :key="index"
+        style="width: 90%; margin-left: auto; margin-right: auto"
       />
     </div>
-
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="image in images" :key="image">
-        <img :src="image" />
-      </van-swipe-item>
-    </van-swipe>
-
-    <div class="twobtn">
-      <img class="img1" src="@/assets/home/img1.png" alt="" />
-      <img class="img2" src="@/assets/home/img2.png" alt="" />
-    </div>
-
-    <BarLine style="width: 90%; margin: auto" />
-    <CardItem
-      v-for="(item, index) in 5"
-      :key="index"
-      style="width: 90%; margin-left: auto; margin-right: auto"
-    />
-  </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>

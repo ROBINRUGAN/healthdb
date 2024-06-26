@@ -4,9 +4,9 @@ import router from '@/router'
 import { showLoadingToast } from 'vant'
 const phone = ref('')
 const password = ref('')
-const login = () => {
+const register = () => {
   showLoadingToast({
-    message: '正在登录...',
+    message: '正在注册...',
     forbidClick: true,
     duration: 1000,
     onClose() {
@@ -20,7 +20,7 @@ const login = () => {
   <div class="back">
     <img src="@/assets/login/back.png" alt="" />
     <div class="wrapper">
-      <h1>益诊</h1>
+      <h1>注册</h1>
       <van-cell-group inset class="phone">
         <van-field
           v-model="phone"
@@ -41,11 +41,11 @@ const login = () => {
           input-align="left"
         />
       </van-cell-group>
-      <button class="login" @click="login">登录</button>
+      <button class="login" @click="register">注册并登录</button>
       <div class="change">
-        <span>没有账号？</span>
-        <span @click="router.push('/register')" style="color: rgb(71, 73, 186); font-weight: bold"
-          >去注册！</span
+        <span>已有账号？</span>
+        <span @click="router.push('/login')" style="color: rgb(71, 73, 186); font-weight: bold"
+          >去登录！</span
         >
       </div>
     </div>
