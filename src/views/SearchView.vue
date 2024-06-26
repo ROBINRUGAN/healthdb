@@ -2,7 +2,9 @@
 import HospItem from '@/components/HospItem.vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 import router from '@/router'
+
 const route = useRoute()
 // 确保value始终为字符串类型，如果route.query.keyword是数组或未定义，则默认为空字符串
 const value = ref(typeof route.query.keyword === 'string' ? route.query.keyword : '')
@@ -11,6 +13,7 @@ function detail(item: any) {
 }
 </script>
 <template>
+  <van-nav-bar title="搜索详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
   <div class="all">
     <van-search
       v-model="value"
@@ -24,6 +27,7 @@ function detail(item: any) {
 </template>
 <style scoped>
 .all {
+  min-height: 100vh;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 15px;

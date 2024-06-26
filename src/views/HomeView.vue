@@ -40,6 +40,7 @@ const onSearch = (val: any) => {
 }
 onMounted(() => {
   showNotify({ type: 'success', message: '登录成功！您好，' + userStore.username || '游客' })
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 const onConfirm = (result: any) => {
   console.log('Selected area:', result)
@@ -48,6 +49,10 @@ const onConfirm = (result: any) => {
 </script>
 
 <template>
+  <van-notice-bar
+    left-icon="volume-o"
+    text="无论我们能活多久，我们能够享受的只有无法分割的此刻，此外别无其他。"
+  />
   <van-pull-refresh v-model="loading" @refresh="onRefresh">
     <div class="all">
       <div class="top">

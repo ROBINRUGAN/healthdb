@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import router from '@/router'
+import { onMounted } from 'vue'
 </script>
 <template>
+  <van-nav-bar title="医院详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
   <div class="all">
     <h3>福建医科大学附属协和医院</h3>
     <img src="@/assets/hosp/info.jpg" alt="" />
@@ -30,6 +32,7 @@ import router from '@/router'
 </template>
 <style scoped>
 .all {
+  min-height: 100vh;
   padding-left: 5%;
   padding-right: 5%;
   padding-top: 15px;

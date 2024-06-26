@@ -20,11 +20,11 @@ import { RouterLink, RouterView } from 'vue-router'
   box-sizing: border-box;
 }
 .van-tabbar--fixed {
-  border-radius: 20px 20px 0 0 !important;
+  border-radius: 10px 10px 0 0 !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 .van-tabbar-item {
-  border-radius: 20px !important;
+  border-radius: 10px !important;
 }
 .van-hairline--top-bottom:after,
 .van-hairline-unset--top-bottom:after {
