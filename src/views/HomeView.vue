@@ -7,7 +7,7 @@ import { showToast, showLoadingToast } from 'vant'
 import { areaList } from '@vant/area-data'
 import BarLine from '@/components/BarLine.vue'
 import CardItem from '@/components/CardItem.vue'
-
+import { useAuthStore } from '@/stores/auth'
 const count = ref(0)
 const loading = ref(false)
 const onRefresh = () => {
@@ -17,7 +17,7 @@ const onRefresh = () => {
     count.value++
   }, 1000)
 }
-
+// TODO: 换成真实数据
 const images = [
   'https://t11.baidu.com/it/u=3118089460,219689805&fm=30&app=106&f=JPEG?w=640&h=427&s=5452578C1572739CDEA00553030080F2',
   'https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2024%2F0512%2Ffa19bf4bj00sdclk9001ud000xc00m6m.jpg&thumbnail=660x2147483647&quality=80&type=jpg'
@@ -26,6 +26,7 @@ const images = [
 const showPopup = ref(false)
 const areaCode = ref('')
 const value = ref('')
+let userStore = useAuthStore()
 const onSearch = (val: any) => {
   showLoadingToast({
     message: '加载中...',
@@ -38,7 +39,7 @@ const onSearch = (val: any) => {
   })
 }
 onMounted(() => {
-  showNotify({ type: 'success', message: '登录成功！晚上好，邓新国～' })
+  showNotify({ type: 'success', message: '登录成功！您好，' + userStore.username || '游客' })
   window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 const onConfirm = (result: any) => {

@@ -1,20 +1,57 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import router from '@/router'
-import { showLoadingToast } from 'vant'
-
+import { showLoadingToast, type FormInstance, showNotify, type FieldRule, showFailToast, showSuccessToast } from 'vant'
+import type { RegisterParams, registerResponseData } from '@/api/user/type'
+import { useAuthStore } from '@/stores/auth'
+import { reqRegister } from '@/api/user'
 const phone = ref('')
 const password = ref('')
-const register = () => {
-  showLoadingToast({
+const formRef = ref<FormInstance>()
+
+const register = async () => {
+  await formRef.value?.validate()
+  const registerParams: RegisterParams = {
+    telephone: phone.value,
+    password: password.value
+  }
+  const loadingToast = showLoadingToast({
     message: '正在注册...',
-    forbidClick: true,
-    duration: 1000,
-    onClose() {
-      router.push('/home')
-    }
+    forbidClick: true
   })
+
+  try {
+    let res: registerResponseData = await reqRegister(registerParams)
+    console.log(res)
+    if (res.code === 200) {
+      showSuccessToast('登录成功')
+      const loginParams = {
+        telephone: phone.value,
+        password: password.value
+      }
+      await useAuthStore().login(loginParams)
+    } else {
+      showFailToast(res.message||'注册失败！')
+    }
+  } catch (error) {
+    showFailToast('注册失败！')
+  } finally {
+    loadingToast.close()
+  }
 }
+
+const phoneRules: FieldRule[] = [
+  { required: true, message: '请输入手机号', trigger: 'onBlur' },
+  { pattern: /^1[3456789]\d{9}$/, message: '手机号格式错误', trigger: 'onChange' }
+]
+const passwordRules: FieldRule[] = [
+  { required: true, message: '请输入密码', trigger: 'onBlur' },
+  {
+    pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
+    message: '密码应为6~16位的字母和数字组合',
+    trigger: 'onChange'
+  }
+]
 </script>
 
 <template>
@@ -22,26 +59,30 @@ const register = () => {
     <img src="@/assets/login/back.png" alt="" />
     <div class="wrapper">
       <h1>注册</h1>
-      <van-cell-group inset class="phone">
-        <van-field
-          v-model="phone"
-          label="手机号"
-          type="tel"
-          placeholder="请输入手机号"
-          label-align="left"
-          input-align="left"
-        />
-      </van-cell-group>
-      <van-cell-group inset class="password">
-        <van-field
-          v-model="password"
-          label="密码"
-          type="password"
-          placeholder="请输入密码"
-          label-align="left"
-          input-align="left"
-        />
-      </van-cell-group>
+      <van-form>
+        <van-cell-group inset class="phone">
+          <van-field
+            v-model="phone"
+            :rules="phoneRules"
+            label="手机号"
+            type="tel"
+            placeholder="请输入手机号"
+            label-align="left"
+            input-align="left"
+          />
+        </van-cell-group>
+        <van-cell-group inset class="password">
+          <van-field
+            v-model="password"
+            :rules="passwordRules"
+            label="密码"
+            type="password"
+            placeholder="请输入密码"
+            label-align="left"
+            input-align="left"
+          />
+        </van-cell-group>
+      </van-form>
       <button class="login" @click="register">注册并登录</button>
       <div class="change">
         <span>已有账号？</span>

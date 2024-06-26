@@ -1,20 +1,40 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import router from '@/router'
-import { showLoadingToast } from 'vant'
-
+import { showLoadingToast, type FieldRule, showNotify, type FormInstance, showFailToast } from 'vant'
+import { useAuthStore } from '@/stores/auth'
+import type { LoginParams } from '@/api/user/type'
 const phone = ref('')
 const password = ref('')
-const login = () => {
-  showLoadingToast({
+const formRef = ref<FormInstance>()
+
+const login = async () => {
+  await formRef.value?.validate()
+  const loadingToast = showLoadingToast({
     message: '正在登录...',
-    forbidClick: true,
-    duration: 1000,
-    onClose() {
-      router.push('/home')
-    }
+    forbidClick: true
   })
+
+  const loginParams: LoginParams = {
+    telephone: phone.value,
+    password: password.value
+  }
+  try {
+    await useAuthStore().login(loginParams)
+  } catch (error) {
+    showFailToast('登录失败！')
+  } finally {
+    loadingToast.close()
+  }
 }
+
+const phoneRules: FieldRule[] = [
+  { required: true, message: '请输入手机号', trigger: 'onBlur' },
+  { pattern: /^1[3456789]\d{9}$/, message: '手机号格式错误', trigger: 'onChange' }
+]
+const passwordRules: FieldRule[] = [
+  { required: true, message: '请输入密码', trigger: 'onBlur' }
+]
 </script>
 
 <template>
@@ -22,26 +42,30 @@ const login = () => {
     <img src="@/assets/login/back.png" alt="" />
     <div class="wrapper">
       <h1>益诊</h1>
-      <van-cell-group inset class="phone">
-        <van-field
-          v-model="phone"
-          label="手机号"
-          type="tel"
-          placeholder="请输入手机号"
-          label-align="left"
-          input-align="left"
-        />
-      </van-cell-group>
-      <van-cell-group inset class="password">
-        <van-field
-          v-model="password"
-          label="密码"
-          type="password"
-          placeholder="请输入密码"
-          label-align="left"
-          input-align="left"
-        />
-      </van-cell-group>
+      <van-form ref="formRef">
+        <van-cell-group inset class="phone">
+          <van-field
+            v-model="phone"
+            :rules="phoneRules"
+            label="手机号"
+            type="tel"
+            placeholder="请输入手机号"
+            label-align="left"
+            input-align="left"
+          />
+        </van-cell-group>
+        <van-cell-group inset class="password">
+          <van-field
+            v-model="password"
+            :rules="passwordRules"
+            label="密码"
+            type="password"
+            placeholder="请输入密码"
+            label-align="left"
+            input-align="left"
+          />
+        </van-cell-group>
+      </van-form>
       <button class="login" @click="login">登录</button>
       <div class="change">
         <span>没有账号？</span>

@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 // 创建axios实例
-export const service = axios.create({
-  baseURL: `http://120.55.112.13:9000/`,
+export let service = axios.create({
+  baseURL: `http://47.113.97.12:9001/`,
   timeout: 20000, // 超时时间
   withCredentials: false // 是否允许带cookie
 })
@@ -29,11 +29,11 @@ service.interceptors.request.use(
 // 添加响应拦截器
 service.interceptors.response.use(
   (response) => {
-    if (response.data.code === 'A000100') {
-      alert('登录失效，请重新登录')
-      window.location.href = '/login'
+    if (response.status === 200) {
+      return Promise.resolve(response.data)
+    } else {
+      return Promise.reject(response.data)
     }
-    return response
   },
   (error) => Promise.reject(error)
 )
