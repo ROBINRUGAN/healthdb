@@ -4,6 +4,7 @@ import OrderView from '@/views/OrderView.vue'
 import JoinView from '@/views/JoinView.vue'
 import MeView from '@/views/MeView.vue'
 import SearchView from '@/views/SearchView.vue'
+import HospView from '@/views/HospView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -30,6 +31,10 @@ const router = createRouter({
     {
       path: '/search',
       component: SearchView
+    },
+    {
+      path: '/hospital',
+      component: HospView
     }
   ]
 })

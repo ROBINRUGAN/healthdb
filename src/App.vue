@@ -19,4 +19,11 @@ import { RouterLink, RouterView } from 'vue-router'
   padding: 0;
   box-sizing: border-box;
 }
+.van-tabbar--fixed {
+  border-radius: 20px 20px 0 0 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.van-tabbar-item {
+  border-radius: 20px !important;
+}
 </style>
