@@ -49,7 +49,7 @@ const onConfirm = (result: any) => {
       <van-search
         v-model="value"
         shape="round"
-        background="#F8F9FD"
+        background="transparent"
         placeholder="请输入搜索关键词"
         style="width: 87%; font-size: 13px; padding: 0; padding-left: 6px"
       />
@@ -96,7 +96,9 @@ const onConfirm = (result: any) => {
 }
 .all {
   height: 100%;
-  background-color: #f8f9fd;
+  background-image: url('@/assets/home/back.png');
+  background-size: contain;
+  background-repeat: no-repeat;
   padding-bottom: 60px;
 }
 .twobtn {
