@@ -6,7 +6,7 @@
         <h3>福建医科大学附属协和医院</h3>
       </div>
       <div class="badge-content">
-        <p>陪诊人: {{ name }}</p>
+        <p>就诊人: {{ name }}</p>
         <p>就诊时间: {{ time }}</p>
       </div>
     </div>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const name = ref('邓新国')
+const name = ref('林黄骁')
 const time = ref('2024-06-30')
 </script>
 

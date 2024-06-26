@@ -11,6 +11,8 @@ declare module 'vue' {
     BarLine: typeof import('./src/components/BarLine.vue')['default']
     CardItem: typeof import('./src/components/CardItem.vue')['default']
     CardView: typeof import('./src/components/CardView.vue')['default']
+    CompItem: typeof import('./src/components/CompItem.vue')['default']
+    copy: typeof import('./src/components/OrderItem copy.vue')['default']
     HospItem: typeof import('./src/components/HospItem.vue')['default']
     OrderItem: typeof import('./src/components/OrderItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
