@@ -19,7 +19,7 @@ export interface LoginParams {
 export interface LoginResponseData extends ResponseData {
   data: {
     token: string;
-    username: string;
+    nickname: string;
     id: string;
     isCompanion: number;
     isIdentified: number;
