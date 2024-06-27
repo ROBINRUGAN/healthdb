@@ -57,90 +57,94 @@ const removePatient = (index: number) => {
 </script>
 
 <template>
-  <div class="all">
+  <div>
     <van-nav-bar title="我的就诊人" left-text="返回" left-arrow @click-left="goBack" />
 
-    <van-cell-group style="background-color: transparent">
-      <van-cell v-for="(patient, index) in patients" :key="index">
-        <template #title>
-          <div>
+    <div class="all">
+      <van-cell-group style="background-color: transparent">
+        <van-cell v-for="(patient, index) in patients" :key="index">
+          <template #title>
             <div>
-              {{ patient.name }} <span class="gender">{{ patient.gender }}</span>
+              <div>
+                {{ patient.name }} <span class="gender">{{ patient.gender }}</span>
+              </div>
+              <div>{{ patient.age }}周岁 {{ patient.phone }}</div>
             </div>
-            <div>{{ patient.age }}周岁 {{ patient.phone }}</div>
-          </div>
-        </template>
-        <template #right-icon>
-          <button class="deletebtn" @click="removePatient(index)">删除</button>
-        </template>
-      </van-cell>
-    </van-cell-group>
+          </template>
+          <template #right-icon>
+            <button class="deletebtn" @click="removePatient(index)">删除</button>
+          </template>
+        </van-cell>
+      </van-cell-group>
 
-    <van-dialog
-      v-model:show="showAdd"
-      title="新增就诊人"
-      show-cancel-button
-      @confirm="confirmAddPatient"
-    >
-      <van-form>
-        <van-cell-group inset>
-          <van-field
-            class="addField"
-            v-model="newPatient.name"
-            label="姓名"
-            required
-            placeholder="请输入姓名"
-            style="margin-top: 20px"
-            :rules="[
-              { required: true, message: '请输入姓名' },
-              { pattern: /^[\u4e00-\u9fa5]{2,4}$/, message: '姓名必须是2-4个汉字' }
-            ]"
-          />
-        </van-cell-group>
-        <van-cell-group inset>
-          <div class="addField sexField">
-            <span class="required-star">性别</span>
-            <van-radio-group class="addField" v-model="newPatient.gender" direction="horizontal">
-              <van-radio name="男">男</van-radio>
-              <van-radio name="女">女</van-radio>
-            </van-radio-group>
-          </div>
-        </van-cell-group>
-        <van-cell-group inset>
-          <van-field
-            class="addField"
-            v-model="newPatient.age"
-            label="年龄"
-            type="number"
-            required
-            placeholder="请输入年龄"
-            :rules="[
-              { required: true, message: '请输入年龄' },
-              { pattern: /^[0-9]+$/, message: '年龄必须是数字' },
-              { pattern: /^(?:1[01][0-9]|120|[1-9]?[0-9])$/, message: '年龄必须在0到120岁之间' }
-            ]"
-          />
-        </van-cell-group>
-        <van-cell-group inset>
-          <van-field
-            class="addField"
-            v-model="newPatient.phone"
-            label="电话"
-            type="tel"
-            required
-            placeholder="请输入电话"
-            :rules="[
-              { required: true, message: '请填写您的手机号码！' },
-              { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }
-            ]"
-            style="margin-bottom: 20px"
-          />
-        </van-cell-group>
-      </van-form>
-    </van-dialog>
+      <van-dialog
+        v-model:show="showAdd"
+        title="新增就诊人"
+        show-cancel-button
+        @confirm="confirmAddPatient"
+      >
+        <van-form>
+          <van-cell-group inset>
+            <van-field
+              class="addField"
+              v-model="newPatient.name"
+              label="姓名"
+              required
+              placeholder="请输入姓名"
+              style="margin-top: 20px"
+              :rules="[
+                { required: true, message: '请输入姓名' },
+                { pattern: /^[\u4e00-\u9fa5]{2,4}$/, message: '姓名必须是2-4个汉字' }
+              ]"
+            />
+          </van-cell-group>
+          <van-cell-group inset>
+            <div class="addField sexField">
+              <span class="required-star">性别</span>
+              <van-radio-group class="addField" v-model="newPatient.gender" direction="horizontal">
+                <van-radio name="男">男</van-radio>
+                <van-radio name="女">女</van-radio>
+              </van-radio-group>
+            </div>
+          </van-cell-group>
+          <van-cell-group inset>
+            <van-field
+              class="addField"
+              v-model="newPatient.age"
+              label="年龄"
+              type="number"
+              required
+              placeholder="请输入年龄"
+              :rules="[
+                { required: true, message: '请输入年龄' },
+                { pattern: /^[0-9]+$/, message: '年龄必须是数字' },
+                { pattern: /^(?:1[01][0-9]|120|[1-9]?[0-9])$/, message: '年龄必须在0到120岁之间' }
+              ]"
+            />
+          </van-cell-group>
+          <van-cell-group inset>
+            <van-field
+              class="addField"
+              v-model="newPatient.phone"
+              label="电话"
+              type="tel"
+              required
+              placeholder="请输入电话"
+              :rules="[
+                { required: true, message: '请填写您的手机号码！' },
+                { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式错误！' }
+              ]"
+              style="margin-bottom: 20px"
+            />
+          </van-cell-group>
+        </van-form>
+      </van-dialog>
 
-    <div class="add-patient">
-      <van-button type="primary" plain icon="plus" @click="addPatient"> 新增就诊人 </van-button>
+      <div class="add-patient">
+        <van-button class="select" type="primary" plain icon="plus" @click="addPatient">
+          新增就诊人
+        </van-button>
+      </div>
     </div>
   </div>
 </template>
@@ -150,10 +154,6 @@ const removePatient = (index: number) => {
   background-color: #f5f5f5;
   min-height: 100vh;
   padding: 16px;
-}
-
-.van-nav-bar {
-  margin-bottom: 16px;
 }
 
 .van-cell {
@@ -214,5 +214,20 @@ const removePatient = (index: number) => {
   width: 50%;
   margin-left: 10px;
   align-self: center;
+}
+.select {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to bottom, rgb(130, 123, 252), rgb(74, 75, 183));
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.select:active {
+  background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
 }
 </style>
