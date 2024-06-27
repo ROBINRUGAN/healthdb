@@ -38,7 +38,7 @@ const modifyNick = () => {
     <van-nav-bar title="个人信息" left-text="返回" left-arrow @click-left="goBack" />
 
     <van-cell-group>
-      <van-cell title="头像" is-link>
+      <van-cell title="头像" is-link style="align-items: center">
         <template #right-icon>
           <img width="100" height="100" class="avatar" :src="userInfo.avatar" />
         </template>
