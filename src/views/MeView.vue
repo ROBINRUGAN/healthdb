@@ -1,5 +1,67 @@
 <script setup lang="ts">
 import mewImage from '@/assets/me/patient.jpeg'
+import { showLoadingToast, showSuccessToast, showFailToast } from 'vant'
+import { ref, reactive } from 'vue'
+
+const userData = reactive({
+  nickname: '林黄晓',
+  id: '1145141212',
+  money: 1893.0
+})
+const addNum = ref(0.0)
+const dropNum = ref(0.0)
+const showAdd = ref(false)
+const showDrop = ref(false)
+
+const isValidAmount = (amount: any) => {
+  const pattern = /^\d+(\.\d{1,2})?$/ // 正则表达式，匹配合法金额
+  return pattern.test(amount)
+}
+
+const addMoney = () => {
+  if (!isValidAmount(addNum.value)) {
+    showFailToast('请输入合法的金额')
+    return
+  }
+  showLoadingToast({
+    message: '修改中...',
+    duration: 1000,
+    forbidClick: true,
+    onClose() {
+      const amount = Number(addNum.value)
+      showSuccessToast('成功充值' + amount + '元～')
+      userData.money += amount
+      showAdd.value = false
+    }
+  })
+}
+
+const dropMoney = () => {
+  if (!isValidAmount(dropNum.value)) {
+    showFailToast('请输入合法的金额')
+    return
+  }
+  const amount = Number(dropNum.value)
+  if (amount > userData.money) {
+    showFailToast('余额不足，无法提现')
+    return
+  }
+  showLoadingToast({
+    message: '修改中...',
+    duration: 1000,
+    forbidClick: true,
+    onClose() {
+      showSuccessToast('成功提现' + amount + '元～')
+      userData.money -= amount
+      showDrop.value = false
+    }
+  })
+}
+
+const joinQQGroup = () => {
+  // 替换为你的 QQ 群链接
+  window.location.href = 'https://qm.qq.com/q/mHztyowGiY'
+}
 </script>
 
 <template>
@@ -8,7 +70,7 @@ import mewImage from '@/assets/me/patient.jpeg'
       <van-image round width="80px" height="80px" :src="mewImage" />
       <div class="info">
         <div style="display: flex; align-items: center">
-          <h3 style="margin-right: 5px; margin-top: 2px">林黄骁</h3>
+          <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>
           <van-tag
             color="#7232dd"
             style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
@@ -17,17 +79,41 @@ import mewImage from '@/assets/me/patient.jpeg'
             >陪诊师</van-tag
           >
         </div>
-        <h5>id: 1145141212</h5>
+        <h5>id: {{ userData.id }}</h5>
       </div>
     </div>
     <div class="twoWrapper">
       <div class="wrapper">
         <h4>用户余额（元）</h4>
-        <h1>1893.00</h1>
+        <h1>{{ userData.money }}</h1>
       </div>
       <div class="btns">
-        <button class="btn1">充值</button>
-        <button class="btn2">提现</button>
+        <button class="btn1" @click="showAdd = true">充值</button>
+        <van-dialog v-model:show="showAdd" title="充值" show-cancel-button @confirm="addMoney">
+          <van-cell-group inset>
+            <van-field
+              v-model="addNum"
+              label="充值金额"
+              required
+              type="number"
+              placeholder="最多两位小数"
+              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+            />
+          </van-cell-group>
+        </van-dialog>
+        <button class="btn2" @click="showDrop = true">提现</button>
+        <van-dialog v-model:show="showDrop" title="提现" show-cancel-button @confirm="dropMoney">
+          <van-cell-group inset>
+            <van-field
+              type="number"
+              v-model="dropNum"
+              required
+              label="提现金额"
+              placeholder="最多两位小数"
+              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+            />
+          </van-cell-group>
+        </van-dialog>
       </div>
     </div>
 
@@ -35,10 +121,11 @@ import mewImage from '@/assets/me/patient.jpeg'
       <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
       <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
       <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link to="/patients" />
-      <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link />
+      <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link @click="joinQQGroup" />
     </van-cell-group>
   </div>
 </template>
+
 <style scoped>
 .top {
   background-repeat: no-repeat;
