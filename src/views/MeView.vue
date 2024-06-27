@@ -23,9 +23,9 @@ import mewImage from '@/assets/me/patient.jpeg'
     </div>
 
     <van-cell-group class="group">
-      <van-cell class="groupItem" icon="records-o" title="待评价" is-link />
-      <van-cell class="groupItem" icon="user-o" title="个人信息" is-link />
-      <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link />
+      <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
+      <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
+      <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link to="/patients" />
       <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link />
     </van-cell-group>
   </div>
