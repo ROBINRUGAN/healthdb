@@ -12,7 +12,5 @@ export const reqRegister = (data: RegisterParams) => {
 }
 
 export const reqLogin = (data: LoginParams) => {
-  return service.post<any, LoginResponseData>("https://mock.apipark.cn/m1/4578650-0-default/user/login", data)
+  return service.post<any, LoginResponseData>(API.LOGIN_API, data)
 }
-
-//API.LOGIN_API

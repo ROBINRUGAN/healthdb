@@ -4,12 +4,11 @@ import router from '@/router'
 import type { LoginParams, LoginResponseData } from '@/api/user/type'
 import { reqLogin } from '@/api/user'
 import { showFailToast, showNotify, showSuccessToast } from 'vant'
-import { tr } from 'element-plus/es/locales.mjs'
 export const useAuthStore = defineStore(
   'auth',
   () => {
     const token = ref('')
-    const username = ref('')
+    const nickname = ref('')
     const id = ref('')
     // 是否是陪诊师
     const isCompanion = ref()
@@ -21,8 +20,8 @@ export const useAuthStore = defineStore(
     const setId = (data: string) => {
       id.value = data
     }
-    const setUsername = (data: string) => {
-      username.value = data
+    const setNickname = (data: string) => {
+      nickname.value = data
     }
     const setIsCompanion = (data: number) => {
       isCompanion.value = data
@@ -43,14 +42,14 @@ export const useAuthStore = defineStore(
         if (res.code === 200) {
           showSuccessToast('登录成功')
           setToken(res.data.token)
-          setUsername(res.data.username)
+          setNickname(res.data.nickname)
           setId(res.data.id)
           setIsCompanion(res.data.isCompanion)
           setIsIdentified(res.data.isIdentified)
           router.push({ path: '/home' })
           showNotify({
             type: 'success',
-            message: '登录成功！您好，' + username.value || '游客'
+            message: '登录成功！您好，' +(nickname.value ? nickname.value : '游客')
           })
         } else {
           showFailToast(res.message || '登录失败！')
@@ -60,7 +59,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    return { token, username, id, isCompanion, isIdentified, setToken, login }
+    return { token, nickname, id, isCompanion, isIdentified, setToken, login }
   },
   {
     // 启用持久化
