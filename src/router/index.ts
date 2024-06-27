@@ -9,6 +9,9 @@ import IWantView from '@/views/IWantView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import CompView from '@/views/CompView.vue'
+import UserInfoView from '@/views/UserInfoView.vue'
+import CommentView from '@/views/CommentView.vue'
+import PatientView from '@/views/PatientView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -55,6 +58,18 @@ const router = createRouter({
     {
       path: '/company',
       component: CompView
+    },
+    {
+      path: '/userinfo',
+      component: UserInfoView
+    },
+    {
+      path: '/comment',
+      component: CommentView
+    },
+    {
+      path: '/patients',
+      component: PatientView
     }
   ],
   scrollBehavior(to, from, savedPosition) {

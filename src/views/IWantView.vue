@@ -82,111 +82,113 @@ const onSubmit = (values: any) => {
 }
 </script>
 <template>
-  <van-nav-bar title="填写陪诊单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
-  <div class="all">
-    <h3>陪诊服务单</h3>
+  <div>
+    <van-nav-bar title="填写陪诊单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+    <div class="all">
+      <h3>陪诊服务单</h3>
 
-    <van-form @submit="onSubmit">
-      <van-cell-group inset>
-        <van-field
-          v-model="serviceResult"
-          is-link
-          readonly
-          name="servicePicker"
-          label="服务类型"
-          placeholder="选择陪诊服务类型"
-          @click="showServicePicker = true"
-        />
-        <van-popup round v-model:show="showServicePicker" position="bottom">
-          <van-picker
-            title="服务类型"
-            :columns="ServiceColumns"
-            @confirm="onServiceConfirm"
-            @cancel="showServicePicker = false"
+      <van-form @submit="onSubmit">
+        <van-cell-group inset>
+          <van-field
+            v-model="serviceResult"
+            is-link
+            readonly
+            name="servicePicker"
+            label="服务类型"
+            placeholder="选择陪诊服务类型"
+            @click="showServicePicker = true"
           />
-        </van-popup>
-        <van-field
-          v-model="patientResult"
-          is-link
-          readonly
-          name="patientPicker"
-          label="就诊人"
-          placeholder="选择就诊人"
-          @click="showPatientPicker = true"
-        />
-        <!-- <van-popup v-model:show="showPatientPicker" position="bottom"> -->
-        <van-action-sheet v-model:show="showPatientPicker" title="选择就诊人">
-          <van-contact-card
-            v-for="(item, index) in patientData"
-            :key="index"
-            type="edit"
-            :tel="item.tel"
-            :name="item.name"
-            @click="onEdit(item)"
+          <van-popup round v-model:show="showServicePicker" position="bottom">
+            <van-picker
+              title="服务类型"
+              :columns="ServiceColumns"
+              @confirm="onServiceConfirm"
+              @cancel="showServicePicker = false"
+            />
+          </van-popup>
+          <van-field
+            v-model="patientResult"
+            is-link
+            readonly
+            name="patientPicker"
+            label="就诊人"
+            placeholder="选择就诊人"
+            @click="showPatientPicker = true"
           />
-        </van-action-sheet>
-        <!-- </van-popup> -->
+          <!-- <van-popup v-model:show="showPatientPicker" position="bottom"> -->
+          <van-action-sheet v-model:show="showPatientPicker" title="选择就诊人">
+            <van-contact-card
+              v-for="(item, index) in patientData"
+              :key="index"
+              type="edit"
+              :tel="item.tel"
+              :name="item.name"
+              @click="onEdit(item)"
+            />
+          </van-action-sheet>
+          <!-- </van-popup> -->
 
-        <van-field
-          v-model="dateResult"
-          is-link
-          readonly
-          name="datePicker"
-          label="开始时间"
-          placeholder="点击选择时间"
-          @click="showDatePicker = true"
-        />
+          <van-field
+            v-model="dateResult"
+            is-link
+            readonly
+            name="datePicker"
+            label="开始时间"
+            placeholder="点击选择时间"
+            @click="showDatePicker = true"
+          />
 
-        <van-popup round v-model:show="showDatePicker" position="bottom">
-          <van-picker-group
-            title="开始日期"
-            :tabs="['选择日期', '选择时间']"
-            @confirm="onDateConfirm"
-            @cancel="showDatePicker = false"
-          >
-            <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
-            <van-time-picker v-model="currentTime" />
-          </van-picker-group>
-        </van-popup>
+          <van-popup round v-model:show="showDatePicker" position="bottom">
+            <van-picker-group
+              title="开始日期"
+              :tabs="['选择日期', '选择时间']"
+              @confirm="onDateConfirm"
+              @cancel="showDatePicker = false"
+            >
+              <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
+              <van-time-picker v-model="currentTime" />
+            </van-picker-group>
+          </van-popup>
 
-        <van-field
-          v-model="endDateResult"
-          is-link
-          readonly
-          name="datePicker"
-          label="结束时间"
-          placeholder="点击选择时间"
-          @click="showEndDatePicker = true"
-        />
+          <van-field
+            v-model="endDateResult"
+            is-link
+            readonly
+            name="datePicker"
+            label="结束时间"
+            placeholder="点击选择时间"
+            @click="showEndDatePicker = true"
+          />
 
-        <van-popup round v-model:show="showEndDatePicker" position="bottom">
-          <van-picker-group
-            title="结束日期"
-            :tabs="['选择日期', '选择时间']"
-            @confirm="onEndDateConfirm"
-            @cancel="showEndDatePicker = false"
-          >
-            <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
-            <van-time-picker v-model="currentTime" />
-          </van-picker-group>
-        </van-popup>
+          <van-popup round v-model:show="showEndDatePicker" position="bottom">
+            <van-picker-group
+              title="结束日期"
+              :tabs="['选择日期', '选择时间']"
+              @confirm="onEndDateConfirm"
+              @cancel="showEndDatePicker = false"
+            >
+              <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
+              <van-time-picker v-model="currentTime" />
+            </van-picker-group>
+          </van-popup>
 
-        <van-field
-          v-model="info"
-          name="备注"
-          label="备注"
-          rows="2"
-          autosize
-          type="textarea"
-          maxlength="50"
-          placeholder="请输入备注"
-          show-word-limit
-        />
-      </van-cell-group>
-      <div style="margin: 16px">
-        <button @click="onSubmit" class="select">提交</button>
-      </div>
-    </van-form>
+          <van-field
+            v-model="info"
+            name="备注"
+            label="备注"
+            rows="2"
+            autosize
+            type="textarea"
+            maxlength="50"
+            placeholder="请输入备注"
+            show-word-limit
+          />
+        </van-cell-group>
+        <div style="margin: 16px">
+          <button @click="onSubmit" class="select">提交</button>
+        </div>
+      </van-form>
+    </div>
   </div>
 </template>
 <style scoped>

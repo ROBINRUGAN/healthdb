@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 创建axios实例
-export let service = axios.create({
+export const service = axios.create({
   baseURL: `http://47.113.97.12:9001/`,
   timeout: 20000, // 超时时间
   withCredentials: false // 是否允许带cookie
