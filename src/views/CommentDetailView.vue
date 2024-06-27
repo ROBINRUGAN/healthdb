@@ -109,4 +109,7 @@ const comment = ref('')
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.select:active {
+  background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
+}
 </style>

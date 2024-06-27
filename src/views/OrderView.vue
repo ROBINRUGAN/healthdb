@@ -10,27 +10,37 @@ const active = ref(0)
     <van-tabs v-model:active="active" swipeable>
       <van-tab title="全部" name="a">
         <div class="page">
-          <OrderItem v-for="(item, index) in 10" :key="index" />
+          <router-link to="/orderDetail">
+            <OrderItem v-for="(item, index) in 10" :key="index" />
+          </router-link>
         </div>
       </van-tab>
       <van-tab title="未付款" name="b">
         <div class="page">
-          <OrderItem v-for="(item, index) in 2" :key="index" />
+          <router-link to="/orderDetail">
+            <OrderItem v-for="(item, index) in 2" :key="index" />
+          </router-link>
         </div>
       </van-tab>
       <van-tab title="未开始" name="b">
         <div class="page">
-          <OrderItem v-for="(item, index) in 5" :key="index" />
+          <router-link to="/orderDetail">
+            <OrderItem v-for="(item, index) in 5" :key="index" />
+          </router-link>
         </div>
       </van-tab>
       <van-tab title="进行中" name="b">
         <div class="page">
-          <OrderItem v-for="(item, index) in 2" :key="index" />
+          <router-link to="/orderDetail">
+            <OrderItem v-for="(item, index) in 2" :key="index" />
+          </router-link>
         </div>
       </van-tab>
       <van-tab title="已完成" name="b">
         <div class="page">
-          <OrderItem v-for="(item, index) in 1" :key="index" />
+          <router-link to="/orderDetail">
+            <OrderItem v-for="(item, index) in 1" :key="index" />
+          </router-link>
         </div>
       </van-tab>
     </van-tabs>
