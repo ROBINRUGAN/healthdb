@@ -91,8 +91,8 @@ const onConfirm = (result: any) => {
       </van-swipe>
 
       <div class="twobtn">
-        <img class="img1" src="@/assets/home/img1.png" alt="" />
-        <img class="img2" src="@/assets/home/img2.png" alt="" />
+        <img class="img1" src="@/assets/home/img1.png" alt="" @click="router.push('/search')" />
+        <img class="img2" src="@/assets/home/img2.png" alt="" @click="router.push('/order')" />
       </div>
 
       <BarLine style="width: 90%; margin: auto" />
