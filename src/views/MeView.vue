@@ -6,7 +6,7 @@ import { ref, reactive } from 'vue'
 const userData = reactive({
   nickname: '林黄晓',
   id: '1145141212',
-  money: 1893.0
+  money: 1893.12
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)

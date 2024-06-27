@@ -14,6 +14,7 @@ import CommentView from '@/views/CommentView.vue'
 import PatientView from '@/views/PatientView.vue'
 import CommentDetailView from '@/views/CommentDetailView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
+import ArticleView from '@/views/ArticleView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -80,6 +81,10 @@ const router = createRouter({
     {
       path: '/orderDetail',
       component: OrderDetailView
+    },
+    {
+      path: '/article',
+      component: ArticleView
     }
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -87,5 +92,4 @@ const router = createRouter({
     return { top: 0 }
   }
 })
-
 export default router
