@@ -7,7 +7,16 @@ import mewImage from '@/assets/me/patient.jpeg'
     <div class="top">
       <van-image round width="80px" height="80px" :src="mewImage" />
       <div class="info">
-        <h3>林黄骁</h3>
+        <div style="display: flex; align-items: center">
+          <h3 style="margin-right: 5px; margin-top: 2px">林黄骁</h3>
+          <van-tag
+            color="#7232dd"
+            style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
+            round
+            size="large"
+            >陪诊师</van-tag
+          >
+        </div>
         <h5>id: 1145141212</h5>
       </div>
     </div>
