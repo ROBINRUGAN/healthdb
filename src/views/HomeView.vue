@@ -97,6 +97,7 @@ const onConfirm = (result: any) => {
 
       <BarLine style="width: 90%; margin: auto" />
       <CardItem
+        @click="router.push('/article')"
         v-for="(item, index) in 5"
         :key="index"
         style="width: 90%; margin-left: auto; margin-right: auto"
