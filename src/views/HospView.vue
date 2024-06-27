@@ -3,31 +3,33 @@ import router from '@/router'
 import { onMounted } from 'vue'
 </script>
 <template>
-  <van-nav-bar title="医院详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
-  <div class="all">
-    <h3>福建医科大学附属协和医院</h3>
-    <img src="@/assets/hosp/info.jpg" alt="" />
-    <div class="wrapper">
-      <div class="content">
-        <h4>简介</h4>
-        <p>
-          由福州圣教医院与福州马高爱医院合并而成。2018年12月4日，被国家卫健委公布为首批肿瘤多学科诊疗试点医院。
-        </p>
+  <div>
+    <van-nav-bar title="医院详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+    <div class="all">
+      <h3>福建医科大学附属协和医院</h3>
+      <img src="@/assets/hosp/info.jpg" alt="" />
+      <div class="wrapper">
+        <div class="content">
+          <h4>简介</h4>
+          <p>
+            由福州圣教医院与福州马高爱医院合并而成。2018年12月4日，被国家卫健委公布为首批肿瘤多学科诊疗试点医院。
+          </p>
+        </div>
+        <div class="content">
+          <h4>医院等级</h4>
+          <p>三级甲等</p>
+        </div>
+        <div class="content">
+          <h4>医院类型</h4>
+          <p>综合性医院</p>
+        </div>
+        <div class="content">
+          <h4>地址</h4>
+          <p>福建省福州市新店路29号</p>
+        </div>
       </div>
-      <div class="content">
-        <h4>医院等级</h4>
-        <p>三级甲等</p>
-      </div>
-      <div class="content">
-        <h4>医院类型</h4>
-        <p>综合性医院</p>
-      </div>
-      <div class="content">
-        <h4>地址</h4>
-        <p>福建省福州市新店路29号</p>
-      </div>
+      <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>
     </div>
-    <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>
   </div>
 </template>
 <style scoped>

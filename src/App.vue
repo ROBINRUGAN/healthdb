@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { watch, ref } from 'vue'
 </script>
 
 <template>
-  <router-view />
+  <transition name="van-fade">
+    <router-view />
+  </transition>
 
   <van-tabbar route>
     <van-tabbar-item replace to="/home" icon="home-o">主页</van-tabbar-item>
