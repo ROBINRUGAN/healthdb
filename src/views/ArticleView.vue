@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import router from '@/router'
 const doctorImage = ref(
   'https://p3.bdxiguaimg.com/img/mosaic-legacy/fe6200001eb5c02bf0e2~0x0.image'
 ) // 修改为实际的图片路径
