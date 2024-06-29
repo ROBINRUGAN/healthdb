@@ -18,90 +18,6 @@ import ArticleView from '@/views/ArticleView.vue'
 import { useAuthStore } from '@/stores/auth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  // routes: [
-  //   {
-  //     path: '/',
-  //     redirect: '/login'
-  //   },
-  //   {
-  //     path: '/home',
-  //     component: HomeView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/order',
-  //     component: OrderView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/join',
-  //     component: JoinView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/me',
-  //     component: MeView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/search',
-  //     component: SearchView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/hospital',
-  //     component: HospView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/iwant',
-  //     component: IWantView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/login',
-  //     component: LoginView
-  //   },
-  //   {
-  //     path: '/register',
-  //     component: RegisterView
-  //   },
-  //   {
-  //     path: '/company',
-  //     component: CompView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/userinfo',
-  //     component: UserInfoView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/comment',
-  //     component: CommentView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/patients',
-  //     component: PatientView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/commentDetail',
-  //     component: CommentDetailView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/orderDetail',
-  //     component: OrderDetailView,
-  //     meta: { requiresAuth: true }
-  //   },
-  //   {
-  //     path: '/article',
-  //     component: ArticleView,
-  //     meta: { requiresAuth: true }
-  //   }
-  // ],
   routes: [
     {
       path: '/',
@@ -110,30 +26,37 @@ const router = createRouter({
     {
       path: '/home',
       component: HomeView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/order',
       component: OrderView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/join',
       component: JoinView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/me',
       component: MeView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/search',
       component: SearchView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/hospital',
       component: HospView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/iwant',
       component: IWantView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -146,30 +69,37 @@ const router = createRouter({
     {
       path: '/company',
       component: CompView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/userinfo',
       component: UserInfoView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/comment',
       component: CommentView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/patients',
       component: PatientView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/commentDetail',
       component: CommentDetailView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/orderDetail',
       component: OrderDetailView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/article',
       component: ArticleView,
+      meta: { requiresAuth: true }
     }
   ],
   scrollBehavior(to, from, savedPosition) {
