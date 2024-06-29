@@ -14,6 +14,8 @@ export const useAuthStore = defineStore(
     const isCompanion = ref()
     // 是否实名认证
     const isIdentified = ref()
+    const selectedCity = ref('福州')
+    const selectedCityCode = ref('350100')
     const setToken = (data: string) => {
       token.value = data
     }
@@ -29,6 +31,13 @@ export const useAuthStore = defineStore(
     const setIsIdentified = (data: number) => {
       isIdentified.value = data
     }
+    const setSelectedCity = (data: string) => {
+      selectedCity.value = data
+    }
+    const setSelectedCityCode = (data: string) => {
+      selectedCityCode.value = data
+    }
+
 
     // const Logout = () => {
     //   token.value = ''
@@ -59,7 +68,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    return { token, nickname, id, isCompanion, isIdentified, setToken, login }
+    return { token, nickname, id, isCompanion, isIdentified, setToken,selectedCity,selectedCityCode, setNickname, setId, setIsCompanion, setIsIdentified, setSelectedCity, setSelectedCityCode, login}
   },
   {
     // 启用持久化
