@@ -16,10 +16,8 @@ service.interceptors.request.use(
     config.headers['Access-Control-Allow-Origin'] = '*'
     const authString = window.localStorage.getItem('auth')
     let token = ''
-    console.log(authString)
     if (authString) {
       token = authString
-      console.log(token)
     }
     if (token) {
       config.headers.token = token

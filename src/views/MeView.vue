@@ -6,7 +6,7 @@ import { ref, reactive, onMounted } from 'vue'
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
-  nickname: currentUser.nickname || currentUser.telephone || '用户 ' + currentUser.id,
+  nickname: currentUser.nickname ,
   id: currentUser.id,
   money: currentUser.money
 })

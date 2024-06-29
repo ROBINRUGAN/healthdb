@@ -18,7 +18,7 @@ export const useAuthStore = defineStore(
     const selectedCityCode = ref('350100')
     const currentUser: User = {
       id: 0,
-      nickname: '用户' + id,
+      nickname: '用户 ' + id,
       telephone: '',
       avatar: '',
       realname: '',
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore(
     }
     const setUserInfo = (data: User) => {
       currentUser.id = data.id
-      currentUser.nickname = data.nickname || '用户' + data.id
+      currentUser.nickname = data.nickname || '用户 ' + data.id
       currentUser.telephone = data.telephone
       currentUser.avatar = data.avatar || mewImage
       currentUser.realname = data.realname || '未实名'
@@ -90,16 +90,17 @@ export const useAuthStore = defineStore(
       try {
         const res: LoginResponseData = await reqLogin(data)
         if (res.code === 200) {
+          const nickname = res.data.nickname || '用户 ' + res.data.id
           showSuccessToast('登录成功')
           setToken(res.data.token)
-          setNickname(res.data.nickname)
+          setNickname(nickname)
           setId(res.data.id)
           setIsCompanion(res.data.isCompanion)
           setIsIdentified(res.data.isIdentified)
           router.push({ path: '/home' })
           showNotify({
             type: 'success',
-            message: '登录成功！您好，' + (res.data.nickname || '用户 ' + res.data.id) + '！'
+            message: '登录成功！您好，' + nickname + '！'
           })
         } else {
           showFailToast(res.message || '登录失败！')
