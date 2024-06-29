@@ -38,7 +38,9 @@ export const useAuthStore = defineStore(
       selectedCityCode.value = data
     }
 
-
+    const isLogin = () => {
+      return !!token.value
+    }
     // const Logout = () => {
     //   token.value = ''
     //   username.value = ''
@@ -68,7 +70,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    return { token, nickname, id, isCompanion, isIdentified, setToken,selectedCity,selectedCityCode, setNickname, setId, setIsCompanion, setIsIdentified, setSelectedCity, setSelectedCityCode, login}
+    return { token, nickname, id, isCompanion, isIdentified, setToken,selectedCity,selectedCityCode, setNickname, setId, setIsCompanion, setIsIdentified, setSelectedCity, setSelectedCityCode, login, isLogin}
   },
   {
     // 启用持久化
