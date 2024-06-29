@@ -24,8 +24,9 @@ const images = [
 ]
 
 const showPopup = ref(false)
-const areaCode = ref('')
+const areaCode = ref('350100')
 const value = ref('')
+const selectedCity = ref('福州')
 let userStore = useAuthStore()
 const onSearch = (val: any) => {
   showLoadingToast({
@@ -39,8 +40,25 @@ const onSearch = (val: any) => {
   })
 }
 const onConfirm = (result: any) => {
-  console.log('Selected area:', result)
-  showPopup.value = false // Optionally close the popup after selection
+  try {
+    if (
+      result &&
+      result.selectedOptions &&
+      Array.isArray(result.selectedOptions) &&
+      result.selectedOptions.length > 0
+    ) {
+      const selectedOption = result.selectedOptions[1]
+      areaCode.value = selectedOption.value
+      selectedCity.value = selectedOption.text.replace(/市$/, '')
+      userStore.setSelectedCity(selectedCity.value)
+      userStore.setSelectedCityCode(areaCode.value)
+      showPopup.value = false
+    } else {
+      throw new Error('Invalid result structure')
+    }
+  } catch (error) {
+    showNotify({ type: 'danger', message: `选择地区时出错` })
+  }
 }
 </script>
 
@@ -63,7 +81,7 @@ const onConfirm = (result: any) => {
             "
           >
             <van-icon name="location-o" @click="showPopup = true" size="20px" />
-            <span style="font-size: 13px; margin-top: 3px">福州</span>
+             <span class="selected-city">{{ selectedCity }}</span>
           </div>
           <van-popup v-model:show="showPopup" round position="bottom">
             <van-area
@@ -146,6 +164,15 @@ const onConfirm = (result: any) => {
 .img2 {
   padding: 10px 0px 10px 5px;
   width: 45%;
+}
+.selected-city {
+  font-size: 13px;
+  margin-top: 3px;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 :deep(.van-search__content--round) {
   background-color: white;
