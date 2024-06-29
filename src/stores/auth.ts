@@ -6,6 +6,7 @@ import type { LoginParams, LoginResponseData, User } from '@/api/user/type'
 import { reqLogin, reqUserInfo } from '@/api/user'
 import { showFailToast, showNotify, showSuccessToast } from 'vant'
 import { id } from 'element-plus/es/locales.mjs'
+import { reqUploadFile } from '@/api/file'
 export const useAuthStore = defineStore(
   'auth',
   () => {
@@ -40,16 +41,15 @@ export const useAuthStore = defineStore(
 
     const getGenderStr = () => {
       // -1 未知 0 男 1 女
-      switch
-      (currentUser.gender) {
+      switch (currentUser.gender) {
         case -1:
-          return '未知'
+          return '去设置'
         case 0:
           return '男'
         case 1:
           return '女'
         default:
-          return '未知'
+          return '去设置'
       }
     }
 
@@ -70,10 +70,10 @@ export const useAuthStore = defineStore(
       currentUser.nickname = data.nickname || '用户 ' + data.id
       currentUser.telephone = data.telephone
       currentUser.avatar = data.avatar || mewImage
-      currentUser.realname = data.realname || '未实名'
+      currentUser.realname = data.realname || '去实名'
       currentUser.age = data.age || -1
       currentUser.gender = data.gender || -1
-      currentUser.idNumber = data.idNumber || '未实名'
+      currentUser.idNumber = data.idNumber || '去实名'
       currentUser.money = data.money || 0
     }
 
@@ -110,7 +110,6 @@ export const useAuthStore = defineStore(
       }
     }
 
-
     const refreshUserInfo = async () => {
       try {
         const res = await reqUserInfo()
@@ -121,6 +120,23 @@ export const useAuthStore = defineStore(
         }
       } catch (error) {
         showFailToast('获取用户信息失败！')
+      }
+    }
+
+    // 上传文件
+    const uploadFile = async (file: File) => {
+      const formData = new FormData()
+      formData.append('files', file)
+      try {
+        const res = await reqUploadFile(formData)
+        if (res.code === 200) {
+          showSuccessToast('上传成功')
+          return res.data.fileUrl
+        } else {
+          showFailToast(res.message || '上传失败！')
+        }
+      } catch (error) {
+        showFailToast('上传失败！')
       }
     }
 
@@ -141,7 +157,8 @@ export const useAuthStore = defineStore(
       login,
       isLogin,
       refreshUserInfo,
-      getGenderStr
+      getGenderStr,
+      uploadFile
     }
   },
   {

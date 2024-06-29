@@ -62,7 +62,7 @@ export interface ModifyUserInfoParams {
 
 // 修改用户头像
 export interface ModifyAvatarParams {
-  id: number;
+  uid: number;
   avatar: string;
 }
 
