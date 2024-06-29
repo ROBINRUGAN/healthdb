@@ -1,10 +1,8 @@
 <script setup lang="ts">
+import router from '@/router'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Cell, CellGroup, Icon, NavBar, Popup, Field, showLoadingToast } from 'vant'
-
-const router = useRouter()
-
 const overallRating = ref(0)
 const processRating = ref(0)
 const serviceRating = ref(0)
@@ -59,6 +57,7 @@ const handleCall = (phone: string) => {
           <van-cell title="订单id" :value="orderInfo.orderId" />
           <van-cell title="备注" :value="orderInfo.remark" />
         </van-cell-group>
+        <div class="amount">¥599.00</div>
       </div>
       <div class="textWrapper">
         <div class="contact" @click="handleContactClick">
@@ -80,7 +79,7 @@ const handleCall = (phone: string) => {
 
         <p class="puzzle">对订单有疑问？</p>
       </div>
-      <button class="select">提交评价</button>
+      <button class="select" @click="router.push('/commentdetail')">提交评价</button>
     </div>
 
     <van-popup v-model:show="showPopup" position="bottom" name="联系我们" round closeable>
@@ -174,5 +173,11 @@ h4 {
 }
 .select:active {
   background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
+}
+.amount {
+  color: rgb(185, 1, 1);
+  font-size: 28px;
+  text-align: end;
+  margin-right: 20px;
 }
 </style>
