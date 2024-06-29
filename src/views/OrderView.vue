@@ -15,14 +15,14 @@ const active = ref(0)
           </router-link>
         </div>
       </van-tab>
-      <van-tab title="未付款" name="b">
+      <van-tab title="已下单" name="b">
         <div class="page">
           <router-link to="/orderDetail">
             <OrderItem v-for="(item, index) in 2" :key="index" />
           </router-link>
         </div>
       </van-tab>
-      <van-tab title="未开始" name="b">
+      <van-tab title="已接单" name="b">
         <div class="page">
           <router-link to="/orderDetail">
             <OrderItem v-for="(item, index) in 5" :key="index" />
