@@ -1,5 +1,5 @@
 import service from '@/utils/request'
-import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams } from './type'
+import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams, userInfoResponseData } from './type'
 
 enum API {
   REGISTER_API = '/user/register',
@@ -22,7 +22,7 @@ export const reqLogin = (data: LoginParams) => {
 }
 
 export const reqUserInfo = () => {
-  return service.get(API.USER_INFO_API)
+  return service.get<any, userInfoResponseData>(API.USER_INFO_API)
 }
 
 export const reqIdentify = (data: IdentifyParams) => {

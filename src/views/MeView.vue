@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import mewImage from '@/assets/me/patient.jpeg'
+import { useAuthStore } from '@/stores/auth'
 import { showLoadingToast, showSuccessToast, showFailToast } from 'vant'
-import { ref, reactive } from 'vue'
-
+import { ref, reactive, onMounted } from 'vue'
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
-  nickname: '林黄晓',
-  id: '1145141212',
-  money: 1893.12
+  nickname: currentUser.nickname || currentUser.telephone || '用户 ' + currentUser.id,
+  id: currentUser.id,
+  money: currentUser.money
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)
 const showAdd = ref(false)
 const showDrop = ref(false)
+
+// 获得用户信息
+onMounted(async () => {
+  userStore.refreshUserInfo()
+})
 
 const isValidAmount = (amount: any) => {
   const pattern = /^\d+(\.\d{1,2})?$/ // 正则表达式，匹配合法金额

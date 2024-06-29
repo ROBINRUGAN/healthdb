@@ -1,4 +1,7 @@
+import router from '@/router'
 import axios from 'axios'
+import { ro } from 'element-plus/es/locales.mjs'
+import { showFailToast } from 'vant'
 
 // 创建axios实例
 export const service = axios.create({
@@ -13,10 +16,10 @@ service.interceptors.request.use(
     config.headers['Access-Control-Allow-Origin'] = '*'
     const authString = window.localStorage.getItem('auth')
     let token = ''
+    console.log(authString)
     if (authString) {
-      const auth = JSON.parse(authString)
-      token = auth.token
-      // console.log(token)
+      token = authString
+      console.log(token)
     }
     if (token) {
       config.headers.token = token
@@ -32,6 +35,10 @@ service.interceptors.response.use(
     if (response.status === 200) {
       return Promise.resolve(response.data)
     } else {
+      // 登录过期
+      showFailToast('登录过期，请重新登录')
+      window.localStorage.removeItem('auth')
+      router.push('/login')
       return Promise.reject(response.data)
     }
   },
