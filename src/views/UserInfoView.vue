@@ -2,18 +2,21 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { showLoadingToast, showSuccessToast } from 'vant'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const show = ref(false)
+const userStore = useAuthStore()
+const currentUser = userStore.currentUser
 const userInfo = ref({
-  avatar:
-    'https://t11.baidu.com/it/u=3118089460,219689805&fm=30&app=106&f=JPEG?w=640&h=427&s=5452578C1572739CDEA00553030080F2',
-  nickname: '小茜',
-  realName: '芭萨卡',
-  gender: '女',
-  idCard: '5586********2361',
-  phone: '189****9999',
-  id: '1719188345'
+  avatar: currentUser.avatar,
+  nickname: currentUser.nickname || currentUser.telephone || '用户 ' + currentUser.id,
+  realName: currentUser.realname,
+  // -1: 未知, 0: 男, 1: 女
+  gender : userStore.getGenderStr(),
+  idCard: currentUser.idNumber,
+  phone: currentUser.telephone,
+  id: currentUser.id
 })
 
 const goBack = () => {
@@ -26,7 +29,6 @@ const modifyNick = () => {
     forbidClick: true,
     onClose() {
       showSuccessToast('修改成功')
-
       show.value = false
     }
   })
