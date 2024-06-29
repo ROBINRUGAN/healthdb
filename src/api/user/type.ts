@@ -26,9 +26,47 @@ export interface LoginResponseData extends ResponseData {
   };
 }
 
+export interface User {
+  id: number;
+  avatar?: string;
+  nickname?: string;
+  realname?: string;
+  gender?: number;
+  age?: number;
+  idNumber?: string;
+  telephone: string;
+}
+
 // 用户信息
 export interface userInfoResponseData extends ResponseData {
-  data: {
+  data: User
+}
 
-  };
+// 用户实名认证
+export interface IdentifyParams {
+  id: number;
+  name: string;
+  identity: string;
+}
+
+// 修改用户信息
+export interface ModifyUserInfoParams {
+  id: number;
+  nickname?: string;
+  realname?: string;
+  age?: number;
+  password?: string;
+  gender?: number;
+}
+
+// 修改用户头像
+export interface ModifyAvatarParams {
+  id: number;
+  avatar: string;
+}
+
+// 充值
+export interface RechargeParams {
+  id: number;
+  money: number;
 }
