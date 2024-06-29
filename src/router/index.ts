@@ -15,6 +15,7 @@ import PatientView from '@/views/PatientView.vue'
 import CommentDetailView from '@/views/CommentDetailView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
 import ArticleView from '@/views/ArticleView.vue'
+import { useAuthStore } from '@/stores/auth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -24,35 +25,42 @@ const router = createRouter({
     },
     {
       path: '/home',
-      component: HomeView
+      component: HomeView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/order',
-      component: OrderView
+      component: OrderView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/join',
-      component: JoinView
+      component: JoinView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/me',
-      component: MeView
+      component: MeView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/search',
-      component: SearchView
+      component: SearchView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/hospital',
-      component: HospView
+      component: HospView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/iwant',
-      component: IWantView
+      component: IWantView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
-      component: LoginView
+      component: LoginView,
     },
     {
       path: '/register',
@@ -60,36 +68,59 @@ const router = createRouter({
     },
     {
       path: '/company',
-      component: CompView
+      component: CompView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/userinfo',
-      component: UserInfoView
+      component: UserInfoView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/comment',
-      component: CommentView
+      component: CommentView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/patients',
-      component: PatientView
+      component: PatientView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/commentDetail',
-      component: CommentDetailView
+      component: CommentDetailView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/orderDetail',
-      component: OrderDetailView
+      component: OrderDetailView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/article',
-      component: ArticleView
+      component: ArticleView,
+      meta: { requiresAuth: true }
     }
   ],
   scrollBehavior(to, from, savedPosition) {
     // 总是滚动到顶部
     return { top: 0 }
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!authStore.isLogin()) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
   }
 })
 export default router
