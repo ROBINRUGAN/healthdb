@@ -8,7 +8,8 @@ const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
   nickname: currentUser.nickname ,
   id: currentUser.id,
-  money: currentUser.money
+  money: currentUser.money,
+  avatar : currentUser.avatar
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)
@@ -74,7 +75,7 @@ const joinQQGroup = () => {
 <template>
   <div class="all">
     <div class="top">
-      <van-image round width="80px" height="80px" :src="mewImage" />
+      <van-image round width="80px" height="80px" :src="userData.avatar" />
       <div class="info">
         <div style="display: flex; align-items: center">
           <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>
