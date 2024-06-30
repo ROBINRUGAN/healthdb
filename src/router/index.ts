@@ -16,6 +16,7 @@ import CommentDetailView from '@/views/CommentDetailView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
 import ArticleView from '@/views/ArticleView.vue'
 import { useAuthStore } from '@/stores/auth'
+import PaymentView from '@/views/PaymentView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -99,6 +100,11 @@ const router = createRouter({
     {
       path: '/article',
       component: ArticleView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/payment',
+      component: PaymentView,
       meta: { requiresAuth: true }
     }
   ],
