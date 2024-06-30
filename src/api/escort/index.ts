@@ -1,5 +1,6 @@
 import request from "@/utils/request"
 import type { AddEscortParams } from "./type"
+import type { ResponseData } from "../type"
 
 enum API{
   // 申请陪诊师
@@ -10,7 +11,7 @@ enum API{
 }
 
 export const addEscort = (data: AddEscortParams) => {
-  return request.post(API.ADD_ESCORT, data)
+  return request.post<any,ResponseData>(API.ADD_ESCORT, data)
 }
 
 

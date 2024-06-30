@@ -102,6 +102,7 @@ export const useAuthStore = defineStore(
             type: 'success',
             message: '登录成功！您好，' + nickname + '！'
           })
+          refreshUserInfo()
         } else {
           showFailToast(res.message || '登录失败！')
         }
