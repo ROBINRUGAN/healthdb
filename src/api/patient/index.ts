@@ -1,5 +1,6 @@
 import service from "@/utils/request"
 import type { AddPatientParams, AddPatientResponseData, DeletePatientParams, PatientListResponseData } from "./type"
+import type { ResponseData } from "../type"
 
 enum API{
   // 添加就诊人
@@ -15,7 +16,7 @@ export const reqAddPatient = (data: AddPatientParams) => {
 }
 
 export const reqDeletePatient = (data: DeletePatientParams) => {
-  return service.post<any, any>(API.DELETE_PATIENT, data)
+  return service.post<any, ResponseData>(API.DELETE_PATIENT, data)
 }
 
 export const reqGetPatientList = (uid: number) => {
