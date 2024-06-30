@@ -2,11 +2,85 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import OrderItem from '@/components/OrderItem.vue'
+import { showLoadingToast, showSuccessToast } from 'vant'
+import router from '@/router'
 const active = ref(0)
+const showPopup = ref(false)
+const showDatePicker = ref(false)
+const dateResult = ref('')
+const value = ref('')
+const onSearch = (val: any) => {
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000,
+    onOpened() {
+      // router.push('/search')
+      // router.push({ path: 'search', query: { keyword: value.value } })
+    }
+  })
+}
+//设置成本地时间
+const currentDate = ref([
+  new Date().getFullYear().toString(),
+  (new Date().getMonth() + 1).toString(),
+  new Date().getDate().toString()
+])
+const currentTime = ref([new Date().getHours().toString(), new Date().getMinutes().toString()])
+
+const onDateConfirm = () => {
+  // showSuccessToast(`${currentDate.value.join('/')} ${currentTime.value.join(':')}`)
+  dateResult.value = `${currentDate.value.join('/')} ${currentTime.value.join(':')}`
+  showDatePicker.value = false
+}
+
+const onConfirm = (result: any) => {
+  address.value = result.selectedOptions.map((option: { text: string }) => option.text).join(' ')
+  showPopup.value = false
+}
 </script>
 
 <template>
   <div class="all">
+    <van-search
+      v-model="value"
+      round
+      placeholder="请输入搜索关键词"
+      background="white"
+      style="
+        font-size: 14px;
+        padding: 0;
+        border-radius: 10px;
+        height: 40px;
+        background-color: white;
+      "
+      @search="onSearch"
+    />
+
+    <van-field
+      style="margin-top: 10px"
+      v-model="dateResult"
+      is-link
+      readonly
+      class="filter"
+      name="datePicker"
+      label="开始时间"
+      placeholder="点击选择时间"
+      @click="showDatePicker = true"
+    />
+
+    <van-popup round v-model:show="showDatePicker" position="bottom">
+      <van-picker-group
+        title="开始日期"
+        :tabs="['选择日期', '选择时间']"
+        @confirm="onDateConfirm"
+        @cancel="showDatePicker = false"
+      >
+        <van-date-picker v-model="currentDate" />
+        <van-time-picker v-model="currentTime" />
+      </van-picker-group>
+    </van-popup>
+
     <van-tabs v-model:active="active" swipeable>
       <van-tab title="全部" name="a">
         <div class="page">
@@ -70,5 +144,12 @@ const active = ref(0)
 }
 :deep(.van-tabs__content--animated, .van-tabs__track) {
   border-radius: 10px;
+}
+.filter {
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+:deep(.van-search__content) {
+  background-color: transparent;
 }
 </style>
