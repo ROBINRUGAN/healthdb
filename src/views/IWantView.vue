@@ -3,33 +3,77 @@ import { showSuccessToast, showLoadingToast, showDialog } from 'vant'
 import { ref, onMounted } from 'vue'
 import router from '@/router'
 import { showConfirmDialog, showFailToast } from 'vant'
+import { useRoute } from 'vue-router'
+import { reqGetHospitalServerByHid } from '@/api/hosp_server'
+import type { HospitalServerList, HospitalServerListResponseData } from '@/api/hosp_server/type'
+import { useAuthStore } from '@/stores/auth'
+import type { addOrdersParams } from '@/api/order/type'
 
 const serviceResult = ref('')
-const patientResult = ref('')
+const serviceResultId = ref()
+const patientResultName = ref('')
+const patientResultTel = ref('')
+const patientResultId = ref()
 const dateResult = ref('')
 const endDateResult = ref('')
+const limitTime = ref()
 const showAmount = ref(false)
 const loading = ref(false)
+const route = useRoute()
+const userStore = useAuthStore()
+const amount = ref()
+interface PatientData {
+  id: number
+  name: string
+  tel: string
+}
+const patientData = ref<PatientData[]>([])
+interface ServiceNoticeColumn {
+  name: string
+  text: string
+  sid: number
+}
+const serviceNoticeColumns = ref<ServiceNoticeColumn[]>([
+  {
+    name: '院内服务',
+    text: '陪诊师协助完成病友院内就诊流程，含规划就诊流程、协助排队取号、排队缴费、代取报告、排队取药等服务陪诊师与病友在约定的医院汇合，院内陪诊师协助完成病友就诊流程，含规划就诊流程、院内协助排队取号、排队缴费、当次服务时间内代取报告、排队取药等服务。最长6小时全程服务。',
+    sid: 1
+  },
+  {
+    name: '全程服务',
+    text: '陪诊师协助完成病友全就诊流程，含接送服务规划就诊流程、协助排队取号、排队缴费、代取报告、排队取药等服务。陪诊师与病友在约定的地点汇合，含院外全程接送及规划就诊流程，院内协助排队取号、排队缴费、当次服务时间内代取报告、排队取药等服务。最长4小时全程服务。',
+    sid: 2
+  },
+  {
+    name: '尊享服务',
+    text: '从家门—医院—家门的一站式陪诊服务，协助完成病友全就诊流程，含接送，诊前挂号预约;规划就诊流程、协助排队取号、排队缴费次日代取报告及寄送等服务。陪诊师与病友在约定的地点汇合，含院外全程接送诊前挂号预约及规划就诊流程;院内协助排排队取号排队缴费、次日代取报告及寄送、排队取药等服务无服务时间限制，直至完成全环节就诊。',
+    sid: 3
+  }
+])
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
 }
+
+onMounted(() => {
+  queryServiceType()
+  userStore.queryPatients()
+  userStore.patients.forEach((item) => {
+    patientData.value.push({ id: item.id, name: item.name, tel: item.phone })
+  })
+  console.log(patientData.value)
+})
+
 const showServicePicker = ref(false)
-const ServiceColumns = [
-  { text: '院内服务', value: 'normal' },
-  { text: '全程服务', value: 'all' },
-  { text: '尊享服务', value: 'vip' }
-]
+interface ServiceColumn {
+  text: string
+  value: number
+}
+const serviceColumns = ref<ServiceColumn[]>()
+const serviceList = ref<HospitalServerList>()
 const showPatientPicker = ref(false)
-const patientColumns = [
-  { text: '张三', value: 'Zhangsan' },
-  { text: '李四', value: 'Lisi' },
-  { text: '王五', value: 'Wangwu' },
-  { text: '赵六', value: 'Zhaoliu' },
-  { text: '钱七', value: 'Qianqi' }
-]
 const showDatePicker = ref(false)
 const showEndDatePicker = ref(false)
 
@@ -46,50 +90,114 @@ const currentDate = ref([
 const currentTime = ref([new Date().getHours().toString(), new Date().getMinutes().toString()])
 
 const onDateConfirm = () => {
-  // showSuccessToast(`${currentDate.value.join('/')} ${currentTime.value.join(':')}`)
-  dateResult.value = `${currentDate.value.join('/')} ${currentTime.value.join(':')}`
+  // "2024-7-03 20:00:00"
+  dateResult.value = `${currentDate.value.join('-')} ${currentTime.value.join(':')}` + ':00'
   showDatePicker.value = false
 }
 const onEndDateConfirm = () => {
-  // showSuccessToast(`${currentDate.value.join('/')} ${currentTime.value.join(':')}`)
-  endDateResult.value = `${currentDate.value.join('/')} ${currentTime.value.join(':')}`
+  endDateResult.value = `${currentDate.value.join('-')} ${currentTime.value.join(':')}` + ':00'
   showEndDatePicker.value = false
 }
 
 const onServiceConfirm = ({ selectedOptions }: any) => {
   serviceResult.value = selectedOptions[0]?.text
+  serviceResultId.value = selectedOptions[0]?.value
   showServicePicker.value = false
+  const selectService = serviceNoticeColumns.value.find(
+    (item) => item.sid === serviceResultId.value
+  )
+  limitTime.value = serviceList.value?.find((item) => item.id === serviceResultId.value)?.limit
+  amount.value = serviceList.value?.find((item) => item.id === serviceResultId.value)?.money
   showDialog({
-    title: '院内服务',
-    message:
-      '陪诊师协助完成病友全就诊流程，含接送服务规划就诊流程、协助排队取号、排队缴费、代取报告、排队取药等服务。\n 陪诊师与病友在约定的地点汇合，含院外全程接送及规划就诊流程，院内协助排队取号、排队缴费、当次服务时间内代取报告、排队取药等服务。最长4小时全程服务。'
+    title: serviceResult.value,
+    message: selectService?.text
   })
   showAmount.value = true
 }
 const onPatientConfirm = ({ selectedOptions }: any) => {
-  patientResult.value = selectedOptions[0]?.text
+
   showPatientPicker.value = false
+  console.log(selectedOptions[0]?.text)
 }
 const info = ref('')
 
-const patientData = ref([
-  { name: '张三', tel: '13000000000' },
-  { name: '李四', tel: '13100000000' },
-  { name: '王五', tel: '13200000000' },
-  { name: '赵六', tel: '13300000000' },
-  { name: '钱七', tel: '13400000000' }
-])
-const onEdit = (item: any) => {
+// 查询当前医院的服务类型
+const queryServiceType = async () => {
+  try {
+    const hid = route.query.hid
+    if (!hid) {
+      showFailToast('未找到医院信息')
+      return
+    }
+    const id = parseInt(hid as string)
+    const res: HospitalServerListResponseData = await reqGetHospitalServerByHid(id)
+    if (res.code === 200) {
+      console.log(res.data)
+      serviceList.value = res.data
+      serviceColumns.value = res.data.map((item) => {
+        return { text: item.name, value: item.id }
+      })
+    } else {
+      throw new Error(res.message || '加载失败')
+    }
+  } catch (error) {
+    showFailToast('加载失败')
+  }
+}
+
+const onEdit = (item: PatientData) => {
   showPatientPicker.value = false
-  patientResult.value = item.name
+  patientResultName.value = item.name
+  patientResultId.value = item.id
+  patientResultTel.value = item.tel
 }
 
 const onSubmit = (values: any) => {
   showLoadingToast({
     message: '加载中...',
     duration: 1000,
-    onClose() {
-      router.push('/payment')
+    forbidClick: true
+    // onClose() {
+    //   router.push('/payment')
+    // }
+  })
+  console.log(values)
+  if (!serviceResultId.value||!patientResultId.value||!dateResult.value||!endDateResult.value) {
+    showFailToast('请填写完整信息')
+    return
+  }
+  if (new Date(dateResult.value) > new Date(endDateResult.value)) {
+    showFailToast('开始时间不能大于结束时间')
+    return
+  }
+  if (new Date(dateResult.value) < new Date()) {
+    showFailToast('开始时间不能小于当前时间')
+    return
+  }
+  // 小时单位
+  if (new Date(endDateResult.value).getTime() - new Date(dateResult.value).getTime() > limitTime.value * 60 * 60 * 1000) {
+    showFailToast('服务时间超过限制')
+    return
+  }
+  const data: addOrdersParams = {
+    uid: userStore.currentUser.id,
+    hid: parseInt(route.query.hid as string),
+    sid: serviceResultId.value,
+    pid: patientResultId.value,
+    startTime: dateResult.value,
+    endTime: endDateResult.value,
+    telephone: patientResultTel.value,
+    requirement: info.value,
+    money: amount.value,
+    sname: serviceResult.value,
+    pname: patientResultName.value
+  }
+  
+  console.log(data)
+  router.push({
+    path: '/payment',
+    query: {
+      data: JSON.stringify(data)
     }
   })
 }
@@ -123,19 +231,19 @@ const onSubmit = (values: any) => {
               <van-popup round v-model:show="showServicePicker" position="bottom">
                 <van-picker
                   title="服务类型"
-                  :columns="ServiceColumns"
+                  :columns="serviceColumns"
                   @confirm="onServiceConfirm"
                   @cancel="showServicePicker = false"
                 />
               </van-popup>
               <van-field
-                v-model="patientResult"
+                v-model="patientResultName"
                 is-link
                 readonly
                 name="patientPicker"
                 label="就诊人"
                 placeholder="选择就诊人"
-                @click="showPatientPicker = true"
+                @click="(showPatientPicker = true), userStore.queryPatients()"
               />
               <!-- <van-popup v-model:show="showPatientPicker" position="bottom"> -->
               <van-action-sheet v-model:show="showPatientPicker" title="选择就诊人">
@@ -208,7 +316,7 @@ const onSubmit = (values: any) => {
             </van-cell-group>
           </van-form>
 
-          <div v-if="showAmount" class="amount">¥ 599.00</div>
+          <div v-if="showAmount" class="amount">¥ {{ amount }}</div>
         </div>
         <button @click="onSubmit" class="select">提交</button>
       </div>

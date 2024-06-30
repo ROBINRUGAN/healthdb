@@ -17,7 +17,7 @@ service.interceptors.request.use(
     const authString = window.localStorage.getItem('auth')
     let token = ''
     if (authString) {
-      const auth = JSON.parse(authString)
+      const auth= JSON.parse(authString)
       token = auth.token
     }
     if (token) {
