@@ -8,6 +8,8 @@ import { areaList } from '@vant/area-data'
 import BarLine from '@/components/BarLine.vue'
 import CardItem from '@/components/CardItem.vue'
 import { useAuthStore } from '@/stores/auth'
+import type { Article, ArticleResponse } from '@/api/article/type'
+import { getArticleList } from '@/api/article'
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
@@ -58,6 +60,24 @@ const onConfirm = (result: any) => {
     showNotify({ type: 'danger', message: `选择地区时出错` })
   }
 }
+const articleList = ref<Article[]>()
+const fetchArticles = async () => {
+  try {
+    const res: ArticleResponse = await getArticleList()
+    console.log(res)
+    if (res.code === 200) {
+      articleList.value = res.data
+      console.log(articleList.value)
+    } else {
+      throw new Error(res.message || '加载失败')
+    }
+  } catch (error) {
+    showNotify({ type: 'danger', message: '加载失败' })
+  }
+}
+onMounted(() => {
+  fetchArticles()
+})
 </script>
 
 <template>
@@ -113,9 +133,23 @@ const onConfirm = (result: any) => {
 
       <BarLine style="width: 90%; margin: auto" />
       <CardItem
-        @click="router.push('/article')"
-        v-for="(item, index) in 5"
+        @click="
+          router.push({
+            path: '/article',
+            query: {
+              avatar: item.avatar,
+              content: item.content,
+              name: item.name,
+              photo: item.photo,
+              position: item.position,
+              title: item.title,
+              createTime: item.createTime
+            }
+          })
+        "
+        v-for="(item, index) in articleList"
         :key="index"
+        :article="item"
         style="width: 90%; margin-left: auto; margin-right: auto"
       />
     </div>

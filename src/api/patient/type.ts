@@ -1,5 +1,4 @@
 import type { ResponseData } from '../type'
-
 export interface Patient {
   id: number
   uid: number
@@ -8,10 +7,6 @@ export interface Patient {
   age: number
   telephoneNumber: string
   relationship: string
-}
-
-export interface PatientListResponseData extends ResponseData {
-  data: Patient[]
 }
 
 export interface PatientResponseData {

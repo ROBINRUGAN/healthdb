@@ -104,6 +104,8 @@ const router = createRouter({
     },
     {
       path: '/article',
+      name: 'article',
+      props: true,
       component: ArticleView,
       meta: { requiresAuth: true }
     },
