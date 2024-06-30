@@ -14,7 +14,6 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 const userStore = useAuthStore()
@@ -63,7 +62,6 @@ const submitForm = async () => {
     (userStore.isIdentified === 0 && formData.value.name === '') ||
     (userStore.isIdentified === 0 && formData.value.identity === '') ||
     formData.value.telephone === '' ||
-    formData.value.city === '' ||
     formData.value.area_code === 0 ||
     formData.value.gender === -1 ||
     age.value === undefined ||
