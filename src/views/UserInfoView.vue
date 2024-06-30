@@ -239,7 +239,7 @@ const modifyUserInfo = async (params: ModifyUserInfoParams) => {
       <van-cell title="id" :value="userInfo.id" />
     </van-cell-group>
   </div>
-
+</van-pull-refresh>
 </template>
 
 <style scoped>
