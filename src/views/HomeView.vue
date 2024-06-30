@@ -8,13 +8,11 @@ import { areaList } from '@vant/area-data'
 import BarLine from '@/components/BarLine.vue'
 import CardItem from '@/components/CardItem.vue'
 import { useAuthStore } from '@/stores/auth'
-const count = ref(0)
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 // TODO: 换成真实数据

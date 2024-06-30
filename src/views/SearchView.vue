@@ -9,7 +9,6 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 

@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import router from '@/router'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import {
+  showConfirmDialog,
+  showFailToast,
+  showLoadingToast,
+  showSuccessToast,
+  type FieldRule,
+  type FormInstance
+} from 'vant'
 import type { RegisterParams, registerResponseData } from '@/api/user/type'
 import { useAuthStore } from '@/stores/auth'
 import { reqRegister } from '@/api/user'
@@ -13,7 +20,6 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 
