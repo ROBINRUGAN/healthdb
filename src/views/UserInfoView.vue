@@ -12,6 +12,7 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  userStore.refreshUserInfo()
 }
 const router = useRouter()
 const userStore = useAuthStore()
