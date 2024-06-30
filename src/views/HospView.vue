@@ -2,6 +2,7 @@
 import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import CommentItem from '@/components/CommentItem.vue'
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
@@ -38,6 +39,13 @@ const onRefresh = () => {
           </div>
         </div>
         <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>
+
+        <div class="wrapper" style="width: 100%; margin-top: 0">
+          <div class="content">
+            <h4 style="margin-bottom: 15px">用户评价</h4>
+            <CommentItem v-for="(item, index) in 5" :key="index" />
+          </div>
+        </div>
       </div>
     </div>
   </van-pull-refresh>
@@ -80,7 +88,7 @@ h4 {
   border-radius: 20px;
 }
 .select {
-  width: 80%;
+  width: 90%;
   padding: 15px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -90,6 +98,7 @@ h4 {
   border-radius: 20px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
 }
 .select:active {
   background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
