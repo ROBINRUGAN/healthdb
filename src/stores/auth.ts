@@ -38,7 +38,7 @@ export const useAuthStore = defineStore(
       phone: string
       relationship: string
     }
-    let patients = ref([] as showPatient[])
+    const patients = ref([] as showPatient[])
     const setToken = (data: string) => {
       window.localStorage.setItem('auth', data)
       token.value = data
