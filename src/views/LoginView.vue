@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import router from '@/router'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import {
+  showConfirmDialog,
+  showFailToast,
+  showLoadingToast,
+  showSuccessToast,
+  type FieldRule,
+  type FormInstance
+} from 'vant'
 import { useAuthStore } from '@/stores/auth'
 import type { LoginParams } from '@/api/user/type'
 const phone = ref('')
@@ -12,7 +19,6 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 

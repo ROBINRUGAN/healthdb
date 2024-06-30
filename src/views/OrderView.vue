@@ -9,12 +9,12 @@ const showPopup = ref(false)
 const showDatePicker = ref(false)
 const dateResult = ref('')
 const value = ref('')
+const address = ref('')
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
 }
 const onSearch = (val: any) => {

@@ -8,8 +8,17 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-    count.value++
   }, 1000)
+}
+function pay() {
+  showLoadingToast({
+    message: '支付中...',
+    duration: 1000,
+    onClose: () => {
+      showSuccessToast('支付成功')
+      router.push('/order')
+    }
+  })
 }
 </script>
 
