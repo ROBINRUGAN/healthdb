@@ -13,6 +13,10 @@ export interface PatientResponseData {
   data: Patient
 }
 
+export interface PatientListResponseData extends ResponseData {
+  data: Patient[]
+}
+
 export interface AddPatientParams {
   uid: number
   name: string
