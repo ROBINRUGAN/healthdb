@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { watch, ref } from 'vue'
+const mewch = ref(true)
 </script>
 
 <template>
@@ -8,7 +9,7 @@ import { watch, ref } from 'vue'
     <router-view />
   </transition>
 
-  <van-tabbar route>
+  <van-tabbar route v-if="mewch">
     <van-tabbar-item replace to="/home" icon="home-o">主页</van-tabbar-item>
     <van-tabbar-item replace to="/order" icon="notes-o">我的订单</van-tabbar-item>
     <!-- 这里要二选一掉 -->

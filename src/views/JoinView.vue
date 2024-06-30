@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 import { onMounted, ref } from 'vue'
 import mewImage from '@/assets/me/patient.jpeg'
 import { areaList } from '@vant/area-data'
@@ -93,6 +94,7 @@ const submitForm = async () => {
 </script>
 
 <template>
+
   <div class="all">
     <h3>申请成为陪诊师</h3>
     <div class="form-container">
@@ -169,6 +171,7 @@ const submitForm = async () => {
       </van-form>
     </div>
   </div>
+
 </template>
 
 <style scoped>

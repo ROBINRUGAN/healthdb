@@ -6,7 +6,14 @@ import { useAuthStore } from '@/stores/auth'
 import type { ModifyAvatarParams, ModifyUserInfoParams } from '@/api/user/type'
 import { reqIdentify, reqModifyUserAvatar, reqModifyUserInfo } from '@/api/user'
 import type { ResponseData } from '@/api/type'
-
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 const router = useRouter()
 const userStore = useAuthStore()
 const showNickDialog = ref(false)
@@ -114,7 +121,7 @@ const identify = async () => {
       showRealNameDialog.value = false
       userStore.setIsIdentified(1)
       userInfo.value.idCard = modifyIdNumber.value.replace(/(\d{3})\d+(\d{4})/, '$1****$2')
-      userInfo.value.realName = modifyRealname.value.replace(/(\S)\S+/, '$1**') 
+      userInfo.value.realName = modifyRealname.value.replace(/(\S)\S+/, '$1**')
     } else {
       showFailToast({ message: res.message || '认证失败' })
     }
@@ -161,39 +168,39 @@ const modifyUserInfo = async (params: ModifyUserInfoParams) => {
 </script>
 
 <template>
-  <div class="all">
-    <van-nav-bar title="个人信息" left-text="返回" left-arrow @click-left="goBack" />
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <van-nav-bar title="个人信息" left-text="返回" left-arrow @click-left="goBack" />
 
-    <van-cell-group>
-      <van-cell title="头像" is-link style="align-items: center" @click="triggerAvatarUpload">
-        <template #right-icon>
-          <img width="100" height="100" class="avatar" :src="userInfo.avatar" />
-        </template>
-        <input
-          type="file"
-          accept="image/*"
-          @change="modifyAvatar"
-          style="display: none"
-          ref="avatarInputRef"
-        />
-      </van-cell>
-      <van-cell title="昵称" :value="userInfo.nickname" is-link @click="showNickDialog = true" />
-      <van-dialog
-        v-model:show="showNickDialog"
-        title="修改昵称"
-        show-cancel-button
-        @confirm="modifyNick"
-      >
-        <van-cell-group inset>
-          <van-field
-            v-model="userInfo.nickname"
-            label="昵称"
-            placeholder="请输入昵称"
-            style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+      <van-cell-group>
+        <van-cell title="头像" is-link style="align-items: center" @click="triggerAvatarUpload">
+          <template #right-icon>
+            <img width="100" height="100" class="avatar" :src="userInfo.avatar" />
+          </template>
+          <input
+            type="file"
+            accept="image/*"
+            @change="modifyAvatar"
+            style="display: none"
+            ref="avatarInputRef"
           />
-        </van-cell-group>
-      </van-dialog>
-
+        </van-cell>
+        <van-cell title="昵称" :value="userInfo.nickname" is-link @click="showNickDialog = true" />
+        <van-dialog
+          v-model:show="showNickDialog"
+          title="修改昵称"
+          show-cancel-button
+          @confirm="modifyNick"
+        >
+          <van-cell-group inset>
+            <van-field
+              v-model="userInfo.nickname"
+              label="昵称"
+              placeholder="请输入昵称"
+              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+            />
+          </van-cell-group>
+        </van-dialog>
 
       <van-cell title="手机" :value="userInfo.phone" />
       <van-cell
@@ -232,6 +239,7 @@ const modifyUserInfo = async (params: ModifyUserInfoParams) => {
       <van-cell title="id" :value="userInfo.id" />
     </van-cell-group>
   </div>
+
 </template>
 
 <style scoped>

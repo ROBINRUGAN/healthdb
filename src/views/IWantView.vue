@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { showSuccessToast } from 'vant'
+import { showSuccessToast, showLoadingToast, showDialog } from 'vant'
 import { ref, onMounted } from 'vue'
+import router from '@/router'
+import { showConfirmDialog, showFailToast } from 'vant'
+
 const serviceResult = ref('')
 const patientResult = ref('')
 const dateResult = ref('')
 const endDateResult = ref('')
-
+const showAmount = ref(false)
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 const showServicePicker = ref(false)
 const ServiceColumns = [
-  { text: '普通服务', value: 'normal' },
-  { text: '急诊服务', value: 'emergency' },
-  { text: '预约服务', value: 'appointment' },
-  { text: '陪同服务', value: 'accompany' },
-  { text: '接送服务', value: 'pickUp' },
-  { text: '其他服务', value: 'other' }
+  { text: '院内服务', value: 'normal' },
+  { text: '全程服务', value: 'all' },
+  { text: '尊享服务', value: 'vip' }
 ]
 const showPatientPicker = ref(false)
 const patientColumns = [
@@ -52,6 +60,12 @@ const onEndDateConfirm = () => {
 const onServiceConfirm = ({ selectedOptions }: any) => {
   serviceResult.value = selectedOptions[0]?.text
   showServicePicker.value = false
+  showDialog({
+    title: '院内服务',
+    message:
+      '陪诊师协助完成病友全就诊流程，含接送服务规划就诊流程、协助排队取号、排队缴费、代取报告、排队取药等服务。\n 陪诊师与病友在约定的地点汇合，含院外全程接送及规划就诊流程，院内协助排队取号、排队缴费、当次服务时间内代取报告、排队取药等服务。最长4小时全程服务。'
+  })
+  showAmount.value = true
 }
 const onPatientConfirm = ({ selectedOptions }: any) => {
   patientResult.value = selectedOptions[0]?.text
@@ -72,130 +86,140 @@ const onEdit = (item: any) => {
 }
 
 const onSubmit = (values: any) => {
-  showSuccessToast({
-    message: '提交成功',
+  showLoadingToast({
+    message: '加载中...',
     duration: 1000,
     onClose() {
-      console.log('onClose')
+      router.push('/payment')
     }
   })
 }
 </script>
 <template>
-  <div>
-    <van-nav-bar title="填写陪诊单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
-    <div class="all">
-      <h3>陪诊服务单</h3>
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div>
+      <van-nav-bar title="填写陪诊单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+      <div class="all">
+        <h3>陪诊服务单</h3>
+        <div
+          style="
+            padding: 20px 0;
+            border-radius: 20px;
+            background-color: white;
+            width: 90%;
+            margin-bottom: 20px;
+          "
+        >
+          <van-form @submit="onSubmit">
+            <van-cell-group inset>
+              <van-field
+                v-model="serviceResult"
+                is-link
+                readonly
+                name="servicePicker"
+                label="服务类型"
+                placeholder="选择陪诊服务类型"
+                @click="showServicePicker = true"
+              />
+              <van-popup round v-model:show="showServicePicker" position="bottom">
+                <van-picker
+                  title="服务类型"
+                  :columns="ServiceColumns"
+                  @confirm="onServiceConfirm"
+                  @cancel="showServicePicker = false"
+                />
+              </van-popup>
+              <van-field
+                v-model="patientResult"
+                is-link
+                readonly
+                name="patientPicker"
+                label="就诊人"
+                placeholder="选择就诊人"
+                @click="showPatientPicker = true"
+              />
+              <!-- <van-popup v-model:show="showPatientPicker" position="bottom"> -->
+              <van-action-sheet v-model:show="showPatientPicker" title="选择就诊人">
+                <van-contact-card
+                  v-for="(item, index) in patientData"
+                  :key="index"
+                  type="edit"
+                  :tel="item.tel"
+                  :name="item.name"
+                  @click="onEdit(item)"
+                />
+              </van-action-sheet>
+              <!-- </van-popup> -->
 
-      <van-form @submit="onSubmit">
-        <van-cell-group inset>
-          <van-field
-            v-model="serviceResult"
-            is-link
-            readonly
-            name="servicePicker"
-            label="服务类型"
-            placeholder="选择陪诊服务类型"
-            @click="showServicePicker = true"
-          />
-          <van-popup round v-model:show="showServicePicker" position="bottom">
-            <van-picker
-              title="服务类型"
-              :columns="ServiceColumns"
-              @confirm="onServiceConfirm"
-              @cancel="showServicePicker = false"
-            />
-          </van-popup>
-          <van-field
-            v-model="patientResult"
-            is-link
-            readonly
-            name="patientPicker"
-            label="就诊人"
-            placeholder="选择就诊人"
-            @click="showPatientPicker = true"
-          />
-          <!-- <van-popup v-model:show="showPatientPicker" position="bottom"> -->
-          <van-action-sheet v-model:show="showPatientPicker" title="选择就诊人">
-            <van-contact-card
-              v-for="(item, index) in patientData"
-              :key="index"
-              type="edit"
-              :tel="item.tel"
-              :name="item.name"
-              @click="onEdit(item)"
-            />
-          </van-action-sheet>
-          <!-- </van-popup> -->
+              <van-field
+                v-model="dateResult"
+                is-link
+                readonly
+                name="datePicker"
+                label="开始时间"
+                placeholder="点击选择时间"
+                @click="showDatePicker = true"
+              />
 
-          <van-field
-            v-model="dateResult"
-            is-link
-            readonly
-            name="datePicker"
-            label="开始时间"
-            placeholder="点击选择时间"
-            @click="showDatePicker = true"
-          />
+              <van-popup round v-model:show="showDatePicker" position="bottom">
+                <van-picker-group
+                  title="开始日期"
+                  :tabs="['选择日期', '选择时间']"
+                  @confirm="onDateConfirm"
+                  @cancel="showDatePicker = false"
+                >
+                  <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
+                  <van-time-picker v-model="currentTime" />
+                </van-picker-group>
+              </van-popup>
 
-          <van-popup round v-model:show="showDatePicker" position="bottom">
-            <van-picker-group
-              title="开始日期"
-              :tabs="['选择日期', '选择时间']"
-              @confirm="onDateConfirm"
-              @cancel="showDatePicker = false"
-            >
-              <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
-              <van-time-picker v-model="currentTime" />
-            </van-picker-group>
-          </van-popup>
+              <van-field
+                v-model="endDateResult"
+                is-link
+                readonly
+                name="datePicker"
+                label="结束时间"
+                placeholder="点击选择时间"
+                @click="showEndDatePicker = true"
+              />
 
-          <van-field
-            v-model="endDateResult"
-            is-link
-            readonly
-            name="datePicker"
-            label="结束时间"
-            placeholder="点击选择时间"
-            @click="showEndDatePicker = true"
-          />
+              <van-popup round v-model:show="showEndDatePicker" position="bottom">
+                <van-picker-group
+                  title="结束日期"
+                  :tabs="['选择日期', '选择时间']"
+                  @confirm="onEndDateConfirm"
+                  @cancel="showEndDatePicker = false"
+                >
+                  <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
+                  <van-time-picker v-model="currentTime" />
+                </van-picker-group>
+              </van-popup>
 
-          <van-popup round v-model:show="showEndDatePicker" position="bottom">
-            <van-picker-group
-              title="结束日期"
-              :tabs="['选择日期', '选择时间']"
-              @confirm="onEndDateConfirm"
-              @cancel="showEndDatePicker = false"
-            >
-              <van-date-picker v-model="currentDate" :min-date="minDate" :max-date="maxDate" />
-              <van-time-picker v-model="currentTime" />
-            </van-picker-group>
-          </van-popup>
+              <van-field
+                v-model="info"
+                name="备注"
+                label="备注"
+                rows="2"
+                autosize
+                type="textarea"
+                maxlength="50"
+                placeholder="请输入备注"
+                show-word-limit
+              />
+            </van-cell-group>
+          </van-form>
 
-          <van-field
-            v-model="info"
-            name="备注"
-            label="备注"
-            rows="2"
-            autosize
-            type="textarea"
-            maxlength="50"
-            placeholder="请输入备注"
-            show-word-limit
-          />
-        </van-cell-group>
-        <div style="margin: 16px">
-          <button @click="onSubmit" class="select">提交</button>
+          <div v-if="showAmount" class="amount">¥ 599.00</div>
         </div>
-      </van-form>
+        <button @click="onSubmit" class="select">提交</button>
+      </div>
     </div>
-  </div>
+  </van-pull-refresh>
 </template>
 <style scoped>
 .all {
   min-height: 90vh;
-  padding-left: 5%;
-  padding-right: 5%;
+
   padding-top: 15px;
   margin: auto;
   padding-bottom: 60px;
@@ -209,7 +233,7 @@ h3 {
   margin-bottom: 20px;
 }
 .select {
-  width: 100%;
+  width: 90%;
   padding: 15px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -222,5 +246,16 @@ h3 {
 }
 .select:active {
   background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
+}
+.amount {
+  width: 80%;
+  margin: auto;
+  background-color: white;
+  font-weight: bold;
+  color: rgb(196, 3, 3);
+  font-size: 32px;
+  text-align: end;
+  margin-top: 20px;
+  /* margin-right: 20px; */
 }
 </style>

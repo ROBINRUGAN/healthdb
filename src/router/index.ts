@@ -16,12 +16,18 @@ import CommentDetailView from '@/views/CommentDetailView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
 import ArticleView from '@/views/ArticleView.vue'
 import { useAuthStore } from '@/stores/auth'
+import DownloadView from '@/views/DownloadView.vue'
+import PaymentView from '@/views/PaymentView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/download',
+      component: DownloadView
     },
     {
       path: '/home',
@@ -100,6 +106,11 @@ const router = createRouter({
       path: '/article',
       component: ArticleView,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/payment',
+      component: PaymentView,
+      meta: { requiresAuth: true }
     }
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -108,6 +119,21 @@ const router = createRouter({
   }
 })
 
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore()
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!authStore.isLogin()) {
+//       next({
+//         path: '/login',
+//         query: { redirect: to.fullPath }
+//       })
+//     } else {
+//       next()
+//     }
+//   } else {
+//     next()
+//   }
+// })
 // router.beforeEach((to, from, next) => {
 //   const authStore = useAuthStore()
 //   if (to.matched.some((record) => record.meta.requiresAuth)) {

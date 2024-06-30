@@ -81,7 +81,7 @@ const onConfirm = (result: any) => {
             "
           >
             <van-icon name="location-o" @click="showPopup = true" size="20px" />
-             <span class="selected-city">{{ selectedCity }}</span>
+            <span class="selected-city">{{ selectedCity }}</span>
           </div>
           <van-popup v-model:show="showPopup" round position="bottom">
             <van-area

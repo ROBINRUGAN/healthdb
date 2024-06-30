@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import mewImage from '@/assets/me/patient.jpeg'
 import { useAuthStore } from '@/stores/auth'
-import { showLoadingToast, showSuccessToast, showFailToast } from 'vant'
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { ref, reactive, onMounted } from 'vue'
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
-  nickname: currentUser.nickname ,
+  nickname: currentUser.nickname,
   id: currentUser.id,
   money: currentUser.money,
-  avatar : currentUser.avatar
+  avatar: currentUser.avatar
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)
 const showAdd = ref(false)
 const showDrop = ref(false)
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 
 // 获得用户信息
 onMounted(async () => {
@@ -73,65 +81,67 @@ const joinQQGroup = () => {
 </script>
 
 <template>
-  <div class="all">
-    <div class="top">
-      <van-image round width="80px" height="80px" :src="userData.avatar" />
-      <div class="info">
-        <div style="display: flex; align-items: center">
-          <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>
-          <van-tag
-            color="#7232dd"
-            style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
-            round
-            size="large"
-            >陪诊师</van-tag
-          >
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <div class="top">
+        <van-image round width="80px" height="80px" :src="userData.avatar" />
+        <div class="info">
+          <div style="display: flex; align-items: center">
+            <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>
+            <van-tag
+              color="#7232dd"
+              style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
+              round
+              size="large"
+              >陪诊师</van-tag
+            >
+          </div>
+          <h5>id: {{ userData.id }}</h5>
         </div>
-        <h5>id: {{ userData.id }}</h5>
       </div>
-    </div>
-    <div class="twoWrapper">
-      <div class="wrapper">
-        <h4>用户余额（元）</h4>
-        <h1>{{ userData.money }}</h1>
+      <div class="twoWrapper">
+        <div class="wrapper">
+          <h4>用户余额（元）</h4>
+          <h1>{{ userData.money }}</h1>
+        </div>
+        <div class="btns">
+          <button class="btn1" @click="showAdd = true">充值</button>
+          <van-dialog v-model:show="showAdd" title="充值" show-cancel-button @confirm="addMoney">
+            <van-cell-group inset>
+              <van-field
+                v-model="addNum"
+                label="充值金额"
+                required
+                type="number"
+                placeholder="最多两位小数"
+                style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+              />
+            </van-cell-group>
+          </van-dialog>
+          <button class="btn2" @click="showDrop = true">提现</button>
+          <van-dialog v-model:show="showDrop" title="提现" show-cancel-button @confirm="dropMoney">
+            <van-cell-group inset>
+              <van-field
+                type="number"
+                v-model="dropNum"
+                required
+                label="提现金额"
+                placeholder="最多两位小数"
+                style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+              />
+            </van-cell-group>
+          </van-dialog>
+        </div>
       </div>
-      <div class="btns">
-        <button class="btn1" @click="showAdd = true">充值</button>
-        <van-dialog v-model:show="showAdd" title="充值" show-cancel-button @confirm="addMoney">
-          <van-cell-group inset>
-            <van-field
-              v-model="addNum"
-              label="充值金额"
-              required
-              type="number"
-              placeholder="最多两位小数"
-              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
-            />
-          </van-cell-group>
-        </van-dialog>
-        <button class="btn2" @click="showDrop = true">提现</button>
-        <van-dialog v-model:show="showDrop" title="提现" show-cancel-button @confirm="dropMoney">
-          <van-cell-group inset>
-            <van-field
-              type="number"
-              v-model="dropNum"
-              required
-              label="提现金额"
-              placeholder="最多两位小数"
-              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
-            />
-          </van-cell-group>
-        </van-dialog>
-      </div>
-    </div>
 
-    <van-cell-group class="group">
-      <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
-      <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
-      <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link to="/patients" />
-      <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link @click="joinQQGroup" />
-    </van-cell-group>
-  </div>
+      <van-cell-group class="group">
+        <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
+        <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
+        <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link to="/patients" />
+        <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link @click="joinQQGroup" />
+      </van-cell-group>
+    </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>
