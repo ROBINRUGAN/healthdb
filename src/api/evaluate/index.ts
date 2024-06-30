@@ -1,6 +1,7 @@
 import request from "@/utils/request"
 import type { AddEscortParams, } from "../escort/type"
-import type { DeleteEvaluateParams } from "./type"
+import type { DeleteEvaluateParams, EvaluateListResponseData } from "./type"
+import type { ResponseData } from "../type"
 
 enum API{
   // 评论订单
@@ -14,18 +15,18 @@ enum API{
 }
 
 export const addEscort = (data: AddEscortParams) => {
-  return request.post(API.ADD_ESCORT, data)
+  return request.post<any,ResponseData>(API.ADD_ESCORT, data)
 }
 
 export const deleteEscort = (data: DeleteEvaluateParams) => {
-  return request.post(API.DELETE_ESCORT, data)
+  return request.post<any,ResponseData>(API.DELETE_ESCORT, data)
 }
 
 export const getEscortByHid = (hid: string) => {
-  return request.get(API.GET_ESCORT_BY_HID + hid)
+  return request.get<any,EvaluateListResponseData>(API.GET_ESCORT_BY_HID + hid)
 }
 
 export const getEscortByUid = (uid: string) => {
-  return request.get(API.GET_ESCORT_BY_UID + uid)
+  return request.get<any,EvaluateListResponseData>(API.GET_ESCORT_BY_UID + uid)
 }
 
