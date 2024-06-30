@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showLoadingToast, showSuccessToast } from 'vant'
+
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
@@ -10,14 +11,30 @@ const onRefresh = () => {
   }, 1000)
 }
 const pattern = /\d{6}/
+const showRelationshipPicker = ref(false)
 
+const onConfirmRelationship = ({ selectedOptions }: any) => {
+  console.log(selectedOptions)
+  newPatient.value.relationship = selectedOptions[0]?.text
+  showRelationshipPicker.value = false
+}
 const router = useRouter()
 const showAdd = ref(false)
-const newPatient = ref({ name: '', gender: '男', age: '', phone: '' })
-
+const newPatient = ref({
+  name: '',
+  gender: '男',
+  age: '',
+  phone: '',
+  relationship: ''
+})
+const relationshipColumns = [
+  { text: '本人', value: 'me' },
+  { text: '亲属', value: 'dear' },
+  { text: '朋友', value: 'friend' }
+]
 const patients = ref([
-  { name: '翁鹏', gender: '男', age: '20', phone: '13748276637' },
-  { name: '吴荣榜', gender: '男', age: '20', phone: '13748276637' }
+  { name: '翁鹏', gender: '男', age: '20', phone: '13748276637', relationship: '亲属' },
+  { name: '吴荣榜', gender: '男', age: '20', phone: '13748276637', relationship: '亲属' }
 ])
 
 const goBack = () => {
@@ -34,7 +51,7 @@ const confirmAddPatient = () => {
     duration: 1000,
     onClose: () => {
       patients.value.push({ ...newPatient.value })
-      newPatient.value = { name: '', gender: '男', age: '', phone: '' }
+      newPatient.value = { name: '', gender: '男', age: '', phone: '', relationship: '亲属' }
       showSuccessToast('添加成功')
       showAdd.value = false
     }
@@ -65,6 +82,7 @@ const removePatient = (index: number) => {
               <div>
                 <div>
                   {{ patient.name }} <span class="gender">{{ patient.gender }}</span>
+                  <van-tag type="primary" size="medium" round>亲属</van-tag>
                 </div>
                 <div>{{ patient.age }}周岁 {{ patient.phone }}</div>
               </div>
@@ -139,6 +157,30 @@ const removePatient = (index: number) => {
                 style="margin-bottom: 20px"
               />
             </van-cell-group>
+            <van-cell-group inset>
+              <van-field
+                class="addField"
+                v-model="newPatient.relationship"
+                label="关系"
+                required
+                placeholder="选择关系"
+                is-link
+                clickable
+                readonly
+                @click="showRelationshipPicker = true"
+              />
+            </van-cell-group>
+
+            <!-- 关系选择器 -->
+            <van-popup v-model:show="showRelationshipPicker" position="bottom">
+              <van-picker
+                show-toolbar
+                title="选择关系"
+                :columns="relationshipColumns"
+                @confirm="onConfirmRelationship"
+                @cancel="showRelationshipPicker = false"
+              />
+            </van-popup>
           </van-form>
         </van-dialog>
 
@@ -169,6 +211,7 @@ const removePatient = (index: number) => {
 .gender {
   color: #3f51b5;
   margin-left: 8px;
+  margin-right: 10px;
 }
 
 .add-patient {
