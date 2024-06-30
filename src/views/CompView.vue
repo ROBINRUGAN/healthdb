@@ -19,35 +19,35 @@ const onRefresh = () => {
       <van-tabs v-model:active="active" swipeable>
         <van-tab title="全部" name="a">
           <div class="page">
-            <router-link to="/orderDetail">
+            <router-link to="/helperorder">
               <CompItem v-for="(item, index) in 10" :key="index" />
             </router-link>
           </div>
         </van-tab>
         <van-tab title="可接单" name="b">
           <div class="page">
-            <router-link to="/orderDetail">
+            <router-link to="/helperorder">
               <CompItem v-for="(item, index) in 2" :key="index" />
             </router-link>
           </div>
         </van-tab>
         <van-tab title="未开始" name="b">
           <div class="page">
-            <router-link to="/orderDetail">
+            <router-link to="/helperorder">
               <CompItem v-for="(item, index) in 5" :key="index" />
             </router-link>
           </div>
         </van-tab>
         <van-tab title="进行中" name="b">
           <div class="page">
-            <router-link to="/orderDetail">
+            <router-link to="/helperorder">
               <CompItem v-for="(item, index) in 2" :key="index" />
             </router-link>
           </div>
         </van-tab>
         <van-tab title="已完成" name="b">
           <div class="page">
-            <router-link to="/orderDetail">
+            <router-link to="/helperorder">
               <CompItem v-for="(item, index) in 1" :key="index" />
             </router-link>
           </div>
