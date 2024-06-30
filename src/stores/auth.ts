@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import mewImage from '@/assets/me/patient.jpeg'
 import router from '@/router'
 import type { LoginParams, LoginResponseData, User } from '@/api/user/type'
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore(
     const isIdentified = ref()
     const selectedCity = ref('福州')
     const selectedCityCode = ref(350100)
-    const currentUser: User = {
+    const currentUser: User = reactive({
       id: 0,
       nickname: '用户 ' + id,
       telephone: '',
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore(
       age: -1,
       idNumber: '',
       money: 0
-    }
+    })
     interface showPatient {
       id: number
       name: string

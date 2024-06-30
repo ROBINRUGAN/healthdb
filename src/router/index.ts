@@ -18,6 +18,7 @@ import ArticleView from '@/views/ArticleView.vue'
 import { useAuthStore } from '@/stores/auth'
 import DownloadView from '@/views/DownloadView.vue'
 import PaymentView from '@/views/PaymentView.vue'
+import HelperOrderView from '@/views/HelperOrderView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -104,7 +105,6 @@ const router = createRouter({
     },
     {
       path: '/article',
-      name: 'article',
       props: true,
       component: ArticleView,
       meta: { requiresAuth: true }
@@ -112,6 +112,11 @@ const router = createRouter({
     {
       path: '/payment',
       component: PaymentView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/helperorder',
+      component: HelperOrderView,
       meta: { requiresAuth: true }
     }
   ],
