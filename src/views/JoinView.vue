@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { onMounted, ref } from 'vue'
 import mewImage from '@/assets/me/patient.jpeg'
 import { areaList } from '@vant/area-data'
@@ -10,6 +9,14 @@ import { addEscort } from '@/api/escort'
 import type { ResponseData } from '@/api/type'
 import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 const showPopup = ref(false)
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 const userStore = useAuthStore()
 const currentUser = userStore.currentUser
 let selectedCity = ref('')
@@ -22,6 +29,7 @@ const formData = ref<AddEscortParams>({
   age: 0,
   gender: -1,
   telephone: '',
+  city: '',
   area_code: 0
 })
 
@@ -35,10 +43,9 @@ const onConfirm = (result: any) => {
     ) {
       const selectedOption = result.selectedOptions[1]
       const areaCode = selectedOption.value
-      selectedCity = result.selectedOptions
+      selectedCity.value = result.selectedOptions
         .map((option: { text: string }) => option.text)
         .join(' / ')
-
       // 字符串转数字
       formData.value.area_code = parseInt(areaCode)
       showPopup.value = false
@@ -52,11 +59,12 @@ const onConfirm = (result: any) => {
 
 const submitForm = async () => {
   console.log('Submitted Data:', formData.value)
-  // 不为空
+  // 如果未实名认证，姓名和身份证号不能为空
   if (
     (userStore.isIdentified === 0 && formData.value.name === '') ||
     (userStore.isIdentified === 0 && formData.value.identity === '') ||
     formData.value.telephone === '' ||
+    formData.value.city === '' ||
     formData.value.area_code === 0 ||
     formData.value.gender === -1 ||
     age.value === undefined ||
@@ -95,84 +103,84 @@ const submitForm = async () => {
 </script>
 
 <template>
-
-  <div class="all">
-    <h3>申请成为陪诊师</h3>
-    <div class="form-container">
-      <van-form>
-        <van-cell-group>
-          <van-field
-            v-model="formData.name"
-            label="真实姓名"
-            :placeholder="userStore.isIdentified === 1 ? currentUser.realname : '请输入真实姓名'"
-            :readonly="userStore.isIdentified === 1"
-            :value="formData.name"
-          />
-          <van-field
-            v-model="formData.identity"
-            label="身份证号"
-            :placeholder="userStore.isIdentified === 1 ? currentUser.idNumber : '请输入身份证号'"
-            :readonly="userStore.isIdentified === 1"
-            :value="formData.identity"
-          />
-          <van-cell title="性别" value-class="cell-value">
-            <template #right-icon>
-              <van-radio-group v-model="formData.gender" direction="horizontal">
-                <van-radio :name="1" :value="1">男</van-radio>
-                <van-radio :name="0" :value="0">女</van-radio>
-              </van-radio-group>
-            </template>
-          </van-cell>
-          <van-field
-            v-model="age"
-            label="年龄"
-            placeholder="请输入年龄"
-            type="number"
-            @update:modelValue="(val) => (age = val ? parseInt(val) : undefined)"
-          />
-          <van-field
-            v-model="selectedCity"
-            label="所在地"
-            placeholder="请选择地址"
-            is-link
-            readonly
-            @click="showPopup = true"
-          />
-          <van-popup v-model:show="showPopup" round position="bottom">
-            <van-area
-              title="选择地区"
-              :area-list="areaList"
-              @confirm="onConfirm"
-              @cancel="showPopup = false"
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <h3>申请成为陪诊师</h3>
+      <div class="form-container">
+        <van-form>
+          <van-cell-group>
+            <van-field
+              v-model="formData.name"
+              label="真实姓名"
+              :placeholder="userStore.isIdentified === 1 ? currentUser.realname : '请输入真实姓名'"
+              :readonly="userStore.isIdentified === 1"
+              :value="formData.name"
             />
-          </van-popup>
+            <van-field
+              v-model="formData.identity"
+              label="身份证号"
+              :placeholder="userStore.isIdentified === 1 ? currentUser.idNumber : '请输入身份证号'"
+              :readonly="userStore.isIdentified === 1"
+              :value="formData.identity"
+            />
+            <van-cell title="性别" value-class="cell-value">
+              <template #right-icon>
+                <van-radio-group v-model="formData.gender" direction="horizontal">
+                  <van-radio :name="1" :value="1">男</van-radio>
+                  <van-radio :name="0" :value="0">女</van-radio>
+                </van-radio-group>
+              </template>
+            </van-cell>
+            <van-field
+              v-model="age"
+              label="年龄"
+              placeholder="请输入年龄"
+              type="number"
+              @update:modelValue="(val) => (age = val ? parseInt(val) : undefined)"
+            />
+            <van-field
+              v-model="selectedCity"
+              label="所在地"
+              placeholder="请选择地址"
+              is-link
+              readonly
+              @click="showPopup = true"
+            />
+            <van-popup v-model:show="showPopup" round position="bottom">
+              <van-area
+                title="选择地区"
+                :area-list="areaList"
+                @confirm="onConfirm"
+                @cancel="showPopup = false"
+              />
+            </van-popup>
 
-          <van-field
-            v-model="formData.telephone"
-            label="手机号"
-            placeholder="请输入手机号"
-            type="tel"
-          />
-          <van-cell title="是否为医护人员" value-class="cell-value">
-            <template #right-icon>
-              <van-radio-group v-model="formData.isMedicalWorker" direction="horizontal">
-                <van-radio :name="1" :value="true">是</van-radio>
-                <van-radio :name="0" :value="false">否</van-radio>
-              </van-radio-group>
-            </template>
-          </van-cell>
-          <van-field
-            v-model="formData.workSection"
-            v-if="formData.isMedicalWorker == 1"
-            label="工作科室"
-            placeholder="请输入工作科室"
-          />
-        </van-cell-group>
-        <button class="select" @click="submitForm">提交申请</button>
-      </van-form>
+            <van-field
+              v-model="formData.telephone"
+              label="手机号"
+              placeholder="请输入手机号"
+              type="tel"
+            />
+            <van-cell title="是否为医护人员" value-class="cell-value">
+              <template #right-icon>
+                <van-radio-group v-model="formData.isMedicalWorker" direction="horizontal">
+                  <van-radio :name="1" :value="true">是</van-radio>
+                  <van-radio :name="0" :value="false">否</van-radio>
+                </van-radio-group>
+              </template>
+            </van-cell>
+            <van-field
+              v-model="formData.workSection"
+              v-if="formData.isMedicalWorker == 1"
+              label="工作科室"
+              placeholder="请输入工作科室"
+            />
+          </van-cell-group>
+          <button class="select" @click="submitForm">提交申请</button>
+        </van-form>
+      </div>
     </div>
-  </div>
-
+  </van-pull-refresh>
 </template>
 
 <style scoped>

@@ -202,44 +202,44 @@ const modifyUserInfo = async (params: ModifyUserInfoParams) => {
           </van-cell-group>
         </van-dialog>
 
-      <van-cell title="手机" :value="userInfo.phone" />
-      <van-cell
-        title="真实姓名"
-        :value="userInfo.realName"
-        :is-link="userStore.isIdentified === 0"
-        @click="showRealNameDialog = true && userStore.isIdentified === 0"
-      />
-      <van-cell
-        title="身份证"
-        :value="userInfo.idCard"
-        :is-link="userStore.isIdentified === 0"
-        @click="showRealNameDialog = true && userStore.isIdentified === 0"
-      />
-      <van-dialog
-        v-model:show="showRealNameDialog"
-        title="实名认证"
-        show-cancel-button
-        @confirm="handleIdentifyConfirm"
-      >
-        <van-cell-group inset>
-          <van-field
-            v-model="modifyRealname"
-            label="真实姓名"
-            placeholder="请输入真实姓名"
-            style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
-          />
-          <van-field
-            v-model="modifyIdNumber"
-            label="身份证"
-            placeholder="请输入身份证号"
-            style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
-          />
-        </van-cell-group>
-      </van-dialog>
-      <van-cell title="id" :value="userInfo.id" />
-    </van-cell-group>
-  </div>
-</van-pull-refresh>
+        <van-cell title="手机" :value="userInfo.phone" />
+        <van-cell
+          title="真实姓名"
+          :value="userInfo.realName"
+          :is-link="userStore.isIdentified === 0"
+          @click="showRealNameDialog = true && userStore.isIdentified === 0"
+        />
+        <van-cell
+          title="身份证"
+          :value="userInfo.idCard"
+          :is-link="userStore.isIdentified === 0"
+          @click="showRealNameDialog = true && userStore.isIdentified === 0"
+        />
+        <van-dialog
+          v-model:show="showRealNameDialog"
+          title="实名认证"
+          show-cancel-button
+          @confirm="handleIdentifyConfirm"
+        >
+          <van-cell-group inset>
+            <van-field
+              v-model="modifyRealname"
+              label="真实姓名"
+              placeholder="请输入真实姓名"
+              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+            />
+            <van-field
+              v-model="modifyIdNumber"
+              label="身份证"
+              placeholder="请输入身份证号"
+              style="border-radius: 10px; margin: 15px 0 25px 0; border: 1px solid #000"
+            />
+          </van-cell-group>
+        </van-dialog>
+        <van-cell title="id" :value="userInfo.id" />
+      </van-cell-group>
+    </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>
