@@ -2,6 +2,7 @@
 import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import CommentItem from '@/components/CommentItem.vue'
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
@@ -35,6 +36,12 @@ const onRefresh = () => {
           <div class="content">
             <h4>地址</h4>
             <p>福建省福州市新店路29号</p>
+          </div>
+        </div>
+        <div class="wrapper" style="width: 100%; margin-top: 0">
+          <div class="content">
+            <h4>评价</h4>
+            <CommentItem v-for="(item, index) in 5" :key="index" />
           </div>
         </div>
         <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>

@@ -8,7 +8,7 @@
       <div class="badge-content">
         <p>{{ hospital.detailAddress }}</p>
         <p>
-          {{ useAuthStore().getHospitalLevelStr(hospital.hospitalLevel) }} 
+          {{ useAuthStore().getHospitalLevelStr(hospital.hospitalLevel) }}
           {{ hospital.hospitalType }}
         </p>
       </div>
@@ -20,14 +20,14 @@
 import type { Hospital } from '@/api/hosp/type'
 import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
-
+import demoImg from '@/assets/hosp/demo.jpg'
 // Script setup area doesn't require change as no dynamic content or methods needed yet.
 const props = defineProps<{
   hospital: Hospital
 }>()
 
 const hospitalPhoto = computed(() => {
-  return props.hospital.photo ? props.hospital.photo : '@/assets/hosp/demo.jpg'
+  return props.hospital.photo ? props.hospital.photo : demoImg
 })
 </script>
 
