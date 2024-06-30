@@ -20,7 +20,9 @@ const onRefresh = () => {
     loading.value = false
   }, 1000)
   userStore.queryPatients()
+  patients.value = userStore.patients
 }
+
 const pattern = /\d{6}/
 const showRelationshipPicker = ref(false)
 const userStore = useAuthStore()
@@ -46,7 +48,7 @@ const relationshipColumns = [
   { text: '朋友', value: 'friend' }
 ]
 
-let patients = userStore.patients
+const patients = ref(userStore.patients)
 
 const goBack = () => {
   router.go(-1)
@@ -86,7 +88,7 @@ const confirmAddPatient = async () => {
     if (res.code === 200) {
       showSuccessToast('添加成功')
       newPatient.value.id = res.data.id
-      patients.push({ ...newPatient.value })
+      patients.value.push({ ...newPatient.value })
       newPatient.value = {
         id: 0,
         name: '',
@@ -112,11 +114,11 @@ const removePatient = async (index: number) => {
   })
   // 拿到就诊人id
   const data = ref<DeletePatientParams>({
-    id: patients[index].id
+    id: patients.value[index].id
   })
   const res: ResponseData = await reqDeletePatient(data.value)
   if (res.code === 200) {
-    patients.splice(index, 1)
+    patients.value.splice(index, 1)
     showSuccessToast('删除成功')
   } else {
     showFailToast(res.message || '删除失败')

@@ -1,3 +1,5 @@
+import type { ResponseData } from "../type"
+
 export interface HospitalServer {
   id: number
   name: string
@@ -7,6 +9,6 @@ export interface HospitalServer {
 
 export type HospitalServerList = HospitalServer[]
 
-export interface HospitalServerListResponseData {
+export interface HospitalServerListResponseData extends ResponseData{
   data: HospitalServerList
 }

@@ -35,7 +35,10 @@ export interface addOrdersParams {
   endTime: string
   telephone: string
   requirement: string
-  isFinished: number
+  isFinished?: number
+  money?: number
+  sname?: string
+  pname?: string
 }
 
 // 陪诊师接单参数
