@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import router from '@/router'
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 </script>
 <template>
-  <div class="all">
-    <van-nav-bar title="待评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
-    <div class="page">
-      <OrderItem v-for="(item, index) in 10" :key="index" @click="router.push('/commentDetail')" />
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <van-nav-bar title="待评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+      <div class="page">
+        <OrderItem
+          v-for="(item, index) in 10"
+          :key="index"
+          @click="router.push('/commentDetail')"
+        />
+      </div>
     </div>
-  </div>
+  </van-pull-refresh>
 </template>
 <style scoped>
 .all {

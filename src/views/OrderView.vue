@@ -2,13 +2,21 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import OrderItem from '@/components/OrderItem.vue'
-import { showLoadingToast, showSuccessToast } from 'vant'
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import router from '@/router'
 const active = ref(0)
 const showPopup = ref(false)
 const showDatePicker = ref(false)
 const dateResult = ref('')
 const value = ref('')
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 const onSearch = (val: any) => {
   showLoadingToast({
     message: '加载中...',
@@ -41,84 +49,86 @@ const onConfirm = (result: any) => {
 </script>
 
 <template>
-  <div class="all">
-    <van-search
-      v-model="value"
-      round
-      placeholder="请输入搜索关键词"
-      background="white"
-      style="
-        font-size: 14px;
-        padding: 0;
-        border-radius: 10px;
-        height: 40px;
-        background-color: white;
-      "
-      @search="onSearch"
-    />
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <van-search
+        v-model="value"
+        round
+        placeholder="请输入搜索关键词"
+        background="white"
+        style="
+          font-size: 14px;
+          padding: 0;
+          border-radius: 10px;
+          height: 40px;
+          background-color: white;
+        "
+        @search="onSearch"
+      />
 
-    <van-field
-      style="margin-top: 10px"
-      v-model="dateResult"
-      is-link
-      readonly
-      class="filter"
-      name="datePicker"
-      label="开始时间"
-      placeholder="点击选择时间"
-      @click="showDatePicker = true"
-    />
+      <van-field
+        style="margin-top: 10px"
+        v-model="dateResult"
+        is-link
+        readonly
+        class="filter"
+        name="datePicker"
+        label="开始时间"
+        placeholder="点击选择时间"
+        @click="showDatePicker = true"
+      />
 
-    <van-popup round v-model:show="showDatePicker" position="bottom">
-      <van-picker-group
-        title="开始日期"
-        :tabs="['选择日期', '选择时间']"
-        @confirm="onDateConfirm"
-        @cancel="showDatePicker = false"
-      >
-        <van-date-picker v-model="currentDate" />
-        <van-time-picker v-model="currentTime" />
-      </van-picker-group>
-    </van-popup>
+      <van-popup round v-model:show="showDatePicker" position="bottom">
+        <van-picker-group
+          title="开始日期"
+          :tabs="['选择日期', '选择时间']"
+          @confirm="onDateConfirm"
+          @cancel="showDatePicker = false"
+        >
+          <van-date-picker v-model="currentDate" />
+          <van-time-picker v-model="currentTime" />
+        </van-picker-group>
+      </van-popup>
 
-    <van-tabs v-model:active="active" swipeable>
-      <van-tab title="全部" name="a">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <OrderItem v-for="(item, index) in 10" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="已下单" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <OrderItem v-for="(item, index) in 2" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="已接单" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <OrderItem v-for="(item, index) in 5" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="进行中" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <OrderItem v-for="(item, index) in 2" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="已完成" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <OrderItem v-for="(item, index) in 1" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-    </van-tabs>
-  </div>
+      <van-tabs v-model:active="active" swipeable>
+        <van-tab title="全部" name="a">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <OrderItem v-for="(item, index) in 10" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="已下单" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <OrderItem v-for="(item, index) in 2" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="已接单" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <OrderItem v-for="(item, index) in 5" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="进行中" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <OrderItem v-for="(item, index) in 2" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="已完成" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <OrderItem v-for="(item, index) in 1" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+      </van-tabs>
+    </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>

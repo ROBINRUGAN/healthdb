@@ -2,49 +2,60 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import CompItem from '@/components/CompItem.vue'
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 const active = ref(0)
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 </script>
 
 <template>
-  <div class="all">
-    <van-tabs v-model:active="active" swipeable>
-      <van-tab title="全部" name="a">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <CompItem v-for="(item, index) in 10" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="可接单" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <CompItem v-for="(item, index) in 2" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="未开始" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <CompItem v-for="(item, index) in 5" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="进行中" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <CompItem v-for="(item, index) in 2" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-      <van-tab title="已完成" name="b">
-        <div class="page">
-          <router-link to="/orderDetail">
-            <CompItem v-for="(item, index) in 1" :key="index" />
-          </router-link>
-        </div>
-      </van-tab>
-    </van-tabs>
-  </div>
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="all">
+      <van-tabs v-model:active="active" swipeable>
+        <van-tab title="全部" name="a">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <CompItem v-for="(item, index) in 10" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="可接单" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <CompItem v-for="(item, index) in 2" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="未开始" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <CompItem v-for="(item, index) in 5" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="进行中" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <CompItem v-for="(item, index) in 2" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+        <van-tab title="已完成" name="b">
+          <div class="page">
+            <router-link to="/orderDetail">
+              <CompItem v-for="(item, index) in 1" :key="index" />
+            </router-link>
+          </div>
+        </van-tab>
+      </van-tabs>
+    </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>
