@@ -16,6 +16,7 @@ import CommentDetailView from '@/views/CommentDetailView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
 import ArticleView from '@/views/ArticleView.vue'
 import { useAuthStore } from '@/stores/auth'
+import DownloadView from '@/views/DownloadView.vue'
 import PaymentView from '@/views/PaymentView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,10 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/download',
+      component: DownloadView
     },
     {
       path: '/home',
