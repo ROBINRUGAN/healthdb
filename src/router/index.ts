@@ -134,4 +134,19 @@ const router = createRouter({
 //     next()
 //   }
 // })
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore()
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!authStore.isLogin()) {
+//       next({
+//         path: '/login',
+//         query: { redirect: to.fullPath }
+//       })
+//     } else {
+//       next()
+//     }
+//   } else {
+//     next()
+//   }
+// })
 export default router

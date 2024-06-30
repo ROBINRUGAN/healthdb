@@ -20,7 +20,7 @@ export interface LoginResponseData extends ResponseData {
   data: {
     token: string;
     nickname: string;
-    id: string;
+    id: number;
     isCompanion: number;
     isIdentified: number;
   };
@@ -35,6 +35,7 @@ export interface User {
   age?: number;
   idNumber?: string;
   telephone: string;
+  money: number;
 }
 
 // 用户信息
@@ -61,7 +62,7 @@ export interface ModifyUserInfoParams {
 
 // 修改用户头像
 export interface ModifyAvatarParams {
-  id: number;
+  uid: number;
   avatar: string;
 }
 

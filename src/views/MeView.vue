@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import mewImage from '@/assets/me/patient.jpeg'
+import { useAuthStore } from '@/stores/auth'
 import { showLoadingToast, showSuccessToast, showFailToast } from 'vant'
-import { ref, reactive } from 'vue'
-
+import { ref, reactive, onMounted } from 'vue'
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
-  nickname: '林黄晓',
-  id: '1145141212',
-  money: 1893.12
+  nickname: currentUser.nickname ,
+  id: currentUser.id,
+  money: currentUser.money,
+  avatar : currentUser.avatar
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)
 const showAdd = ref(false)
 const showDrop = ref(false)
+
+// 获得用户信息
+onMounted(async () => {
+  userStore.refreshUserInfo()
+})
 
 const isValidAmount = (amount: any) => {
   const pattern = /^\d+(\.\d{1,2})?$/ // 正则表达式，匹配合法金额
@@ -67,7 +75,7 @@ const joinQQGroup = () => {
 <template>
   <div class="all">
     <div class="top">
-      <van-image round width="80px" height="80px" :src="mewImage" />
+      <van-image round width="80px" height="80px" :src="userData.avatar" />
       <div class="info">
         <div style="display: flex; align-items: center">
           <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>

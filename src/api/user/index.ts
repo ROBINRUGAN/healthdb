@@ -1,5 +1,6 @@
 import service from '@/utils/request'
-import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams } from './type'
+import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams, userInfoResponseData } from './type'
+import type { ResponseData } from '../type'
 
 enum API {
   REGISTER_API = '/user/register',
@@ -22,22 +23,22 @@ export const reqLogin = (data: LoginParams) => {
 }
 
 export const reqUserInfo = () => {
-  return service.get(API.USER_INFO_API)
+  return service.get<any, userInfoResponseData>(API.USER_INFO_API)
 }
 
 export const reqIdentify = (data: IdentifyParams) => {
-  return service.post(API.IDENTIFY_API, data)
+  return service.post<any,ResponseData>(API.IDENTIFY_API, data)
 }
 
 export const reqModifyUserInfo = (data: ModifyUserInfoParams) => {
-  return service.post(API.MODIFY_USER_INFO_API, data)
+  return service.post<any,ResponseData>(API.MODIFY_USER_INFO_API, data)
 }
 
 export const reqModifyUserAvatar = (data: ModifyAvatarParams) => {
-  return service.post(API.MODIFY_USER_AVATAR_API, data)
+  return service.post<any,ResponseData>(API.MODIFY_USER_AVATAR_API, data)
 }
 
 export const reqRecharge = (data: RechargeParams) => {
-  return service.post(API.RECHARGE_API, data)
+  return service.post<any,ResponseData>(API.RECHARGE_API, data)
 }
 
