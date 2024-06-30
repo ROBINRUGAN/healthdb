@@ -49,7 +49,7 @@ const onConfirm = (result: any) => {
       areaCode.value = selectedOption.value
       selectedCity.value = selectedOption.text.replace(/市$/, '')
       userStore.setSelectedCity(selectedCity.value)
-      userStore.setSelectedCityCode(areaCode.value)
+      userStore.setSelectedCityCode(parseInt(areaCode.value))
       showPopup.value = false
     } else {
       throw new Error('Invalid result structure')

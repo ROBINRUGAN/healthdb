@@ -16,7 +16,7 @@ export const useAuthStore = defineStore(
     // 是否实名认证
     const isIdentified = ref()
     const selectedCity = ref('福州')
-    const selectedCityCode = ref('350100')
+    const selectedCityCode = ref(350100)
     const currentUser: User = {
       id: 0,
       nickname: '用户 ' + id,
@@ -53,6 +53,28 @@ export const useAuthStore = defineStore(
       }
     }
 
+    const getHospitalLevelStr = (level: number) => {
+      // 默认返回''
+      switch (level) {
+        case 1:
+          return '二级甲等'
+        case 2:
+          return '三级甲等'
+        case 3:
+          return '三级乙等'
+        case 4:
+          return '三级医院'
+        case 5:
+          return '二级医院'
+        case 6:
+          return '一级医院'
+        case 7:
+          return '未评级'
+        default:
+          return ''
+      }
+    }
+
     const setIsCompanion = (data: number) => {
       isCompanion.value = data
     }
@@ -62,7 +84,7 @@ export const useAuthStore = defineStore(
     const setSelectedCity = (data: string) => {
       selectedCity.value = data
     }
-    const setSelectedCityCode = (data: string) => {
+    const setSelectedCityCode = (data: number) => {
       selectedCityCode.value = data
     }
     const setUserInfo = (data: User) => {
@@ -159,7 +181,8 @@ export const useAuthStore = defineStore(
       isLogin,
       refreshUserInfo,
       getGenderStr,
-      uploadFile
+      uploadFile,
+      getHospitalLevelStr
     }
   },
   {
