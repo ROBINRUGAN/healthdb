@@ -7,6 +7,8 @@ import { reqLogin, reqUserInfo } from '@/api/user'
 import { showFailToast, showNotify, showSuccessToast } from 'vant'
 import { id } from 'element-plus/es/locales.mjs'
 import { reqUploadFile } from '@/api/file'
+import type { PatientListResponseData } from '@/api/patient/type'
+import { reqGetPatientList } from '@/api/patient'
 export const useAuthStore = defineStore(
   'auth',
   () => {
@@ -28,6 +30,15 @@ export const useAuthStore = defineStore(
       idNumber: '',
       money: 0
     }
+    interface showPatient {
+      id: number
+      name: string
+      gender: string
+      age: string
+      phone: string
+      relationship: string
+    }
+    let patients = ref([] as showPatient[])
     const setToken = (data: string) => {
       window.localStorage.setItem('auth', data)
       token.value = data
@@ -163,6 +174,31 @@ export const useAuthStore = defineStore(
       }
     }
 
+    // 查询就诊人列表
+    const queryPatients = async () => {
+      try {
+        const res: PatientListResponseData = await reqGetPatientList(currentUser.id)
+        if (res.code === 200) {
+          // 清空原有数据
+          patients.value = []
+          res.data.forEach((item) => {
+            patients.value.push({
+              id: item.id,
+              name: item.name,
+              gender: item.gender === 1 ? '男' : '女',
+              age: item.age.toString(),
+              phone: item.telephoneNumber,
+              relationship: item.relationship
+            })
+          })
+        } else {
+          showNotify({ type: 'danger', message: res.message || '查询失败' })
+        }
+      } catch (error) {
+        showFailToast('查询失败')
+      }
+    }
+
     return {
       token,
       isCompanion,
@@ -171,6 +207,7 @@ export const useAuthStore = defineStore(
       selectedCity,
       selectedCityCode,
       currentUser,
+      patients,
       setNickname,
       setId,
       setIsCompanion,
@@ -182,7 +219,8 @@ export const useAuthStore = defineStore(
       refreshUserInfo,
       getGenderStr,
       uploadFile,
-      getHospitalLevelStr
+      getHospitalLevelStr,
+      queryPatients
     }
   },
   {

@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showNotify, showSuccessToast } from 'vant'
+import type {
+  AddPatientParams,
+  AddPatientResponseData,
+  DeletePatientParams,
+  Patient,
+  PatientListResponseData
+} from '@/api/patient/type'
+import { useAuthStore } from '@/stores/auth'
+import { reqAddPatient, reqDeletePatient, reqGetPatientList } from '@/api/patient'
+import type { ResponseData } from '@/api/type'
 
 const loading = ref(false)
 const onRefresh = () => {
@@ -9,10 +19,12 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  userStore.queryPatients()
 }
 const pattern = /\d{6}/
 const showRelationshipPicker = ref(false)
-
+const userStore = useAuthStore()
+const currentUser = ref(userStore.currentUser)
 const onConfirmRelationship = ({ selectedOptions }: any) => {
   console.log(selectedOptions)
   newPatient.value.relationship = selectedOptions[0]?.text
@@ -21,6 +33,7 @@ const onConfirmRelationship = ({ selectedOptions }: any) => {
 const router = useRouter()
 const showAdd = ref(false)
 const newPatient = ref({
+  id: 0,
   name: '',
   gender: '男',
   age: '',
@@ -32,10 +45,8 @@ const relationshipColumns = [
   { text: '亲属', value: 'dear' },
   { text: '朋友', value: 'friend' }
 ]
-const patients = ref([
-  { name: '翁鹏', gender: '男', age: '20', phone: '13748276637', relationship: '亲属' },
-  { name: '吴荣榜', gender: '男', age: '20', phone: '13748276637', relationship: '亲属' }
-])
+
+let patients = userStore.patients
 
 const goBack = () => {
   router.go(-1)
@@ -45,28 +56,71 @@ const addPatient = () => {
   showAdd.value = true
 }
 
-const confirmAddPatient = () => {
+const confirmAddPatient = async () => {
   showLoadingToast({
     message: '添加中...',
-    duration: 1000,
-    onClose: () => {
-      patients.value.push({ ...newPatient.value })
-      newPatient.value = { name: '', gender: '男', age: '', phone: '', relationship: '亲属' }
-      showSuccessToast('添加成功')
-      showAdd.value = false
-    }
+    duration: 1000
   })
+  console.log(newPatient.value)
+  // 不为''
+  if (
+    newPatient.value.name === '' ||
+    newPatient.value.age === '' ||
+    newPatient.value.phone === '' ||
+    newPatient.value.relationship === ''
+  ) {
+    showFailToast('请填写完整信息')
+    return
+  }
+  const data = ref<AddPatientParams>({
+    uid: currentUser.value.id,
+    name: newPatient.value.name,
+    gender: newPatient.value.gender === '男' ? 1 : 0,
+    age: Number(newPatient.value.age),
+    telephone: newPatient.value.phone,
+    relationship: newPatient.value.relationship
+  })
+  console.log(data)
+  try {
+    const res: AddPatientResponseData = await reqAddPatient(data.value)
+    if (res.code === 200) {
+      showSuccessToast('添加成功')
+      newPatient.value.id = res.data.id
+      patients.push({ ...newPatient.value })
+      newPatient.value = {
+        id: 0,
+        name: '',
+        gender: '男',
+        age: '',
+        phone: '',
+        relationship: ''
+      }
+    } else {
+      showFailToast(res.message || '添加失败')
+    }
+  } catch (error) {
+    showFailToast('添加失败')
+  }
 }
 
-const removePatient = (index: number) => {
+// 删除就诊人
+const removePatient = async (index: number) => {
   showLoadingToast({
     message: '删除中...',
-    duration: 1000,
-    onClose: () => {
-      patients.value.splice(index, 1)
-      showSuccessToast('删除成功')
-    }
+    duration: 2000,
+    forbidClick: true
   })
+  // 拿到就诊人id
+  const data = ref<DeletePatientParams>({
+    id: patients[index].id
+  })
+  const res: ResponseData = await reqDeletePatient(data.value)
+  if (res.code === 200) {
+    patients.splice(index, 1)
+    showSuccessToast('删除成功')
+  } else {
+    showFailToast(res.message || '删除失败')
+  }
 }
 </script>
 
@@ -82,7 +136,7 @@ const removePatient = (index: number) => {
               <div>
                 <div>
                   {{ patient.name }} <span class="gender">{{ patient.gender }}</span>
-                  <van-tag type="primary" size="medium" round>亲属</van-tag>
+                  <van-tag type="primary" size="medium" round>{{ patient.relationship }}</van-tag>
                 </div>
                 <div>{{ patient.age }}周岁 {{ patient.phone }}</div>
               </div>

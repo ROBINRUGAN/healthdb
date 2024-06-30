@@ -1,4 +1,4 @@
-import type { ResponseData } from "../type"
+import type { ResponseData } from '../type'
 
 export interface Patient {
   id: number
@@ -10,7 +10,7 @@ export interface Patient {
   relationship: string
 }
 
-export interface PatientListResponseData {
+export interface PatientListResponseData extends ResponseData {
   data: Patient[]
 }
 
@@ -27,7 +27,8 @@ export interface AddPatientParams {
   relationship: string
 }
 
-export interface AddPatientResponseData extends ResponseData{
+export interface AddPatientResponseData extends ResponseData {
+  data: { id: number }
 }
 
 export interface DeletePatientParams {
