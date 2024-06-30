@@ -3,7 +3,7 @@ import { ref, onMounted, reactive } from 'vue'
 import router from '@/router'
 const animate = ref(false)
 const animateIcon = ref(false)
-
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 onMounted(() => {
   setTimeout(() => {
     animateIcon.value = true
@@ -12,42 +12,57 @@ onMounted(() => {
     animate.value = true
   }, 500) // 小延时确保页面元素已经渲染
 })
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 </script>
 
 <template>
-  <div class="back">
-    <img src="@/assets/login/back.png" alt="" />
-    <div class="wrapper">
-      <div
-        style="display: flex; justify-content: center; margin-bottom: 5px"
-        :class="{ animated: animateIcon, 'hidden-initially': !animateIcon }"
-      >
-        <img class="logo" src="@/assets/download/logo.png" alt="" />
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="back">
+      <img src="@/assets/login/back.png" alt="" />
+      <div class="wrapper">
         <div
-          style="display: flex; flex-direction: column; justify-content: center; text-align: start"
+          style="display: flex; justify-content: center; margin-bottom: 5px"
+          :class="{ animated: animateIcon, 'hidden-initially': !animateIcon }"
         >
-          <h1>益诊</h1>
-          <h3>你的就医助理</h3>
+          <img class="logo" src="@/assets/download/logo.png" alt="" />
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              text-align: start;
+            "
+          >
+            <h1>益诊</h1>
+            <h3>你的就医助理</h3>
+          </div>
         </div>
+        <button class="select" :class="{ animated: animate, 'hidden-initially': !animate }">
+          <img src="@/assets/download/Android.svg" class="icon" alt="" />
+          <span>EasyCare For Android</span>
+        </button>
+        <button class="select" :class="{ animated: animate, 'hidden-initially': !animate }">
+          <img src="@/assets/download/iOS.svg" class="icon" alt="" />
+          <span>EasyCare For iOS</span>
+        </button>
+        <button
+          class="select-o"
+          :class="{ animated: animate, 'hidden-initially': !animate }"
+          @click="router.push('/home')"
+        >
+          <img src="@/assets/download/web.svg" class="icon" alt="" />
+          <span>EasyCare On Web</span>
+        </button>
       </div>
-      <button class="select" :class="{ animated: animate, 'hidden-initially': !animate }">
-        <img src="@/assets/download/Android.svg" class="icon" alt="" />
-        <span>EasyCare For Android</span>
-      </button>
-      <button class="select" :class="{ animated: animate, 'hidden-initially': !animate }">
-        <img src="@/assets/download/iOS.svg" class="icon" alt="" />
-        <span>EasyCare For iOS</span>
-      </button>
-      <button
-        class="select-o"
-        :class="{ animated: animate, 'hidden-initially': !animate }"
-        @click="router.push('/home')"
-      >
-        <img src="@/assets/download/web.svg" class="icon" alt="" />
-        <span>EasyCare On Web</span>
-      </button>
     </div>
-  </div>
+  </van-pull-refresh>
 </template>
 
 <style scoped>

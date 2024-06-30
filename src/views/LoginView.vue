@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import router from '@/router'
-import {
-  showLoadingToast,
-  type FieldRule,
-  showNotify,
-  type FormInstance,
-  showFailToast
-} from 'vant'
+import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { useAuthStore } from '@/stores/auth'
 import type { LoginParams } from '@/api/user/type'
 const phone = ref('')
 const password = ref('')
 const formRef = ref<FormInstance>()
+const loading = ref(false)
+const onRefresh = () => {
+  setTimeout(() => {
+    showSuccessToast('刷新成功')
+    loading.value = false
+    count.value++
+  }, 1000)
+}
 
 const login = async () => {
   await formRef.value?.validate()
@@ -41,43 +43,45 @@ const passwordRules: FieldRule[] = [{ required: true, message: '请输入密码'
 </script>
 
 <template>
-  <div class="back">
-    <img src="@/assets/login/back.png" alt="" />
-    <div class="wrapper">
-      <h1>益诊</h1>
-      <van-form ref="formRef">
-        <van-cell-group inset class="phone">
-          <van-field
-            v-model="phone"
-            :rules="phoneRules"
-            label="手机号"
-            type="tel"
-            placeholder="请输入手机号"
-            label-align="left"
-            input-align="left"
-          />
-        </van-cell-group>
-        <van-cell-group inset class="password">
-          <van-field
-            v-model="password"
-            :rules="passwordRules"
-            label="密码"
-            type="password"
-            placeholder="请输入密码"
-            label-align="left"
-            input-align="left"
-          />
-        </van-cell-group>
-      </van-form>
-      <button class="login" @click="login">登录</button>
-      <div class="change">
-        <span>没有账号？</span>
-        <span @click="router.push('/register')" style="color: rgb(71, 73, 186); font-weight: bold"
-          >去注册！</span
-        >
+  <van-pull-refresh v-model="loading" @refresh="onRefresh">
+    <div class="back">
+      <img src="@/assets/login/back.png" alt="" />
+      <div class="wrapper">
+        <h1>益诊</h1>
+        <van-form ref="formRef">
+          <van-cell-group inset class="phone">
+            <van-field
+              v-model="phone"
+              :rules="phoneRules"
+              label="手机号"
+              type="tel"
+              placeholder="请输入手机号"
+              label-align="left"
+              input-align="left"
+            />
+          </van-cell-group>
+          <van-cell-group inset class="password">
+            <van-field
+              v-model="password"
+              :rules="passwordRules"
+              label="密码"
+              type="password"
+              placeholder="请输入密码"
+              label-align="left"
+              input-align="left"
+            />
+          </van-cell-group>
+        </van-form>
+        <button class="login" @click="login">登录</button>
+        <div class="change">
+          <span>没有账号？</span>
+          <span @click="router.push('/register')" style="color: rgb(71, 73, 186); font-weight: bold"
+            >去注册！</span
+          >
+        </div>
       </div>
     </div>
-  </div>
+  </van-pull-refresh>
 </template>
 <style scoped>
 .back {
