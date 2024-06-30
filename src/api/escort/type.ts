@@ -27,8 +27,8 @@ export interface AddEscortParams {
   age: number
   gender: number
   telephone: string
-  city: string
-  name?: string
-  identity?: string
+  area_code: number
+  name?: string 
+  identity?: string 
 }
 

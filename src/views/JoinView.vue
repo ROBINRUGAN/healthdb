@@ -22,7 +22,7 @@ const formData = ref<AddEscortParams>({
   age: 0,
   gender: -1,
   telephone: '',
-  city: '',
+  area_code: 0
 })
 
 const onConfirm = (result: any) => {
@@ -39,7 +39,8 @@ const onConfirm = (result: any) => {
         .map((option: { text: string }) => option.text)
         .join(' / ')
 
-      formData.value.city = areaCode
+      // 字符串转数字
+      formData.value.area_code = parseInt(areaCode)
       showPopup.value = false
     } else {
       throw new Error('Invalid result structure')
@@ -51,13 +52,12 @@ const onConfirm = (result: any) => {
 
 const submitForm = async () => {
   console.log('Submitted Data:', formData.value)
-  // 如果未实名认证，姓名和身份证号不能为空
   // 不为空
   if (
     (userStore.isIdentified === 0 && formData.value.name === '') ||
     (userStore.isIdentified === 0 && formData.value.identity === '') ||
     formData.value.telephone === '' ||
-    formData.value.city === '' ||
+    formData.value.area_code === 0 ||
     formData.value.gender === -1 ||
     age.value === undefined ||
     (formData.value.isMedicalWorker == 1 && formData.value.workSection == '')
@@ -87,6 +87,7 @@ const submitForm = async () => {
   const res: ResponseData = await addEscort(formData.value)
   if (res.code === 200) {
     showSuccessToast('提交成功')
+    userStore.setIsCompanion(1)
   } else {
     showFailToast('提交失败')
   }
