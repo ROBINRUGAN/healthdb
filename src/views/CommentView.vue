@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
+import { ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 const loading = ref(false)
 const onRefresh = () => {

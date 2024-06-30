@@ -50,6 +50,9 @@ const onRefresh = () => {
           <h3>已完成</h3>
           <h5>陪诊师：林黄晓</h5>
           <h5>2024-06-30 19:30:02</h5>
+          <button class="select" style="margin-top: 20px; padding: 10px 0">
+            查看陪诊师详细信息
+          </button>
         </div>
         <div class="infoWrapper">
           <h4 style="padding: 0 16px">订单信息</h4>
