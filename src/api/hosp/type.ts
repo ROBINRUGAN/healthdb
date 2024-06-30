@@ -13,24 +13,16 @@ import type { ResponseData } from "../type"
 // hospitalLevel: 6 一级医院
 // hospitalLevel: 7 未评级
 
-export const hospitalLevelMap = {
-  1: '二级甲等',
-  2: '三级甲等',
-  3: '三级乙等',
-  4: '三级医院',
-  5: '二级医院',
-  6: '一级医院',
-  7: '未评级'
-}
 
 export interface Hospital {
   id: number
   name: string
-  hospitalLevel: number
   hospitalType: string
+  hospitalLevel: number
   introduction: string
   areaCode: number
   detailAddress: string
+  photo?: string
 }
 
 export interface HospitalResponseData extends ResponseData{

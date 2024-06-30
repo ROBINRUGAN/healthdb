@@ -1,20 +1,34 @@
 <template>
   <div class="hospital-badge">
-    <img src="@/assets/hosp/demo.jpg" alt="" />
+    <img :src="hospitalPhoto" alt="" />
     <div class="content">
       <div class="badge-header">
-        <h3>福建医科大学附属协和医院</h3>
+        <h3>{{ hospital.name }}</h3>
       </div>
       <div class="badge-content">
-        <p>福建省福州市新店路29号</p>
-        <p>三级甲等综合性医院</p>
+        <p>{{ hospital.detailAddress }}</p>
+        <p>
+          {{ useAuthStore().getHospitalLevelStr(hospital.hospitalLevel) }} 
+          {{ hospital.hospitalType }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Hospital } from '@/api/hosp/type'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
+
 // Script setup area doesn't require change as no dynamic content or methods needed yet.
+const props = defineProps<{
+  hospital: Hospital
+}>()
+
+const hospitalPhoto = computed(() => {
+  return props.hospital.photo ? props.hospital.photo : '@/assets/hosp/demo.jpg'
+})
 </script>
 
 <style scoped>
