@@ -2,13 +2,24 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import OrderItem from '@/components/OrderItem.vue'
+import { showLoadingToast, showSuccessToast } from 'vant'
+import router from '@/router'
 const active = ref(0)
-import { areaList } from '@vant/area-data'
-const address = ref('')
 const showPopup = ref(false)
 const showDatePicker = ref(false)
 const dateResult = ref('')
-
+const value = ref('')
+const onSearch = (val: any) => {
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000,
+    onOpened() {
+      // router.push('/search')
+      // router.push({ path: 'search', query: { keyword: value.value } })
+    }
+  })
+}
 //设置成本地时间
 const currentDate = ref([
   new Date().getFullYear().toString(),
@@ -31,24 +42,23 @@ const onConfirm = (result: any) => {
 
 <template>
   <div class="all">
-    <van-field
-      class="filter"
-      v-model="address"
-      label="所在地"
-      placeholder="请选择地址"
-      is-link
-      readonly
-      @click="showPopup = true"
+    <van-search
+      v-model="value"
+      round
+      placeholder="请输入搜索关键词"
+      background="white"
+      style="
+        font-size: 14px;
+        padding: 0;
+        border-radius: 10px;
+        height: 40px;
+        background-color: white;
+      "
+      @search="onSearch"
     />
-    <van-popup v-model:show="showPopup" round position="bottom">
-      <van-area
-        title="选择地区"
-        :area-list="areaList"
-        @confirm="onConfirm"
-        @cancel="showPopup = false"
-      />
-    </van-popup>
+
     <van-field
+      style="margin-top: 10px"
       v-model="dateResult"
       is-link
       readonly
@@ -138,5 +148,8 @@ const onConfirm = (result: any) => {
 .filter {
   border-radius: 10px;
   margin-bottom: 10px;
+}
+:deep(.van-search__content) {
+  background-color: transparent;
 }
 </style>
