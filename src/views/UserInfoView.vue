@@ -194,18 +194,7 @@ const modifyUserInfo = async (params: ModifyUserInfoParams) => {
         </van-cell-group>
       </van-dialog>
 
-      <van-cell title="性别" :value="userInfo.genderStr" is-link @click="showGenderDialog = true" />
-      <van-dialog
-        v-model:show="showGenderDialog"
-        title="修改性别"
-        show-cancel-button
-        @confirm="modifyGender"
-      >
-        <van-radio-group v-model="selectedGender" direction="horizontal" class="gender-radio-group">
-          <van-radio name="0">女</van-radio>
-          <van-radio name="1">男</van-radio>
-        </van-radio-group>
-      </van-dialog>
+
       <van-cell title="手机" :value="userInfo.phone" />
       <van-cell
         title="真实姓名"
