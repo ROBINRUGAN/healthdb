@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ResponseData } from '@/api/type'
-import { reqRecharge } from '@/api/user'
-import type { RechargeParams } from '@/api/user/type'
+import { reqDecrease, reqRecharge } from '@/api/user'
+import type { RechargeParams, WithdrawParams } from '@/api/user/type'
 import mewImage from '@/assets/me/patient.jpeg'
 import { useAuthStore } from '@/stores/auth'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
@@ -45,11 +45,11 @@ const addMoney = async () => {
   showLoadingToast({
     message: '修改中...',
     duration: 2000,
-    forbidClick: true,
+    forbidClick: true
   })
   try {
     const amount = Number(addNum.value)
-    const data:RechargeParams = {
+    const data: RechargeParams = {
       id: userData.id,
       money: amount
     }
@@ -66,7 +66,7 @@ const addMoney = async () => {
     showFailToast('充值失败')
   }
 }
-const dropMoney = () => {
+const dropMoney = async () => {
   if (!isValidAmount(dropNum.value)) {
     showFailToast('请输入合法的金额')
     return
@@ -80,14 +80,30 @@ const dropMoney = () => {
     message: '修改中...',
     duration: 1000,
     forbidClick: true,
-    onClose() {
-      showSuccessToast('成功提现' + amount + '元～')
-      userData.money -= amount
-      showDrop.value = false
-    }
+    // onClose() {
+    //   showSuccessToast('成功提现' + amount + '元～')
+    //   userData.money -= amount
+    //   showDrop.value = false
+    // }
   })
-}
-
+    try{
+      const data: WithdrawParams = {
+        id: userData.id,
+        money: amount
+      }
+      const res: ResponseData = await reqDecrease(data)
+      if(res.code === 200) {
+        showSuccessToast('成功提现' + amount + '元～')
+        userData.money -= amount
+        currentUser.money -= amount
+        showDrop.value = false
+      } else {
+        showFailToast(res.message || '提现失败')
+      }
+    }catch(error) {
+      showFailToast('提现失败')
+    }
+  }
 const joinQQGroup = () => {
   // 替换为你的 QQ 群链接
   window.location.href = 'https://qm.qq.com/q/mHztyowGiY'
@@ -151,7 +167,14 @@ const joinQQGroup = () => {
       <van-cell-group class="group">
         <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
         <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
-        <van-cell class="groupItem" icon="friends-o" title="就诊人管理" is-link to="/patients" />
+        <van-cell
+          class="groupItem"
+          icon="friends-o"
+          title="就诊人管理"
+          is-link
+          to="/patients"
+          @click="userStore.queryPatients()"
+        />
         <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link @click="joinQQGroup" />
       </van-cell-group>
     </div>

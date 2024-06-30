@@ -71,3 +71,9 @@ export interface RechargeParams {
   id: number;
   money: number;
 }
+
+// 提现
+export interface WithdrawParams {
+  id: number;
+  money: number;
+}

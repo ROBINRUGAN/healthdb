@@ -1,5 +1,5 @@
 import service from '@/utils/request'
-import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams, userInfoResponseData } from './type'
+import type { RegisterParams, registerResponseData, LoginParams, LoginResponseData, ModifyUserInfoParams, IdentifyParams, ModifyAvatarParams, RechargeParams, userInfoResponseData, WithdrawParams } from './type'
 import type { ResponseData } from '../type'
 
 enum API {
@@ -10,8 +10,7 @@ enum API {
   MODIFY_USER_INFO_API = '/user/update/other',
   MODIFY_USER_AVATAR_API = '/user/update/avatar',
   RECHARGE_API = '/user/recharge',
-
-
+  DECREASE_API = '/user/decrease'
 }
 
 export const reqRegister = (data: RegisterParams) => {
@@ -40,5 +39,9 @@ export const reqModifyUserAvatar = (data: ModifyAvatarParams) => {
 
 export const reqRecharge = (data: RechargeParams) => {
   return service.post<any,ResponseData>(API.RECHARGE_API, data)
+}
+
+export const reqDecrease = (data: WithdrawParams) => {
+  return service.post<any,ResponseData>(API.DECREASE_API, data)
 }
 
