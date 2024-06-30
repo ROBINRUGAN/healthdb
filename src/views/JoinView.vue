@@ -29,7 +29,6 @@ const formData = ref<AddEscortParams>({
   age: 0,
   gender: -1,
   telephone: '',
-  city: '',
   area_code: 0
 })
 
