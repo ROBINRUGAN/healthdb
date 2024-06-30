@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { ResponseData } from '@/api/type'
+import { reqRecharge } from '@/api/user'
+import type { RechargeParams } from '@/api/user/type'
 import mewImage from '@/assets/me/patient.jpeg'
 import { useAuthStore } from '@/stores/auth'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
@@ -21,6 +24,7 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  userStore.refreshUserInfo()
 }
 
 // 获得用户信息
@@ -33,24 +37,35 @@ const isValidAmount = (amount: any) => {
   return pattern.test(amount)
 }
 
-const addMoney = () => {
+const addMoney = async () => {
   if (!isValidAmount(addNum.value)) {
     showFailToast('请输入合法的金额')
     return
   }
   showLoadingToast({
     message: '修改中...',
-    duration: 1000,
+    duration: 2000,
     forbidClick: true,
-    onClose() {
-      const amount = Number(addNum.value)
+  })
+  try {
+    const amount = Number(addNum.value)
+    const data:RechargeParams = {
+      id: userData.id,
+      money: amount
+    }
+    const res: ResponseData = await reqRecharge(data)
+    if (res.code === 200) {
       showSuccessToast('成功充值' + amount + '元～')
       userData.money += amount
+      currentUser.money += amount
       showAdd.value = false
+    } else {
+      showFailToast(res.message || '充值失败')
     }
-  })
+  } catch (error) {
+    showFailToast('充值失败')
+  }
 }
-
 const dropMoney = () => {
   if (!isValidAmount(dropNum.value)) {
     showFailToast('请输入合法的金额')
