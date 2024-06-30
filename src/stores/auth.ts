@@ -82,7 +82,7 @@ export const useAuthStore = defineStore(
         case 7:
           return '未评级'
         default:
-          return ''
+          return '未录入'
       }
     }
 
@@ -191,6 +191,7 @@ export const useAuthStore = defineStore(
               relationship: item.relationship
             })
           })
+          console.log(patients.value)
         } else {
           showNotify({ type: 'danger', message: res.message || '查询失败' })
         }

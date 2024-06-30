@@ -3,12 +3,45 @@ import router from '@/router'
 import { onMounted, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import CommentItem from '@/components/CommentItem.vue'
+import { useRoute } from 'vue-router'
+import { reqGetHospitalById } from '@/api/hosp'
+import type { Hospital, HospitalResponseData } from '@/api/hosp/type'
+import { useAuthStore } from '@/stores/auth'
 const loading = ref(false)
+const route = useRoute()
+const userStore = useAuthStore()
+const hospital = ref<Hospital>()
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  queryHospitalDetails()
+}
+
+onMounted(() => {
+  queryHospitalDetails()
+})
+
+const queryHospitalDetails = async () => {
+  const hospitalId = route.query.id
+  if (!hospitalId) {
+    showFailToast('未找到医院信息')
+    return
+  }
+  try {
+    showLoadingToast({ message: '加载中...', forbidClick: true, duration: 1000 })
+    const id = parseInt(hospitalId as string)
+    const res: HospitalResponseData = await reqGetHospitalById(id)
+    if (res.code === 200) {
+      console.log(res.data)
+      hospital.value = res.data
+    } else {
+      showFailToast(res.message || '加载失败')
+    }
+  } catch (error) {
+    showFailToast('加载失败')
+  }
 }
 </script>
 <template>
@@ -16,29 +49,34 @@ const onRefresh = () => {
     <div>
       <van-nav-bar title="医院详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
       <div class="all">
-        <h3>福建医科大学附属协和医院</h3>
+        <h3>{{ hospital?.name }}</h3>
         <img src="@/assets/hosp/info.jpg" alt="" />
         <div class="wrapper">
           <div class="content">
             <h4>简介</h4>
             <p>
-              由福州圣教医院与福州马高爱医院合并而成。2018年12月4日，被国家卫健委公布为首批肿瘤多学科诊疗试点医院。
+              {{ hospital?.introduction }}
             </p>
           </div>
           <div class="content">
             <h4>医院等级</h4>
-            <p>三级甲等</p>
+            <p>{{ userStore.getHospitalLevelStr(hospital?.hospitalLevel ?? 8) }}</p>
           </div>
           <div class="content">
             <h4>医院类型</h4>
-            <p>综合性医院</p>
+            <p>{{ hospital?.hospitalType }}</p>
           </div>
           <div class="content">
             <h4>地址</h4>
-            <p>福建省福州市新店路29号</p>
+            <p>{{ hospital?.detailAddress }}</p>
           </div>
         </div>
-        <button class="select" @click="router.push('/iwant')">选择该医院陪诊服务</button>
+        <button
+          class="select"
+          @click="router.push({ path: '/iwant', query: { hid: hospital?.id } })"
+        >
+          选择该医院陪诊服务
+        </button>
 
         <div class="wrapper" style="width: 100%; margin-top: 0">
           <div class="content">

@@ -14,28 +14,36 @@ const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
-  }, 1000)
+  }, 2000)
+  fetchSearchResults()
 }
 
 const route = useRoute()
 // 确保value始终为字符串类型，如果route.query.keyword是数组或未定义，则默认为空字符串
 const value = ref(typeof route.query.keyword === 'string' ? route.query.keyword : '')
 const detail = (item: Hospital) => {
-  router.push({ path: '/hospital', query: { id: item.id } })
+  router.push({ path: '/hospital', query: { id: item.id as number } })
 }
 onMounted(() => {
-  fetchSearchResults()
+    fetchSearchResults()
 })
 
 const fetchSearchResults = async () => {
   try {
-    showLoadingToast('加载中...')
-    const res: HospitalListResponseData = await reqGetHospitalByName({ name: value.value, area_code: userStore.selectedCityCode })
+    showLoadingToast({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 1000
+    })
+    const res: HospitalListResponseData = await reqGetHospitalByName({
+      name: value.value,
+      area_code: userStore.selectedCityCode
+    })
     if (res.code === 200) {
       hospitalList.value = res.data
       console.log(hospitalList.value)
     } else {
-      throw new Error(res.message || '加载失败')
+      showFailToast(res.message || '加载失败')
     }
   } catch (error) {
     showFailToast('加载失败')
@@ -54,7 +62,12 @@ const fetchSearchResults = async () => {
         style="font-size: 13px; padding: 0; padding-left: 6px"
         @search="fetchSearchResults"
       />
-      <HospItem v-for="(item, index) in hospitalList" :key="index" :hospital="item" @click="detail(item)" />
+      <HospItem
+        v-for="(item, index) in hospitalList"
+        :key="index"
+        :hospital="item"
+        @click="detail(item)"
+      />
     </div>
   </van-pull-refresh>
 </template>
