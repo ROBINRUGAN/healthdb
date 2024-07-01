@@ -53,7 +53,7 @@ async function pay() {
     const res = await reqAddOrder(order.value!)
     if (res.code === 200) {
       showSuccessToast('支付成功')
-      currentUser.money -= order.value.money
+      currentUser.money -= order.value!.money as number
       router.push('/order')
     } else {
       showFailToast(res.message || '支付失败')
