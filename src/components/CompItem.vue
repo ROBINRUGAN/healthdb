@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { showLoadingToast, showSuccessToast } from 'vant'
 import { ref } from 'vue'
-const active = ref(3) // 设置当前激活的步骤
+const active = ref(1) // 设置当前激活的步骤
 const name = ref('邓新国')
 const startTime = ref('2024-06-30 19:23:12')
 const endTime = ref('2024-06-30 19:23:12')

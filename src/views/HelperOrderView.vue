@@ -46,31 +46,9 @@ const onRefresh = () => {
     <van-nav-bar title="订单详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
     <div class="all">
       <div class="ordersWrapper">
-        <h3>已完成</h3>
+        <h3>已接单</h3>
         <h5>陪诊师：林黄晓</h5>
         <h5>2024-06-30 19:30:02</h5>
-        <button
-          class="select"
-          style="margin-top: 20px; padding: 10px 0"
-          @click="showHelperInfo = true"
-        >
-          查看陪诊师详细信息
-        </button>
-        <van-action-sheet v-model:show="showHelperInfo" title="陪诊人信息">
-          <van-cell-group>
-            <van-cell title="陪诊服务类型" :value="orderInfo.serviceType" />
-            <van-cell title="就诊人姓名" :value="orderInfo.patientName" />
-            <van-cell title="性别" :value="orderInfo.gender" />
-            <van-cell title="年龄" :value="orderInfo.age" />
-            <van-cell title="电话号码" :value="orderInfo.phone" />
-            <van-cell title="您与就诊人关系" :value="orderInfo.relationship" />
-            <van-cell title="开始时间" :value="orderInfo.startTime" />
-            <van-cell title="结束时间" :value="orderInfo.endTime" />
-            <van-cell title="就诊医院" :value="orderInfo.hospital" />
-            <van-cell title="订单id" :value="orderInfo.orderId" />
-            <van-cell title="备注" :value="orderInfo.remark" />
-          </van-cell-group>
-        </van-action-sheet>
       </div>
       <div class="infoWrapper">
         <h4 style="padding: 0 16px">订单信息</h4>
@@ -80,7 +58,7 @@ const onRefresh = () => {
           <van-cell title="性别" :value="orderInfo.gender" />
           <van-cell title="年龄" :value="orderInfo.age" />
           <van-cell title="电话号码" :value="orderInfo.phone" />
-          <van-cell title="您与就诊人关系" :value="orderInfo.relationship" />
+          <van-cell title="用户与就诊人关系" :value="orderInfo.relationship" />
           <van-cell title="开始时间" :value="orderInfo.startTime" />
           <van-cell title="结束时间" :value="orderInfo.endTime" />
           <van-cell title="就诊医院" :value="orderInfo.hospital" />
