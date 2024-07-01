@@ -179,6 +179,11 @@ const onSubmit = (values: any) => {
     showFailToast('服务时间超过限制')
     return
   }
+  // 金额
+  if (amount.value > userStore.currentUser.money) {
+    showFailToast('余额不足，请充值')
+    return
+  }
   const data: addOrdersParams = {
     uid: userStore.currentUser.id,
     hid: parseInt(route.query.hid as string),
