@@ -8,6 +8,8 @@ const route = useRoute()
 
 const orderDetail = ref<OrdersEscort>()
 const showPopup = ref(false)
+const orderStatus = ref()
+
 onMounted(() => {
   if (!route.query.data) {
     showFailToast('未找到订单信息')
@@ -20,7 +22,10 @@ onMounted(() => {
       showFailToast('未找到订单信息')
       return
     }
+    showLoadingToast('加载中...')
+    console.log(data)
     orderDetail.value = data
+    orderStatus.value = data.status
   } catch (error) {
     showFailToast('加载失败')
   }
@@ -39,82 +44,85 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  
 }
 </script>
 
 <template>
   <div>
-    <van-nav-bar title="订单详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
-    <div class="all">
-      <div class="ordersWrapper">
-        <h3>{{ getOrderEscortStatus(orderDetail?.status || 4) }}</h3>
-        <h5>陪诊师：{{ orderDetail?.ename }}</h5>
-        <h5>2024-06-30 19:30:02</h5>
+    <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <van-nav-bar title="订单详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+      <div class="all">
+        <div class="ordersWrapper">
+          <h3>{{ getOrderEscortStatus(orderStatus) }}</h3>
+          <h5>陪诊师：{{ orderDetail?.ename }}</h5>
+          <h5>2024-06-30 19:30:02</h5>
+        </div>
+        <div class="infoWrapper">
+          <h4 style="padding: 0 16px">订单信息</h4>
+          <van-cell-group>
+            <van-cell title="陪诊服务类型" :value="orderDetail?.serverType" />
+            <van-cell title="就诊人姓名" :value="orderDetail?.pname" />
+            <van-cell title="就诊人性别" :value="orderDetail?.gender === 1 ? '男' : '女'" />
+            <van-cell title="就诊人年龄" :value="orderDetail?.age" />
+            <van-cell
+              title="就诊人电话号码"
+              :value="orderDetail?.telephoneNumber"
+              is-link
+              @click="handleCall(orderDetail?.telephoneNumber || '')"
+            />
+            <van-cell title="用户与就诊人关系" :value="orderDetail?.relationship" />
+            <van-cell title="开始时间" :value="orderDetail?.startTime" />
+            <van-cell title="结束时间" :value="orderDetail?.endTime" />
+            <van-cell title="就诊医院" :value="orderDetail?.hname" />
+            <van-cell title="订单id" :value="orderDetail?.oid" />
+            <van-cell title="备注" :value="orderDetail?.requirement" />
+          </van-cell-group>
+          <div class="amount">¥599.00</div>
+        </div>
+        <div class="textWrapper">
+          <div class="contact" @click="handleContactClick">
+            <h4>遇到问题</h4>
+            <div style="display: flex">
+              <p
+                style="
+                  font-size: 14px;
+                  color: rgb(100, 100, 100);
+                  align-self: center;
+                  margin-right: 3px;
+                "
+              >
+                联系我们
+              </p>
+              <van-icon name="phone-o" size="20" />
+            </div>
+          </div>
+
+          <p class="puzzle">对订单有疑问？</p>
+        </div>
+        <!-- <button class="select" @click="router.push('/commentdetail')">提交评价</button> -->
       </div>
-      <div class="infoWrapper">
-        <h4 style="padding: 0 16px">订单信息</h4>
+
+      <van-popup v-model:show="showPopup" position="bottom" name="联系我们" round closeable>
+        <h3 style="text-align: center; margin-top: 20px; margin-bottom: 20px">联系我们</h3>
         <van-cell-group>
-          <van-cell title="陪诊服务类型" :value="orderDetail?.serverType" />
-          <van-cell title="就诊人姓名" :value="orderDetail?.pname" />
-          <van-cell title="就诊人性别" :value="orderDetail?.gender === 1 ? '男' : '女'" />
-          <van-cell title="就诊人年龄" :value="orderDetail?.age" />
           <van-cell
-            title="就诊人电话号码"
+            readonly
+            title="联系就诊人"
             :value="orderDetail?.telephoneNumber"
             is-link
             @click="handleCall(orderDetail?.telephoneNumber || '')"
           />
-          <van-cell title="用户与就诊人关系" :value="orderDetail?.relationship" />
-          <van-cell title="开始时间" :value="orderDetail?.startTime" />
-          <van-cell title="结束时间" :value="orderDetail?.endTime" />
-          <van-cell title="就诊医院" :value="orderDetail?.hname" />
-          <van-cell title="订单id" :value="orderDetail?.oid" />
-          <van-cell title="备注" :value="orderDetail?.requirement" />
+          <van-cell
+            readonly
+            title="联系总部"
+            value="0987654321"
+            is-link
+            @click="handleCall('0987654321')"
+          />
         </van-cell-group>
-        <div class="amount">¥599.00</div>
-      </div>
-      <div class="textWrapper">
-        <div class="contact" @click="handleContactClick">
-          <h4>遇到问题</h4>
-          <div style="display: flex">
-            <p
-              style="
-                font-size: 14px;
-                color: rgb(100, 100, 100);
-                align-self: center;
-                margin-right: 3px;
-              "
-            >
-              联系我们
-            </p>
-            <van-icon name="phone-o" size="20" />
-          </div>
-        </div>
-
-        <p class="puzzle">对订单有疑问？</p>
-      </div>
-      <button class="select" @click="router.push('/commentdetail')">提交评价</button>
-    </div>
-
-    <van-popup v-model:show="showPopup" position="bottom" name="联系我们" round closeable>
-      <h3 style="text-align: center; margin-top: 20px; margin-bottom: 20px">联系我们</h3>
-      <van-cell-group>
-        <van-cell
-          readonly
-          title="联系就诊人"
-          :value="orderDetail?.telephoneNumber"
-          is-link
-          @click="handleCall(orderDetail?.telephoneNumber || '')"
-        />
-        <van-cell
-          readonly
-          title="联系总部"
-          value="0987654321"
-          is-link
-          @click="handleCall('0987654321')"
-        />
-      </van-cell-group>
-    </van-popup>
+      </van-popup>
+    </van-pull-refresh>
   </div>
 </template>
 

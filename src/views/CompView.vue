@@ -9,9 +9,9 @@ import type {
   OrdersEscortListResponseData
 } from '@/api/escort/type'
 import { useAuthStore } from '@/stores/auth'
-import { getEscortOrderByStatus } from '@/api/escort'
+import { getEscortOrderByStatus, getEscortOrderByUid } from '@/api/escort'
 import router from '@/router'
-const active = ref(0)
+const active = ref(4)
 const queryStatus = ref(4)
 const loading = ref(false)
 const userStore = useAuthStore()
@@ -22,7 +22,11 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
-  queryOrderEscortByStatus()
+  if (active.value === 0) {
+    queryOrderEscortByUid()
+  } else {
+    queryOrderEscortByStatus()
+  }
 }
 onMounted(() => {
   queryOrderEscortByStatus()
@@ -35,16 +39,20 @@ const detail = (item: OrdersEscort) => {
 // 监听tabs的切换
 watch(active, () => {
   queryStatus.value = active.value
-  queryOrderEscortByStatus()
+  if (active.value === 0) {
+    queryOrderEscortByUid()
+  } else {
+    queryOrderEscortByStatus()
+  }
 })
 
 const queryOrderEscortByStatus = async () => {
+  orderEscortList.value = []
   showLoadingToast({
-    message: '加载中...',
+    message: '拼命加载中...',
     forbidClick: true,
-    duration: 5000,
+    duration: 30000,
     onOpened: async () => {
-      orderEscortList.value = []
       const data = {
         uid: currentUser.id,
         status: queryStatus.value
@@ -59,13 +67,33 @@ const queryOrderEscortByStatus = async () => {
     }
   })
 }
+
+// 查询陪诊师可接单列表
+const queryOrderEscortByUid = async () => {
+  orderEscortList.value = []
+  showLoadingToast({
+    message: '拼命加载中...',
+    forbidClick: true,
+    duration: 30000,
+    onOpened: async () => {
+      const res: OrdersEscortListResponseData = await getEscortOrderByUid(currentUser.id)
+      if (res.code === 200) {
+        orderEscortList.value = res.data
+        showSuccessToast('加载成功')
+      } else {
+        showFailToast(res.message || '加载失败')
+      }
+    }
+  })
+}
+
 </script>
 
 <template>
   <van-pull-refresh v-model="loading" @refresh="onRefresh">
     <div class="all">
       <van-tabs v-model:active="active" swipeable>
-        <van-tab title="全部" :name="4">
+        <van-tab title="已接单" :name="4">
           <div class="page">
             <CompItem
               v-for="(item, index) in orderEscortList"
