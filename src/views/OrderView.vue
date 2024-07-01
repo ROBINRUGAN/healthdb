@@ -7,7 +7,7 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
 import { reqQueryOrderByStatus, reqQueryOrderMultiple } from '@/api/order'
 import type { Order, OrderList, OrderListResponse, OrderListSearchParams } from '@/api/order/type'
-const active = ref(0)
+const active = ref(4)
 const showPopup = ref(false)
 const showDatePicker = ref(false)
 const dateResult = ref('')
@@ -29,11 +29,6 @@ onMounted(() => {
   queryOrderByStatus()
 })
 const onSearch = (val: any) => {
-  showLoadingToast({
-    message: '加载中...',
-    forbidClick: true,
-    duration: 1000
-  })
   const data: OrderListSearchParams = {
     uid: currentUser.id,
     name: val === '' ? undefined : val,
@@ -68,16 +63,21 @@ const onConfirm = (result: any) => {
 }
 
 const queryByMultiple = async (data: OrderListSearchParams) => {
-  orderList.value = []
-  console.log(data)
-  const res: OrderListResponse = await reqQueryOrderMultiple(data)
-  console.log(res)
-  if (res.code === 200) {
-    showSuccessToast('查询成功')
-    orderList.value = res.data
-  } else {
-    showFailToast('查询失败')
-  }
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 2000,
+    onOpened: async () => {
+      orderList.value = []
+      const res: OrderListResponse = await reqQueryOrderMultiple(data)
+      if (res.code === 200) {
+        orderList.value = res.data
+        showSuccessToast('加载成功')
+      } else {
+        showFailToast(res.message || '加载失败')
+      }
+    }
+  })
 }
 
 // 根据订单状态查询

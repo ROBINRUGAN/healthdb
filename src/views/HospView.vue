@@ -24,6 +24,8 @@ const onRefresh = () => {
 }
 
 onMounted(() => {
+  showLoadingToast({ 
+    message: '加载中...', forbidClick: true, duration: 1000 })
   queryHospitalDetails()
   fetchComments()
 })
@@ -54,7 +56,6 @@ const queryHospitalDetails = async () => {
     return
   }
   try {
-    showLoadingToast({ message: '加载中...', forbidClick: true, duration: 1000 })
     const id = parseInt(hospitalId as string)
     const res: HospitalResponseData = await reqGetHospitalById(id)
     if (res.code === 200) {

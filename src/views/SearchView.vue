@@ -41,7 +41,7 @@ const fetchSearchResults = async () => {
     })
     if (res.code === 200) {
       hospitalList.value = res.data
-      console.log(hospitalList.value)
+      showSuccessToast('加载成功')
     } else {
       showFailToast(res.message || '加载失败')
     }

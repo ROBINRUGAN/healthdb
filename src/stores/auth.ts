@@ -52,6 +52,10 @@ export const useAuthStore = defineStore(
     }
     const setStatus = (data: number) => {
       currentUser.status = data
+      // 如果是陪诊师
+      if (data === 2) {
+        isCompanion.value = 1
+      }
     }
 
     const getGenderStr = () => {
