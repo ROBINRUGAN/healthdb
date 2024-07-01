@@ -6,7 +6,7 @@ import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } 
 import type {
   OrdersEscort,
   OrdersEscortList,
-  OrdersEscortListResponseData,
+  OrdersEscortListResponseData
 } from '@/api/escort/type'
 import { useAuthStore } from '@/stores/auth'
 import { getEscortOrderByStatus } from '@/api/escort'
@@ -30,7 +30,7 @@ onMounted(() => {
 
 const detail = (item: OrdersEscort) => {
   console.log(item.oid)
-  router.push({ path: '/helperorder', query: { data:JSON.stringify(item) } })
+  router.push({ path: '/helperorder', query: { data: JSON.stringify(item) } })
 }
 // 监听tabs的切换
 watch(active, () => {
@@ -42,20 +42,22 @@ const queryOrderEscortByStatus = async () => {
   showLoadingToast({
     message: '加载中...',
     forbidClick: true,
-    duration: 1000
+    duration: 5000,
+    onOpened: async () => {
+      orderEscortList.value = []
+      const data = {
+        uid: currentUser.id,
+        status: queryStatus.value
+      }
+      const res: OrdersEscortListResponseData = await getEscortOrderByStatus(data)
+      if (res.code === 200) {
+        orderEscortList.value = res.data
+        showSuccessToast('加载成功')
+      } else {
+        showFailToast(res.message || '加载失败')
+      }
+    }
   })
-  orderEscortList.value = []
-  const data = {
-    uid: currentUser.id,
-    status: queryStatus.value
-  }
-  const res: OrdersEscortListResponseData = await getEscortOrderByStatus(data)
-  if (res.code === 200) {
-    orderEscortList.value = res.data
-    showSuccessToast('加载成功')
-  } else {
-    showFailToast(res.message || '加载失败')
-  }
 }
 </script>
 
