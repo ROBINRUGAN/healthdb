@@ -40,11 +40,9 @@ const onRefresh = () => {
           alt="图片加载失败"
           round
           fit="contain"
-          style="width: 100%; height: 100px; border-radius: 8px; margin-top: 15px; overflow: hidden"
+          style="width: 100%; border-radius: 8px; margin-top: 15px; overflow: hidden"
         />
-        <p class="content">
-          {{ route.query.content }}
-        </p>
+        <div class="content" v-html="route.query.content"></div>
       </div>
     </div>
   </div>
@@ -72,6 +70,7 @@ const onRefresh = () => {
   color: #666;
   margin-top: 10px;
   text-indent: 2em;
+  white-space: pre-line; /* This will respect new lines in the content */
 }
 .footer {
   margin-top: 10px;
