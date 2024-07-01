@@ -7,10 +7,14 @@ import { useRoute } from 'vue-router'
 import { reqGetHospitalById } from '@/api/hosp'
 import type { Hospital, HospitalResponseData } from '@/api/hosp/type'
 import { useAuthStore } from '@/stores/auth'
+import { getEscortByHid } from '@/api/evaluate'
+import type { EvaluateListResponseData } from '@/api/evaluate/type'
+import type { EvaluateList } from '@/api/evaluate/type'
 const loading = ref(false)
 const route = useRoute()
 const userStore = useAuthStore()
 const hospital = ref<Hospital>()
+const commentList = ref<EvaluateList>()
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
@@ -21,7 +25,27 @@ const onRefresh = () => {
 
 onMounted(() => {
   queryHospitalDetails()
+  fetchComments()
 })
+
+const fetchComments = async () => {
+  const hospitalId = route.query.id as string
+  if (!hospitalId) {
+    showFailToast('未找到医院信息')
+    return
+  }
+  try {
+    const res: EvaluateListResponseData = await getEscortByHid(hospitalId)
+    if (res.code === 200) {
+      console.log(res.data)
+      commentList.value = res.data
+    } else {
+      showFailToast(res.message || '加载失败')
+    }
+  } catch (error) {
+    showFailToast('加载失败')
+  }
+}
 
 const queryHospitalDetails = async () => {
   const hospitalId = route.query.id
@@ -81,7 +105,7 @@ const queryHospitalDetails = async () => {
         <div class="wrapper" style="width: 100%; margin-top: 0">
           <div class="content">
             <h4 style="margin-bottom: 15px">用户评价</h4>
-            <CommentItem v-for="(item, index) in 5" :key="index" />
+            <CommentItem v-for="(item, index) in commentList" :key="index" :comment="item" />
           </div>
         </div>
       </div>
