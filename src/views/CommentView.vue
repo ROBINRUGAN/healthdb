@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import router from '@/router'
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import HaveCommentedOrder from '@/components/HaveCommentedOrder.vue'
+import { useAuthStore } from '@/stores/auth'
 const loading = ref(false)
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
 }
+onMounted(async () => {
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000,
+    onOpened: async () => {
+      userStore.queryCommentedOrderList()
+    }
+  })
+})
 </script>
 <template>
   <van-pull-refresh v-model="loading" @refresh="onRefresh">
@@ -17,9 +30,10 @@ const onRefresh = () => {
       <van-nav-bar title="已评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
       <div class="page">
         <HaveCommentedOrder
-          v-for="(item, index) in 10"
+          v-for="(item, index) in userStore.commentedOrderList"
           :key="index"
-          @click="router.push('/haveCommentedDetail')"
+          :order="item"
+          @click="router.push({path:'/haveCommentedDetail', query: { id: item.oid }})"
         />
       </div>
     </div>
