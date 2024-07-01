@@ -2,7 +2,7 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
 import CompItem from '@/components/CompItem.vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { Toast, showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import type {
   OrdersEscort,
   OrdersEscortList,
@@ -18,11 +18,7 @@ const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)
 const orderEscortList = ref<OrdersEscortList>()
 const onRefresh = () => {
-  setTimeout(() => {
-    showSuccessToast('刷新成功')
-    loading.value = false
-  }, 1000)
-  if (active.value === 0) {
+  if (active.value == 0) {
     queryOrderEscortByUid()
   } else {
     queryOrderEscortByStatus()
@@ -38,29 +34,35 @@ const detail = (item: OrdersEscort) => {
 }
 // 监听tabs的切换
 watch(active, () => {
-  queryStatus.value = active.value
-  if (active.value === 0) {
+  // Toast.clear()
+  if (active.value == 0) {
     queryOrderEscortByUid()
   } else {
     queryOrderEscortByStatus()
   }
 })
 
-const queryOrderEscortByStatus = async () => {
+const queryOrderEscortByStatus = () => {
   orderEscortList.value = []
   showLoadingToast({
     message: '拼命加载中...',
     forbidClick: true,
-    duration: 30000,
+    duration: 10000,
     onOpened: async () => {
+      queryStatus.value = active.value
       const data = {
         uid: currentUser.id,
         status: queryStatus.value
       }
       const res: OrdersEscortListResponseData = await getEscortOrderByStatus(data)
+      console.log(res)
       if (res.code === 200) {
         orderEscortList.value = res.data
-        showSuccessToast('加载成功')
+        showSuccessToast({
+          message: '加载成功',
+          duration: 1000,
+          forbidClick: true
+        })
       } else {
         showFailToast(res.message || '加载失败')
       }
@@ -69,24 +71,29 @@ const queryOrderEscortByStatus = async () => {
 }
 
 // 查询陪诊师可接单列表
-const queryOrderEscortByUid = async () => {
+const queryOrderEscortByUid = () => {
   orderEscortList.value = []
   showLoadingToast({
-    message: '拼命加载中...',
+    message: '加载可接单列表中...',
     forbidClick: true,
-    duration: 30000,
+    duration: 10000,
     onOpened: async () => {
+      queryStatus.value = active.value
       const res: OrdersEscortListResponseData = await getEscortOrderByUid(currentUser.id)
+      console.log(res)
       if (res.code === 200) {
         orderEscortList.value = res.data
-        showSuccessToast('加载成功')
+        showSuccessToast({
+          message: '加载成功',
+          duration: 1000,
+          forbidClick: true
+        })
       } else {
         showFailToast(res.message || '加载失败')
       }
     }
   })
 }
-
 </script>
 
 <template>
