@@ -28,7 +28,8 @@ export const useAuthStore = defineStore(
       gender: -1,
       age: -1,
       idNumber: '',
-      money: 0
+      money: 0,
+      status: 0
     })
     interface showPatient {
       id: number
@@ -48,6 +49,9 @@ export const useAuthStore = defineStore(
     }
     const setNickname = (data: string) => {
       currentUser.nickname = data
+    }
+    const setStatus = (data: number) => {
+      currentUser.status = data
     }
 
     const getGenderStr = () => {
@@ -108,6 +112,7 @@ export const useAuthStore = defineStore(
       currentUser.gender = data.gender || -1
       currentUser.idNumber = data.idNumber || '去实名'
       currentUser.money = data.money || 0
+      currentUser.status = data.status || 0
     }
 
     const isLogin = () => {
@@ -118,6 +123,10 @@ export const useAuthStore = defineStore(
       currentUser.id = 0
       currentUser.nickname = '未登录'
       currentUser.money = 0
+      currentUser.avatar = ''
+      currentUser.realname = ''
+      currentUser.status = -1
+      currentUser.telephone = ''
       router.push({ path: '/login' })
     }
     const login = async (data: LoginParams) => {
@@ -131,6 +140,7 @@ export const useAuthStore = defineStore(
           setId(res.data.id)
           setIsCompanion(res.data.isCompanion)
           setIsIdentified(res.data.isIdentified)
+          setStatus(res.data.status)
           router.push({ path: '/home' })
           showNotify({
             type: 'success',
