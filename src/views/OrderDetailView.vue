@@ -67,6 +67,7 @@ const queryEscortInfo = async () => {
   try {
     const res: EscortResponseData = await getEscortById(order.value?.eid as number)
     if (res.code === 200) {
+      console.log(res)
       escort.value = res.data
       showHelperInfo.value = true
     } else {

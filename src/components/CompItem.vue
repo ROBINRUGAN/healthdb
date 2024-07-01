@@ -13,10 +13,13 @@ const active = ref(1) // 设置当前激活的步骤
 const enableGetOrder = ref(true)
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)
+const props = defineProps<{
+  orderEscort: OrdersEscort
+}>()
 async function getOrder() {
   showLoadingToast({
     message: '正在接单...',
-    duration: 1000,
+    duration: 1000
   })
   // 判断是否可以接单
   if (props.orderEscort.status !== 0) {
@@ -28,24 +31,20 @@ async function getOrder() {
     return
   }
   // 接单
-  const data:addOrdersEscortParams = {
+  const data: addOrdersEscortParams = {
     oid: props.orderEscort.oid,
-    uid: currentUser.id,
+    uid: currentUser.id
   }
   const res: ResponseData = await reqAddOrderEscort(data)
   if (res.code === 200) {
     showSuccessToast('接单成功')
     active.value = 1
     enableGetOrder.value = false
-    props.orderEscort.status = 1
   } else {
     showFailToast(res.message || '接单失败')
   }
 }
 
-const props = defineProps<{
-  orderEscort: OrdersEscort
-}>()
 onMounted(() => {
   active.value = props.orderEscort.status as number
   enableGetOrder.value = props.orderEscort.status === 0
@@ -58,7 +57,7 @@ onMounted(() => {
     <hr style="height: 1px; border: none; border-top: 1px dotted #a2a9b6; margin-bottom: 15px" />
     <div class="content">
       <p>服务类型：{{ orderEscort.serverType }}</p>
-      <p>医院：{{orderEscort.hname}}</p>
+      <p>医院：{{ orderEscort.hname }}</p>
       <p>就诊人：{{ orderEscort.pname }}</p>
       <p>开始时间: {{ orderEscort.startTime }}</p>
       <p>结束时间: {{ orderEscort.endTime }}</p>
@@ -114,8 +113,6 @@ onMounted(() => {
     </van-steps>
   </div>
 </template>
-
-
 
 <style scoped>
 .hospital-badge {
