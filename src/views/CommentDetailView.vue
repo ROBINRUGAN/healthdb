@@ -1,16 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import type { AddEvaluateParams } from '@/api/evaluate/type'
+import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { addEvaluate } from '@/api/evaluate'
+import type { ResponseData } from '@/api/type'
+import router from '@/router'
 const overallRating = ref(0)
 const processRating = ref(0)
 const serviceRating = ref(0)
 const comment = ref('')
 const loading = ref(false)
+const route = useRoute()
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
+const oid = ref()
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+}
+onMounted(() => {
+  oid.value = route.query.id
+  if (!oid.value) {
+    showFailToast('未找到订单信息')
+    return
+  }
+})
+// 提交评论
+const submitEvaluate = () => {
+  if (overallRating.value === 0 || processRating.value === 0 || serviceRating.value === 0) {
+    showFailToast('请给医院评分')
+    return
+  }
+  if (!comment.value) {
+    showFailToast('请填写评价内容')
+    return
+  }
+  showLoadingToast({
+    message: '提交中...',
+    forbidClick: true,
+    duration: 2000,
+    async onOpened() {
+      try {
+        const data: AddEvaluateParams = {
+          order_id: parseInt(oid.value as string),
+          uid: currentUser.id,
+          starLevel: overallRating.value,
+          processLevel: processRating.value,
+          serverLevel: serviceRating.value,
+          content: comment.value
+        }
+        console.log(data)
+        const res: ResponseData = await addEvaluate(data)
+        if (res.code === 200) {
+          showSuccessToast('提交成功')
+          // 更新用户评价列表
+          userStore.queryCommentedOrderList()
+          router.go(-1)
+        } else {
+          showFailToast('提交失败')
+        }
+      } catch (error) {
+        showFailToast('提交失败')
+      }
+    }
+  })
 }
 </script>
 
@@ -56,7 +113,7 @@ const onRefresh = () => {
             left-icon="edit"
           />
         </div>
-        <button class="select">提交评价</button>
+        <button class="select" @click="submitEvaluate">提交评价</button>
       </div>
     </div>
   </van-pull-refresh>

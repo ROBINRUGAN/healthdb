@@ -63,12 +63,12 @@ const onConfirm = (result: any) => {
 }
 
 const queryByMultiple = async (data: OrderListSearchParams) => {
+  orderList.value = []
   showLoadingToast({
     message: '加载中...',
     forbidClick: true,
     duration: 2000,
     onOpened: async () => {
-      orderList.value = []
       const res: OrderListResponse = await reqQueryOrderMultiple(data)
       if (res.code === 200) {
         orderList.value = res.data

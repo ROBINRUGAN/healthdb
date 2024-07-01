@@ -1,46 +1,25 @@
 <script setup lang="ts">
 import type { Order } from '@/api/order/type'
-import { reactive } from 'vue'
 import { onMounted, ref } from 'vue'
-const active = ref(3) // 设置当前激活的步骤
-const name = ref('邓新国')
-const time = ref('2024-06-30 19:23:12')
-//TODO 静态数据记得改掉
-const order = reactive<Order>({
-  oid: 1,
-  hname: '广州市第一人民医院',
-  money: 1000,
-  startTime: '2024-06-30 19:23:12',
-  status: 3,
-  serverType: '',
-  pname: '',
-  gender: 0,
-  age: 0,
-  telephoneNumber: '',
-  relationship: '',
-  endTime: '',
-  requirement: '',
-  ename: '',
-  updateTime: '',
-  eid: 0
-})
-// const props = defineProps<{
-//   order: Order
-// }>()
+const active = ref(4) // 设置当前激活的步骤
+const order = ref<Order>()
+const props = defineProps<{
+  order: Order
+}>()
 onMounted(() => {
-  // active.value = props.order.status
-  active.value = order.status
+  order.value = props.order
+  active.value = props.order.status as number
 })
 </script>
 
 <template>
   <div class="hospital-badge">
-    <h4>订单号：{{ order.oid }}</h4>
+    <h4>订单号：{{ order?.oid }}</h4>
     <hr style="height: 1px; border: none; border-top: 1px dotted #a2a9b6; margin-bottom: 15px" />
     <div class="content">
-      <p>医院：{{ order.hname }}</p>
-      <p>价格：{{ order.money }} 元</p>
-      <p>预约时间: {{ order.startTime }}</p>
+      <p>医院：{{ order?.hname }}</p>
+      <p>价格：{{ order?.money }} 元</p>
+      <p>预约时间: {{ order?.startTime }}</p>
     </div>
     <van-steps :active="active" direction="horizontal" active-color="#E99D42" class="steps">
       <van-step>

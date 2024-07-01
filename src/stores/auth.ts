@@ -9,6 +9,8 @@ import { id } from 'element-plus/es/locales.mjs'
 import { reqUploadFile } from '@/api/file'
 import type { PatientListResponseData } from '@/api/patient/type'
 import { reqGetPatientList } from '@/api/patient'
+import type { OrderList, OrderListResponse } from '@/api/order/type'
+import { getEvaluatedOrder } from '@/api/evaluate'
 export const useAuthStore = defineStore(
   'auth',
   () => {
@@ -40,6 +42,7 @@ export const useAuthStore = defineStore(
       relationship: string
     }
     const patients = ref([] as showPatient[])
+    const commentedOrderList = ref<OrderList>([])
     const setToken = (data: string) => {
       window.localStorage.setItem('auth', data)
       token.value = data
@@ -215,6 +218,17 @@ export const useAuthStore = defineStore(
       }
     }
 
+    // 查询已评论订单列表
+    const queryCommentedOrderList = async () => {
+      const data: OrderListResponse = await getEvaluatedOrder({ uid: currentUser.id })
+      if (data.code === 200) {
+        commentedOrderList.value = data.data
+        showSuccessToast('加载成功')
+      } else {
+        showFailToast(data.message || '加载失败')
+      }
+    }
+
     return {
       token,
       isCompanion,
@@ -224,6 +238,7 @@ export const useAuthStore = defineStore(
       selectedCityCode,
       currentUser,
       patients,
+      commentedOrderList,
       setNickname,
       setId,
       setIsCompanion,
@@ -237,7 +252,8 @@ export const useAuthStore = defineStore(
       getGenderStr,
       uploadFile,
       getHospitalLevelStr,
-      queryPatients
+      queryPatients,
+      queryCommentedOrderList
     }
   },
   {

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { useRoute } from 'vue-router'
+import type { Evaluate, EvaluateResponseData } from '@/api/evaluate/type'
+import { getEvaluateByOid } from '@/api/evaluate'
 const overallRating = ref(0)
-const processRating = ref(3)
+const processRating = ref(0)
 const serviceRating = ref(0)
+const route = useRoute()
+const evaluate = ref<Evaluate>()
 const comment = ref(
-  '你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊'
+  ''
 )
 const loading = ref(false)
 const onRefresh = () => {
@@ -14,6 +19,33 @@ const onRefresh = () => {
     loading.value = false
   }, 1000)
 }
+onMounted(() => {
+  const oid = route.query.id
+  if (!oid) {
+    showFailToast('未找到订单信息')
+    return
+  }
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000,
+    async onOpened() {
+      // 查询评价详情
+      const res: EvaluateResponseData = await getEvaluateByOid({ oid: parseInt(oid as string) })
+      if (res.code === 200) {
+        const data: Evaluate = res.data
+        evaluate.value = data
+        overallRating.value = data.starLevel
+        processRating.value = data.processLevel
+        serviceRating.value = data.serverLevel
+        comment.value = data.content
+        showSuccessToast('加载成功')
+      } else {
+        showFailToast(res.message || '加载失败')
+      }
+    }
+  })
+})
 </script>
 
 <template>
@@ -55,7 +87,6 @@ const onRefresh = () => {
             rows="10"
             maxlength="300"
             show-word-limit
-            left-icon="edit"
           />
         </div>
       </div>
