@@ -155,13 +155,15 @@ const onEdit = (item: PatientData) => {
 const onSubmit = (values: any) => {
   showLoadingToast({
     message: '加载中...',
-    duration: 1000,
-    forbidClick: true
-    // onClose() {
-    //   router.push('/payment')
-    // }
+    duration: 2000,
+    forbidClick: true,
+    onOpened: () => {
+      addOrder()
+    }
   })
-  console.log(values)
+}
+
+function addOrder () {
   if (!serviceResultId.value||!patientResultId.value||!dateResult.value||!endDateResult.value) {
     showFailToast('请填写完整信息')
     return

@@ -58,26 +58,28 @@ const addMoney = async () => {
   showLoadingToast({
     message: '修改中...',
     duration: 2000,
-    forbidClick: true
+    forbidClick: true,
+    async onOpened() {
+      try {
+        const amount = Number(addNum.value)
+        const data: RechargeParams = {
+          id: userData.id,
+          money: amount
+        }
+        const res: ResponseData = await reqRecharge(data)
+        if (res.code === 200) {
+          showSuccessToast('成功充值' + amount + '元～')
+          userData.money += amount
+          currentUser.money += amount
+          showAdd.value = false
+        } else {
+          showFailToast(res.message || '充值失败')
+        }
+      } catch (error) {
+        showFailToast('充值失败')
+      }
+    }
   })
-  try {
-    const amount = Number(addNum.value)
-    const data: RechargeParams = {
-      id: userData.id,
-      money: amount
-    }
-    const res: ResponseData = await reqRecharge(data)
-    if (res.code === 200) {
-      showSuccessToast('成功充值' + amount + '元～')
-      userData.money += amount
-      currentUser.money += amount
-      showAdd.value = false
-    } else {
-      showFailToast(res.message || '充值失败')
-    }
-  } catch (error) {
-    showFailToast('充值失败')
-  }
 }
 const dropMoney = async () => {
   if (!isValidAmount(dropNum.value)) {
