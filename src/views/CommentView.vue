@@ -2,6 +2,7 @@
 import router from '@/router'
 import { ref } from 'vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import HaveCommentedOrder from '@/components/HaveCommentedOrder.vue'
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {
@@ -13,13 +14,13 @@ const onRefresh = () => {
 <template>
   <van-pull-refresh v-model="loading" @refresh="onRefresh">
     <div class="all">
-      <van-nav-bar title="待评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
+      <van-nav-bar title="已评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
       <div class="page">
-        <!-- <OrderItem
+        <HaveCommentedOrder
           v-for="(item, index) in 10"
           :key="index"
-          @click="router.push('/commentDetail')"
-        /> -->
+          @click="router.push('/haveCommentedDetail')"
+        />
       </div>
     </div>
   </van-pull-refresh>
