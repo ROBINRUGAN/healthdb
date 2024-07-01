@@ -113,12 +113,13 @@ export const useAuthStore = defineStore(
     const isLogin = () => {
       return !!token.value
     }
-    // const Logout = () => {
-    //   token.value = ''
-    //   username.value = ''
-    //   id.value = ''
-    //   router.push({ path: '/login' })
-    // }
+    const logout = () => {
+      token.value = ''
+      currentUser.id = 0
+      currentUser.nickname = '未登录'
+      currentUser.money = 0
+      router.push({ path: '/login' })
+    }
     const login = async (data: LoginParams) => {
       try {
         const res: LoginResponseData = await reqLogin(data)
@@ -216,6 +217,7 @@ export const useAuthStore = defineStore(
       setSelectedCity,
       setSelectedCityCode,
       login,
+      logout,
       isLogin,
       refreshUserInfo,
       getGenderStr,
