@@ -1,17 +1,24 @@
-import service from "@/utils/request"
-import type { ResponseData } from "../type"
-import type { Order, OrderListResponse, addOrdersEscortParams, addOrdersParams } from "./type"
+import service from '@/utils/request'
+import type { ResponseData } from '../type'
+import type {
+  Order,
+  OrderDetail,
+  OrderListResponse,
+  OrderListSearchParams,
+  addOrdersEscortParams,
+  addOrdersParams
+} from './type'
 
-enum API{
+enum API {
   // /orders/add
   ADD_ORDER = '/orders/add',
   // /orders/delete
   DELETE_ORDER = '/orders/delete',
   // /orders_escort/add
   ADD_ORDER_ESCORT = '/orders_escort/add',
-  // /orders/status  
+  // /orders/status
   // http://47.113.97.12:9001/orders/status?status=0&uid=1
-  UPDATE_ORDER_STATUS = '/orders/status',
+  QUERY_ORDER_BY_STATUS = '/orders/status',
   // /orders_escort/delete
   DELETE_ORDER_ESCORT = '/orders_escort/delete',
   // /orders/update/isFinished
@@ -21,7 +28,7 @@ enum API{
   // /orders/query/multiple
   QUERY_ORDER_MULTIPLE = '/orders/query/multiple',
   // /orders/update
-  UPDATE_ORDER = '/orders/update',
+  UPDATE_ORDER = '/orders/update'
 }
 
 export const reqAddOrder = (data: addOrdersParams) => {
@@ -36,8 +43,8 @@ export const reqAddOrderEscort = (data: addOrdersEscortParams) => {
   return service.post<any, ResponseData>(API.ADD_ORDER_ESCORT, data)
 }
 
-export const reqUpdateOrderStatus = (params: { status: number; uid: number }) => {
-  return service.get<any, OrderListResponse>(API.UPDATE_ORDER_STATUS, { params })
+export const reqQueryOrderByStatus = (params: { status: number; uid: number }) => {
+  return service.get<any, OrderListResponse>(API.QUERY_ORDER_BY_STATUS, { params })
 }
 
 export const reqDeleteOrderEscort = (id: number) => {
@@ -49,5 +56,13 @@ export const reqUpdateOrderIsFinished = (id: number) => {
 }
 
 export const reqQueryOrderById = (id: number) => {
-  return service.get<any, Order>(API.QUERY_ORDER_BY_ID + id)
+  return service.get<any, OrderDetail>(API.QUERY_ORDER_BY_ID + id)
+}
+
+export const reqQueryOrderMultiple = (data: OrderListSearchParams) => {
+  return service.post<any, OrderListResponse>(API.QUERY_ORDER_MULTIPLE, data)
+}
+
+export const reqUpdateOrder = (data: Order) => {
+  return service.post<any, ResponseData>(API.UPDATE_ORDER, data)
 }

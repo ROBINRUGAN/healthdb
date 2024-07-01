@@ -56,10 +56,7 @@ async function pay() {
         id: userData.id,
         money: order.value?.money as number
       }
-      const res: ResponseData = await reqDecrease(data)
-      if (res.code === 200) {
-        currentUser.money -= data.money
-      }
+      currentUser.money -= data.money
       showSuccessToast('支付成功')
       router.push('/order')
     } else {

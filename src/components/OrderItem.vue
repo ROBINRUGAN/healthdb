@@ -1,11 +1,28 @@
+<script setup lang="ts">
+import type { Order } from '@/api/order/type'
+import { onMounted, ref } from 'vue'
+const active = ref(3) // 设置当前激活的步骤
+const name = ref('邓新国')
+const time = ref('2024-06-30 19:23:12')
+
+const props = defineProps<{
+  order: Order
+}>()
+onMounted(() => {
+  active.value = props.order.status
+})
+</script>
+
+
+
 <template>
   <div class="hospital-badge">
-    <h4>订单号：12344213123</h4>
+    <h4>订单号：{{ order.oid }}</h4>
     <hr style="height: 1px; border: none; border-top: 1px dotted #a2a9b6; margin-bottom: 15px" />
     <div class="content">
-      <p>医院：福建医科大学附属协和医院</p>
-      <p>价格：88.00元</p>
-      <p>预约时间: {{ time }}</p>
+      <p>医院：{{ order.hname }}</p>
+      <p>价格：{{ order.money }} 元 </p>
+      <p>预约时间: {{ order.startTime }}</p>
     </div>
     <van-steps :active="active" direction="horizontal" active-color="#E99D42" class="steps">
       <van-step>
@@ -58,12 +75,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-const active = ref(3) // 设置当前激活的步骤
-const name = ref('邓新国')
-const time = ref('2024-06-30 19:23:12')
-</script>
+
 
 <style scoped>
 .hospital-badge {
