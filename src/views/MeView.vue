@@ -142,7 +142,6 @@ const joinQQGroup = () => {
               style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
               round
               size="large"
-              v-if="userStore.isCompanion"
               >{{ identity }}</van-tag
             >
           </div>
