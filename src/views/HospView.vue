@@ -7,7 +7,7 @@ import { useRoute } from 'vue-router'
 import { reqGetHospitalById } from '@/api/hosp'
 import type { Hospital, HospitalResponseData } from '@/api/hosp/type'
 import { useAuthStore } from '@/stores/auth'
-import { getEscortByHid } from '@/api/evaluate'
+
 import type { EvaluateListResponseData } from '@/api/evaluate/type'
 import type { EvaluateList } from '@/api/evaluate/type'
 const loading = ref(false)
@@ -37,7 +37,7 @@ const fetchComments = async () => {
     return
   }
   try {
-    const res: EvaluateListResponseData = await getEscortByHid(hospitalId)
+    const res: EvaluateListResponseData = await getEvaluateByHid(hospitalId)
     if (res.code === 200) {
       console.log(res.data)
       commentList.value = res.data
@@ -67,6 +67,10 @@ const queryHospitalDetails = async () => {
   } catch (error) {
     showFailToast('加载失败')
   }
+}
+
+function getEvaluateByHid (hospitalId: string): EvaluateListResponseData | PromiseLike<EvaluateListResponseData> {
+  throw new Error('Function not implemented.')
 }
 </script>
 <template>

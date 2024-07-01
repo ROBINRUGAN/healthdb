@@ -7,12 +7,13 @@ import { getOrderStatus, type Order, type OrderDetail } from '@/api/order/type'
 import { reqQueryOrderById } from '@/api/order'
 import type { Escort, EscortResponseData } from '@/api/escort/type'
 import { getEscortById } from '@/api/escort'
+import { useAuthStore } from '@/stores/auth'
 const route = useRoute()
+const userStore = useAuthStore()
 const order = ref<Order>()
 const showHelperInfo = ref(false)
 const escort = ref<Escort>()
 const showPopup = ref(false)
-
 const handleContactClick = () => {
   showPopup.value = true
 }
@@ -28,7 +29,6 @@ const onRefresh = () => {
     loading.value = false
   }, 1000)
   queryOrderDetails()
-
 }
 onMounted(() => {
   queryOrderDetails()
@@ -76,6 +76,27 @@ const queryEscortInfo = async () => {
     showFailToast('加载失败')
   }
 }
+const checkIfOrderCommented = (orderId: number) => {
+  return userStore.commentedOrderList.some((order) => order.oid === orderId)
+}
+
+const clickToComment = async () => {
+  const orderId = order.value?.oid
+  if (!orderId) {
+    console.error('订单ID不存在')
+    return
+  }
+  // 先查询是否已经评价
+  if (userStore.commentedOrderList.length === 0) {
+    // 先查
+    await userStore.queryCommentedOrderList()
+  }
+  if (checkIfOrderCommented(orderId)) {
+    showFailToast('您已经评价过了')
+  } else {
+    router.push({ path: '/commentdetail', query: { id: orderId } })
+  }
+}
 </script>
 
 <template>
@@ -86,11 +107,7 @@ const queryEscortInfo = async () => {
         <h3>{{ getOrderStatus(order?.status ?? 4) }}</h3>
         <h5>陪诊师：{{ order?.ename || '未有陪诊师接单' }}</h5>
         <h5>{{ order?.updateTime }}</h5>
-        <button
-          class="select"
-          style="margin-top: 20px; padding: 10px 0"
-          @click="queryEscortInfo()"
-        >
+        <button class="select" style="margin-top: 20px; padding: 10px 0" @click="queryEscortInfo()">
           查看陪诊师详细信息
         </button>
         <van-action-sheet v-model:show="showHelperInfo" title="陪诊师信息">
@@ -145,7 +162,7 @@ const queryEscortInfo = async () => {
         </div>
         <p class="puzzle">对订单有疑问？</p>
       </div>
-      <button class="select" @click="router.push('/commentdetail')">提交评价</button>
+      <button class="select" @click="clickToComment()" v-if="order?.status === 3">提交评价</button>
     </div>
 
     <van-popup v-model:show="showPopup" position="bottom" name="联系我们" round closeable>
