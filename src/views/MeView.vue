@@ -5,20 +5,33 @@ import type { RechargeParams, WithdrawParams } from '@/api/user/type'
 import mewImage from '@/assets/me/patient.jpeg'
 import { useAuthStore } from '@/stores/auth'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)
 const userData = reactive({
   nickname: currentUser.nickname,
   id: currentUser.id,
   money: currentUser.money,
-  avatar: currentUser.avatar
+  avatar: currentUser.avatar,
+  status: currentUser.status
 })
 const addNum = ref(0.0)
 const dropNum = ref(0.0)
 const showAdd = ref(false)
 const showDrop = ref(false)
 const loading = ref(false)
+const identity = computed(() => {
+  // userData.status
+  //0为用户 1为管理员 2为陪诊师
+  if (userData.status === 0) {
+    return '普通用户'
+  } else if (userData.status === 1) {
+    return '管理员'
+  } else if (userData.status === 2) {
+    return '陪诊师'
+  }
+  return '出错了'
+})
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
@@ -127,7 +140,7 @@ const joinQQGroup = () => {
               style="font-size: 10px; padding: 3px 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)"
               round
               size="large"
-              >陪诊师</van-tag
+              >{{ identity }}</van-tag
             >
           </div>
           <h5>id: {{ userData.id }}</h5>

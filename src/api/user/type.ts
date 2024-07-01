@@ -1,41 +1,41 @@
-import type { ResponseData } from "../type";
+import type { ResponseData } from '../type'
 
 // 注册接口需要携带参数ts类型
 export interface RegisterParams {
-  telephone: string;
-  password: string;
+  telephone: string
+  password: string
 }
 
-export interface registerResponseData extends ResponseData {
-
-}
+export interface registerResponseData extends ResponseData {}
 
 // 登录接口需要携带参数ts类型
 export interface LoginParams {
-  telephone: string;
-  password: string;
+  telephone: string
+  password: string
 }
 
 export interface LoginResponseData extends ResponseData {
   data: {
-    token: string;
-    nickname: string;
-    id: number;
-    isCompanion: number;
-    isIdentified: number;
-  };
+    token: string
+    nickname: string
+    id: number
+    isCompanion: number
+    isIdentified: number
+    status: number
+  }
 }
 
 export interface User {
-  id: number;
-  avatar?: string;
-  nickname?: string;
-  realname?: string;
-  gender?: number;
-  age?: number;
-  idNumber?: string;
-  telephone: string;
-  money: number;
+  id: number
+  avatar?: string
+  nickname?: string
+  realname?: string
+  gender?: number
+  age?: number
+  idNumber?: string
+  telephone: string
+  money: number
+  status: number
 }
 
 // 用户信息
@@ -45,35 +45,35 @@ export interface userInfoResponseData extends ResponseData {
 
 // 用户实名认证
 export interface IdentifyParams {
-  id: number;
-  name: string;
-  identity: string;
+  id: number
+  name: string
+  identity: string
 }
 
 // 修改用户信息
 export interface ModifyUserInfoParams {
-  id: number;
-  nickname?: string;
-  realname?: string;
-  age?: number;
-  password?: string;
-  gender?: number;
+  id: number
+  nickname?: string
+  realname?: string
+  age?: number
+  password?: string
+  gender?: number
 }
 
 // 修改用户头像
 export interface ModifyAvatarParams {
-  uid: number;
-  avatar: string;
+  uid: number
+  avatar: string
 }
 
 // 充值
 export interface RechargeParams {
-  id: number;
-  money: number;
+  id: number
+  money: number
 }
 
 // 提现
 export interface WithdrawParams {
-  id: number;
-  money: number;
+  id: number
+  money: number
 }
