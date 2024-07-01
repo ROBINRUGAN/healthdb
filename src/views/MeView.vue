@@ -185,7 +185,7 @@ const joinQQGroup = () => {
       </div>
 
       <van-cell-group class="group">
-        <van-cell class="groupItem" icon="records-o" title="待评价" is-link to="/comment" />
+        <van-cell class="groupItem" icon="records-o" title="我的评价" is-link to="/comment" />
         <van-cell class="groupItem" icon="user-o" title="个人信息" is-link to="userinfo" />
         <van-cell
           class="groupItem"

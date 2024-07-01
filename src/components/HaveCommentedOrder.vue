@@ -1,15 +1,35 @@
 <script setup lang="ts">
 import type { Order } from '@/api/order/type'
+import { reactive } from 'vue'
 import { onMounted, ref } from 'vue'
 const active = ref(3) // 设置当前激活的步骤
 const name = ref('邓新国')
 const time = ref('2024-06-30 19:23:12')
-
-const props = defineProps<{
-  order: Order
-}>()
+//TODO 静态数据记得改掉
+const order = reactive<Order>({
+  oid: 1,
+  hname: '广州市第一人民医院',
+  money: 1000,
+  startTime: '2024-06-30 19:23:12',
+  status: 3,
+  serverType: '',
+  pname: '',
+  gender: 0,
+  age: 0,
+  telephoneNumber: '',
+  relationship: '',
+  endTime: '',
+  requirement: '',
+  ename: '',
+  updateTime: '',
+  eid: 0
+})
+// const props = defineProps<{
+//   order: Order
+// }>()
 onMounted(() => {
-  active.value = props.order.status
+  // active.value = props.order.status
+  active.value = order.status
 })
 </script>
 
