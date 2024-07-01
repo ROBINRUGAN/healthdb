@@ -114,7 +114,11 @@ const joinQQGroup = () => {
   <van-pull-refresh v-model="loading" @refresh="onRefresh">
     <div class="all">
       <div class="top">
-        <van-image round width="80px" height="80px" :src="userData.avatar" />
+        <van-image round width="80px" height="80px" :src="userData.avatar">
+          <template v-slot:loading>
+            <van-loading type="spinner" size="20" />
+          </template>
+        </van-image>
         <div class="info">
           <div style="display: flex; align-items: center">
             <h3 style="margin-right: 5px; margin-top: 2px">{{ userData.nickname }}</h3>

@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import router from '@/router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { showDialog } from 'vant'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { useRoute } from 'vue-router'
 import type { addOrdersParams } from '@/api/order/type'
 import { reqAddOrder } from '@/api/order'
+import type { WithdrawParams } from '@/api/user/type'
+import type { ResponseData } from '@/api/type'
+import { reqDecrease } from '@/api/user'
+import { useAuthStore } from '@/stores/auth'
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
+const userData = reactive({
+  nickname: currentUser.nickname,
+  id: currentUser.id,
+  money: currentUser.money,
+  avatar: currentUser.avatar
+})
 const loading = ref(false)
 const route = useRoute()
 const order = ref<addOrdersParams>()
@@ -40,6 +52,14 @@ async function pay() {
   try {
     const res = await reqAddOrder(order.value!)
     if (res.code === 200) {
+      const data: WithdrawParams = {
+        id: userData.id,
+        money: order.value?.money as number
+      }
+      const res: ResponseData = await reqDecrease(data)
+      if (res.code === 200) {
+        currentUser.money -= data.money
+      }
       showSuccessToast('支付成功')
       router.push('/order')
     } else {
