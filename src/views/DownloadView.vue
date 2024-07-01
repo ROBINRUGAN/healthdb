@@ -19,6 +19,10 @@ const onRefresh = () => {
     loading.value = false
   }, 1000)
 }
+const downloadAndroid = () => {
+  // 替换为你的 QQ 群链接
+  window.location.href = 'http://8.138.10.18:8888/down/OmUH3Y5oog5C.apk'
+}
 </script>
 
 <template>
@@ -43,7 +47,11 @@ const onRefresh = () => {
             <h3>你的就医助理</h3>
           </div>
         </div>
-        <button class="select" :class="{ animated: animate, 'hidden-initially': !animate }">
+        <button
+          class="select"
+          :class="{ animated: animate, 'hidden-initially': !animate }"
+          @click="downloadAndroid"
+        >
           <img src="@/assets/download/Android.svg" class="icon" alt="" />
           <span>EasyCare For Android</span>
         </button>
