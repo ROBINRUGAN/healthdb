@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { watch, ref } from 'vue'
-const mewch = ref(true)
+import { RouterView } from 'vue-router'
+import { useAuthStore } from './stores/auth'
+let userStore = useAuthStore()
 </script>
 
 <template>
@@ -9,12 +9,16 @@ const mewch = ref(true)
     <router-view />
   </transition>
 
-  <van-tabbar route v-if="mewch">
+  <van-tabbar route v-if="userStore.token">
     <van-tabbar-item replace to="/home" icon="home-o">主页</van-tabbar-item>
     <van-tabbar-item replace to="/order" icon="notes-o">我的订单</van-tabbar-item>
     <!-- 这里要二选一掉 -->
-    <van-tabbar-item replace to="/join" icon="smile-o">成为陪诊</van-tabbar-item>
-    <van-tabbar-item replace to="/company" icon="smile-o">陪诊客户</van-tabbar-item>
+    <van-tabbar-item v-if="!userStore.isCompanion" replace to="/join" icon="smile-o"
+      >成为陪诊</van-tabbar-item
+    >
+    <van-tabbar-item v-if="userStore.isCompanion" replace to="/company" icon="smile-o"
+      >陪诊客户</van-tabbar-item
+    >
     <van-tabbar-item replace to="/me" icon="contact-o">我的</van-tabbar-item>
   </van-tabbar>
 </template>

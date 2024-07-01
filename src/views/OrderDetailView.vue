@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import router from '@/router'
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { useRoute } from 'vue-router'
+import { showFailToast, showLoadingToast } from 'vant'
 import { getOrderStatus, type Order, type OrderDetail } from '@/api/order/type'
 import { reqQueryOrderById } from '@/api/order'
 import type { Escort, EscortResponseData } from '@/api/escort/type'
@@ -21,14 +21,6 @@ const handleContactClick = () => {
 const handleCall = (phone: string) => {
   showLoadingToast('加载中...')
   window.location.href = `tel:${phone}`
-}
-const loading = ref(false)
-const onRefresh = () => {
-  setTimeout(() => {
-    showSuccessToast('刷新成功')
-    loading.value = false
-  }, 1000)
-  queryOrderDetails()
 }
 onMounted(() => {
   queryOrderDetails()

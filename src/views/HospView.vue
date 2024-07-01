@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from '@/router'
 import { onMounted, ref } from 'vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import CommentItem from '@/components/CommentItem.vue'
 import { useRoute } from 'vue-router'
 import { reqGetHospitalById } from '@/api/hosp'
@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth'
 
 import type { EvaluateListResponseData } from '@/api/evaluate/type'
 import type { EvaluateList } from '@/api/evaluate/type'
+import { getEscortByHid } from '@/api/evaluate'
 const loading = ref(false)
 const route = useRoute()
 const userStore = useAuthStore()
@@ -24,8 +25,11 @@ const onRefresh = () => {
 }
 
 onMounted(() => {
-  showLoadingToast({ 
-    message: '加载中...', forbidClick: true, duration: 1000 })
+  showLoadingToast({
+    message: '加载中...',
+    forbidClick: true,
+    duration: 1000
+  })
   queryHospitalDetails()
   fetchComments()
 })
@@ -36,16 +40,14 @@ const fetchComments = async () => {
     showFailToast('未找到医院信息')
     return
   }
-  try {
-    const res: EvaluateListResponseData = await getEvaluateByHid(hospitalId)
-    if (res.code === 200) {
-      console.log(res.data)
-      commentList.value = res.data
-    } else {
-      showFailToast(res.message || '加载失败')
-    }
-  } catch (error) {
-    showFailToast('加载失败')
+  const res: EvaluateListResponseData = await getEscortByHid(hospitalId)
+  console.log('mew')
+  console.log(res)
+  if (res.code === 200) {
+    console.log(res.data)
+    commentList.value = res.data
+  } else {
+    showFailToast(res.message || '加载失败')
   }
 }
 
@@ -67,10 +69,6 @@ const queryHospitalDetails = async () => {
   } catch (error) {
     showFailToast('加载失败')
   }
-}
-
-function getEvaluateByHid (hospitalId: string): EvaluateListResponseData | PromiseLike<EvaluateListResponseData> {
-  throw new Error('Function not implemented.')
 }
 </script>
 <template>

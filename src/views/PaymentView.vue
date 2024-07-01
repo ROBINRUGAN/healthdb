@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import router from '@/router'
 import { onMounted, ref, reactive } from 'vue'
-import { showDialog } from 'vant'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { useRoute } from 'vue-router'
 import type { addOrdersParams } from '@/api/order/type'
 import { reqAddOrder } from '@/api/order'
-import type { WithdrawParams } from '@/api/user/type'
-import type { ResponseData } from '@/api/type'
-import { reqDecrease } from '@/api/user'
 import { useAuthStore } from '@/stores/auth'
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)

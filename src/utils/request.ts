@@ -1,6 +1,5 @@
 import router from '@/router'
 import axios from 'axios'
-import { ro } from 'element-plus/es/locales.mjs'
 import { showFailToast } from 'vant'
 
 // 创建axios实例
@@ -17,7 +16,7 @@ service.interceptors.request.use(
     const authString = window.localStorage.getItem('auth')
     let token = ''
     if (authString) {
-      const auth= JSON.parse(authString)
+      const auth = JSON.parse(authString)
       token = auth.token
     }
     if (token) {

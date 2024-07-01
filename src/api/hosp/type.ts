@@ -1,9 +1,5 @@
-
-
 // 医院
-
-import exp from "constants"
-import type { ResponseData } from "../type"
+import type { ResponseData } from '../type'
 
 // hospitalLevel: 1 二级甲等
 // hospitalLevel: 2 三级甲等
@@ -12,7 +8,6 @@ import type { ResponseData } from "../type"
 // hospitalLevel: 5 二级医院
 // hospitalLevel: 6 一级医院
 // hospitalLevel: 7 未评级
-
 
 export interface Hospital {
   id: number
@@ -25,12 +20,12 @@ export interface Hospital {
   photo?: string
 }
 
-export interface HospitalResponseData extends ResponseData{
+export interface HospitalResponseData extends ResponseData {
   data: Hospital
 }
 
 export type HospitalList = Hospital[]
 
-export interface HospitalListResponseData extends ResponseData{
+export interface HospitalListResponseData extends ResponseData {
   data: HospitalList
 }
