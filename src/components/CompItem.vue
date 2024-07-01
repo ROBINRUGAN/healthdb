@@ -4,11 +4,8 @@ import { reqAddOrderEscort } from '@/api/order'
 import type { addOrdersEscortParams } from '@/api/order/type'
 import type { ResponseData } from '@/api/type'
 import { useAuthStore } from '@/stores/auth'
-import { get } from 'node_modules/axios/index.cjs'
 import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
-const route = useRoute()
 const active = ref(1) // 设置当前激活的步骤
 const enableGetOrder = ref(true)
 const userStore = useAuthStore()

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from '@/router'
 import { onMounted, ref } from 'vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import CommentItem from '@/components/CommentItem.vue'
 import { useRoute } from 'vue-router'
 import { reqGetHospitalById } from '@/api/hosp'
@@ -10,12 +10,7 @@ import { useAuthStore } from '@/stores/auth'
 
 import type { EvaluateListResponseData } from '@/api/evaluate/type'
 import type { EvaluateList } from '@/api/evaluate/type'
-import {
-  getEscortByHid,
-  getEvaluateByOid,
-  getEvaluateByUid,
-  getEvaluatedOrder
-} from '@/api/evaluate'
+import { getEscortByHid } from '@/api/evaluate'
 const loading = ref(false)
 const route = useRoute()
 const userStore = useAuthStore()

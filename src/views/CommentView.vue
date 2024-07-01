@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from '@/router'
 import { onMounted, reactive, ref } from 'vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showLoadingToast, showSuccessToast } from 'vant'
 import HaveCommentedOrder from '@/components/HaveCommentedOrder.vue'
 import { useAuthStore } from '@/stores/auth'
 const loading = ref(false)
@@ -33,7 +33,7 @@ onMounted(async () => {
           v-for="(item, index) in userStore.commentedOrderList"
           :key="index"
           :order="item"
-          @click="router.push({path:'/haveCommentedDetail', query: { id: item.oid }})"
+          @click="router.push({ path: '/haveCommentedDetail', query: { id: item.oid } })"
         />
       </div>
     </div>

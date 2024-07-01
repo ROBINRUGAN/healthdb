@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { useRoute } from 'vue-router'
 import type { Evaluate, EvaluateResponseData } from '@/api/evaluate/type'
 import { getEvaluateByOid } from '@/api/evaluate'
@@ -9,9 +9,7 @@ const processRating = ref(0)
 const serviceRating = ref(0)
 const route = useRoute()
 const evaluate = ref<Evaluate>()
-const comment = ref(
-  ''
-)
+const comment = ref('')
 const loading = ref(false)
 const onRefresh = () => {
   setTimeout(() => {

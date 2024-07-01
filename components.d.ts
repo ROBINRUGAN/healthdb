@@ -7,13 +7,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Bar: typeof import('./src/components/bar.vue')['default']
     BarLine: typeof import('./src/components/BarLine.vue')['default']
     CardItem: typeof import('./src/components/CardItem.vue')['default']
-    CardView: typeof import('./src/components/CardView.vue')['default']
     CommentItem: typeof import('./src/components/CommentItem.vue')['default']
     CompItem: typeof import('./src/components/CompItem.vue')['default']
-    copy: typeof import('./src/components/OrderItem copy.vue')['default']
     HaveCommentedOrder: typeof import('./src/components/HaveCommentedOrder.vue')['default']
     HospItem: typeof import('./src/components/HospItem.vue')['default']
     OrderItem: typeof import('./src/components/OrderItem.vue')['default']
@@ -27,7 +24,6 @@ declare module 'vue' {
     VanContactCard: typeof import('vant/es')['ContactCard']
     VanDatePicker: typeof import('vant/es')['DatePicker']
     VanDialog: typeof import('vant/es')['Dialog']
-    VanDivider: typeof import('vant/es')['Divider']
     VanField: typeof import('vant/es')['Field']
     VanForm: typeof import('vant/es')['Form']
     VanIcon: typeof import('vant/es')['Icon']

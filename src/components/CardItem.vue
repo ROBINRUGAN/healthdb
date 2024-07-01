@@ -1,17 +1,17 @@
 <template>
   <div class="card">
     <div class="header">
-      <h3>{{ article.title }}</h3>
+      <h3>{{ props.article.title }}</h3>
     </div>
     <div class="content">
-      <p>{{ article.content }}</p>
+      <p>{{ props.article.content }}</p>
     </div>
     <div class="footer">
-      <img :src="article.avatar" alt="Doctor" />
+      <img :src="props.article.avatar" alt="Doctor" />
       <div class="info">
-        <span>{{ article.name }}</span>
+        <span>{{ props.article.name }}</span>
         &nbsp;
-        <span style="color: darkgray">{{ article.position }}</span>
+        <span style="color: darkgray">{{ props.article.position }}</span>
       </div>
     </div>
   </div>
@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import type { Article } from '@/api/article/type'
-import { ref } from 'vue'
 const props = defineProps<{
   article: Article
 }>()

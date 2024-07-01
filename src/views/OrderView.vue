@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
 import OrderItem from '@/components/OrderItem.vue'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
-import { reqQueryOrderByStatus, reqQueryOrderMultiple } from '@/api/order'
+import { reqQueryOrderMultiple } from '@/api/order'
 import type { Order, OrderList, OrderListResponse, OrderListSearchParams } from '@/api/order/type'
 const active = ref(4)
 const showPopup = ref(false)

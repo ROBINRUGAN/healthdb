@@ -2,9 +2,8 @@
 import type { ResponseData } from '@/api/type'
 import { reqDecrease, reqRecharge } from '@/api/user'
 import type { RechargeParams, WithdrawParams } from '@/api/user/type'
-import mewImage from '@/assets/me/patient.jpeg'
 import { useAuthStore } from '@/stores/auth'
-import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import { ref, reactive, onMounted, computed } from 'vue'
 const userStore = useAuthStore()
 const currentUser = reactive(userStore.currentUser)

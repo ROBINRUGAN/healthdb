@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
 import CompItem from '@/components/CompItem.vue'
-import { Toast, showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import type {
   OrdersEscort,
   OrdersEscortList,

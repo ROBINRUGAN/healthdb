@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { watch, ref } from 'vue'
+import { RouterView } from 'vue-router'
 import { useAuthStore } from './stores/auth'
-const mewch = ref(true)
 let userStore = useAuthStore()
 </script>
 
