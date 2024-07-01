@@ -4,7 +4,7 @@
       <h3>{{ props.article.title }}</h3>
     </div>
     <div class="content">
-      <p>{{ props.article.content }}</p>
+      <p class="van-multi-ellipsis--l3">{{ cleanedContent }}</p>
     </div>
     <div class="footer">
       <img :src="props.article.avatar" alt="Doctor" />
@@ -19,9 +19,14 @@
 
 <script setup lang="ts">
 import type { Article } from '@/api/article/type'
+import { computed } from 'vue'
 const props = defineProps<{
   article: Article
 }>()
+// 创建一个计算属性来处理内容，移除所有的<p>和</p>标签
+const cleanedContent = computed(() => {
+  return props.article!.content!.replace(/<\/?p>/g, '')
+})
 </script>
 
 <style scoped>
