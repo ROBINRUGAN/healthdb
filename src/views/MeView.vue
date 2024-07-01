@@ -79,31 +79,31 @@ const dropMoney = async () => {
   showLoadingToast({
     message: '修改中...',
     duration: 1000,
-    forbidClick: true,
+    forbidClick: true
     // onClose() {
     //   showSuccessToast('成功提现' + amount + '元～')
     //   userData.money -= amount
     //   showDrop.value = false
     // }
   })
-    try{
-      const data: WithdrawParams = {
-        id: userData.id,
-        money: amount
-      }
-      const res: ResponseData = await reqDecrease(data)
-      if(res.code === 200) {
-        showSuccessToast('成功提现' + amount + '元～')
-        userData.money -= amount
-        currentUser.money -= amount
-        showDrop.value = false
-      } else {
-        showFailToast(res.message || '提现失败')
-      }
-    }catch(error) {
-      showFailToast('提现失败')
+  try {
+    const data: WithdrawParams = {
+      id: userData.id,
+      money: amount
     }
+    const res: ResponseData = await reqDecrease(data)
+    if (res.code === 200) {
+      showSuccessToast('成功提现' + amount + '元～')
+      userData.money -= amount
+      currentUser.money -= amount
+      showDrop.value = false
+    } else {
+      showFailToast(res.message || '提现失败')
+    }
+  } catch (error) {
+    showFailToast('提现失败')
   }
+}
 const joinQQGroup = () => {
   // 替换为你的 QQ 群链接
   window.location.href = 'https://qm.qq.com/q/mHztyowGiY'
@@ -177,6 +177,8 @@ const joinQQGroup = () => {
         />
         <van-cell class="groupItem" icon="chat-o" title="意见反馈" is-link @click="joinQQGroup" />
       </van-cell-group>
+      <button v-if="userStore.token" class="select-o" @click="userStore.logout">退出登录</button>
+      <button v-if="userStore.token == ''" class="select" @click="userStore.logout">去登录</button>
     </div>
   </van-pull-refresh>
 </template>
@@ -264,5 +266,39 @@ h1 {
   font-weight: bold;
   line-height: 30px;
   border-radius: 10px;
+}
+.select-o {
+  width: 80%;
+  margin-left: 10%;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to bottom, rgb(255, 55, 55), rgb(177, 21, 21));
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.select-o:active {
+  background-image: linear-gradient(to top, rgb(255, 55, 55), rgb(177, 21, 21));
+}
+.select {
+  width: 80%;
+  margin-left: 10%;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to bottom, rgb(130, 123, 252), rgb(74, 75, 183));
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.select:active {
+  background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
 }
 </style>

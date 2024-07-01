@@ -5,8 +5,10 @@
     <div class="content">
       <p>医院：福建医科大学附属协和医院</p>
       <p>就诊人：林黄晓</p>
-      <p>预约时间: {{ time }}</p>
+      <p>开始时间: {{ startTime }}</p>
+      <p>结束时间: {{ endTime }}</p>
     </div>
+    <button class="select" @click.prevent="getOrder">立即接单</button>
     <van-steps :active="active" direction="horizontal" active-color="#E99D42" class="steps">
       <van-step>
         <template #finish-icon>
@@ -59,10 +61,21 @@
 </template>
 
 <script setup lang="ts">
+import { showLoadingToast, showSuccessToast } from 'vant'
 import { ref } from 'vue'
 const active = ref(3) // 设置当前激活的步骤
 const name = ref('邓新国')
-const time = ref('2024-06-30 19:23:12')
+const startTime = ref('2024-06-30 19:23:12')
+const endTime = ref('2024-06-30 19:23:12')
+function getOrder() {
+  showLoadingToast({
+    message: '正在接单...',
+    duration: 1000,
+    onClose: () => {
+      showSuccessToast('接单成功')
+    }
+  })
+}
 </script>
 
 <style scoped>
@@ -106,5 +119,23 @@ h4 {
   margin: auto;
   margin-top: -10px;
   margin-bottom: 20px;
+}
+.select {
+  width: 90%;
+  /* margin: auto; */
+  margin-left: 5%;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to bottom, rgb(130, 123, 252), rgb(74, 75, 183));
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+.select:active {
+  background-image: linear-gradient(to top, rgb(130, 123, 252), rgb(110, 112, 230));
 }
 </style>
