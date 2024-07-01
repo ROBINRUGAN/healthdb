@@ -74,6 +74,7 @@ const queryByMultiple = async (data: OrderListSearchParams) => {
   console.log(res)
   if (res.code === 200) {
     showSuccessToast('查询成功')
+    console.log(res.data)
     orderList.value = res.data
   } else {
     showFailToast('查询失败')
