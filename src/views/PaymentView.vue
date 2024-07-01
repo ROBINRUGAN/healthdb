@@ -52,11 +52,6 @@ async function pay() {
   try {
     const res = await reqAddOrder(order.value!)
     if (res.code === 200) {
-      const data: WithdrawParams = {
-        id: userData.id,
-        money: order.value?.money as number
-      }
-      currentUser.money -= data.money
       showSuccessToast('支付成功')
       router.push('/order')
     } else {

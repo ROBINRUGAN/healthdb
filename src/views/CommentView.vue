@@ -15,11 +15,11 @@ const onRefresh = () => {
     <div class="all">
       <van-nav-bar title="待评价订单" left-text="返回" left-arrow @click-left="$router.go(-1)" />
       <div class="page">
-        <OrderItem
+        <!-- <OrderItem
           v-for="(item, index) in 10"
           :key="index"
           @click="router.push('/commentDetail')"
-        />
+        /> -->
       </div>
     </div>
   </van-pull-refresh>

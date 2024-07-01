@@ -14,6 +14,7 @@ declare module 'vue' {
     CommentItem: typeof import('./src/components/CommentItem.vue')['default']
     CompItem: typeof import('./src/components/CompItem.vue')['default']
     copy: typeof import('./src/components/OrderItem copy.vue')['default']
+    HaveCommentedOrder: typeof import('./src/components/HaveCommentedOrder.vue')['default']
     HospItem: typeof import('./src/components/HospItem.vue')['default']
     OrderItem: typeof import('./src/components/OrderItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

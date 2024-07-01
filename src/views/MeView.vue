@@ -141,7 +141,7 @@ const joinQQGroup = () => {
               round
               size="large"
               v-if="userStore.isCompanion"
-              >陪诊师</van-tag
+              >{{ identity }}</van-tag
             >
           </div>
           <h5>id: {{ userData.id }}</h5>
