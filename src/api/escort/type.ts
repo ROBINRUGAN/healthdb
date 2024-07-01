@@ -32,7 +32,7 @@ export interface Escort {
   gender: number
   telephone: string
   areaCode: string
-  name: string
+  ename: string
   identity: string
   isPassed: number
 }

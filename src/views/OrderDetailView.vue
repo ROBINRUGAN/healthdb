@@ -113,7 +113,7 @@ const clickToComment = async () => {
         </button>
         <van-action-sheet v-model:show="showHelperInfo" title="陪诊师信息">
           <van-cell-group>
-            <van-cell title="姓名" :value="escort?.name" />
+            <van-cell title="姓名" :value="escort?.ename" />
             <van-cell title="性别" :value="escort?.gender === 1 ? '男' : '女'" />
             <van-cell title="年龄" :value="escort?.age" />
             <van-cell
