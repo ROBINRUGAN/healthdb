@@ -5,6 +5,8 @@ import type { ResponseData } from "../type"
 enum API{
   // 申请陪诊师
   ADD_ESCORT = '/escort/add',
+  // 查询陪诊师可接单的订单
+  GET_ESCORT_ORDER_BY_UID = '/escort/query/by/',
   // 根据id查询陪诊师信息
   GET_ESCORT_BY_ID = '/escort/get/my/',
   // 根据陪诊师订单完成状态查询订单
@@ -26,3 +28,6 @@ export const getEscortOrderByStatus = (params: { status: number; uid: number }) 
   return request.get<any,OrdersEscortListResponseData>(API.GET_ESCORT_ORDER_BY_STATUS, { params })
 }
 
+export const getEscortOrderByUid = (id: number) => {
+  return request.get<any,OrdersEscortListResponseData>(API.GET_ESCORT_ORDER_BY_UID + id)
+}

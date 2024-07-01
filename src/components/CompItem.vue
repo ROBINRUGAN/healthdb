@@ -37,6 +37,7 @@ async function getOrder() {
     showSuccessToast('接单成功')
     active.value = 1
     enableGetOrder.value = false
+    props.orderEscort.status = 1
   } else {
     showFailToast(res.message || '接单失败')
   }
