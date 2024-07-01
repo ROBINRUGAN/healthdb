@@ -1,14 +1,68 @@
+<script setup lang="ts">
+import type { OrdersEscort } from '@/api/escort/type'
+import { reqAddOrderEscort } from '@/api/order'
+import type { addOrdersEscortParams } from '@/api/order/type'
+import type { ResponseData } from '@/api/type'
+import { useAuthStore } from '@/stores/auth'
+import { get } from 'node_modules/axios/index.cjs'
+import { showFailToast, showLoadingToast, showSuccessToast } from 'vant'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const active = ref(1) // 设置当前激活的步骤
+const enableGetOrder = ref(true)
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
+async function getOrder() {
+  showLoadingToast({
+    message: '正在接单...',
+    duration: 1000,
+  })
+  // 判断是否可以接单
+  if (props.orderEscort.status !== 0) {
+    showFailToast('订单已被接单')
+    return
+  }
+  if (!props.orderEscort.oid) {
+    showFailToast('未找到订单信息')
+    return
+  }
+  // 接单
+  const data:addOrdersEscortParams = {
+    oid: props.orderEscort.oid,
+    uid: currentUser.id,
+  }
+  const res: ResponseData = await reqAddOrderEscort(data)
+  if (res.code === 200) {
+    showSuccessToast('接单成功')
+    active.value = 1
+    enableGetOrder.value = false
+  } else {
+    showFailToast(res.message || '接单失败')
+  }
+}
+
+const props = defineProps<{
+  orderEscort: OrdersEscort
+}>()
+onMounted(() => {
+  active.value = props.orderEscort.status as number
+  enableGetOrder.value = props.orderEscort.status === 0
+})
+</script>
+
 <template>
   <div class="hospital-badge">
-    <h4>订单号：12344213123</h4>
+    <h4>订单号：{{ orderEscort.oid }}</h4>
     <hr style="height: 1px; border: none; border-top: 1px dotted #a2a9b6; margin-bottom: 15px" />
     <div class="content">
-      <p>医院：福建医科大学附属协和医院</p>
-      <p>就诊人：林黄晓</p>
-      <p>开始时间: {{ startTime }}</p>
-      <p>结束时间: {{ endTime }}</p>
+      <p>服务类型：{{ orderEscort.serverType }}</p>
+      <p>医院：{{orderEscort.hname}}</p>
+      <p>就诊人：{{ orderEscort.pname }}</p>
+      <p>开始时间: {{ orderEscort.startTime }}</p>
+      <p>结束时间: {{ orderEscort.endTime }}</p>
     </div>
-    <button class="select" @click.prevent="getOrder">立即接单</button>
+    <button class="select" @click.prevent="getOrder" v-if="enableGetOrder">立即接单</button>
     <van-steps :active="active" direction="horizontal" active-color="#E99D42" class="steps">
       <van-step>
         <template #finish-icon>
@@ -60,23 +114,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { showLoadingToast, showSuccessToast } from 'vant'
-import { ref } from 'vue'
-const active = ref(1) // 设置当前激活的步骤
-const name = ref('邓新国')
-const startTime = ref('2024-06-30 19:23:12')
-const endTime = ref('2024-06-30 19:23:12')
-function getOrder() {
-  showLoadingToast({
-    message: '正在接单...',
-    duration: 1000,
-    onClose: () => {
-      showSuccessToast('接单成功')
-    }
-  })
-}
-</script>
+
 
 <style scoped>
 .hospital-badge {

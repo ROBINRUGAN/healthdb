@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import OrderItem from '@/components/OrderItem.vue'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
 import router from '@/router'
+import { useAuthStore } from '@/stores/auth'
+import { reqQueryOrderByStatus, reqQueryOrderMultiple } from '@/api/order'
+import type { Order, OrderList, OrderListResponse, OrderListSearchParams } from '@/api/order/type'
 const active = ref(0)
 const showPopup = ref(false)
 const showDatePicker = ref(false)
@@ -11,22 +14,33 @@ const dateResult = ref('')
 const value = ref('')
 const address = ref('')
 const loading = ref(false)
+const queryStatus = ref(4)
+const userStore = useAuthStore()
+const currentUser = reactive(userStore.currentUser)
+const orderList = ref<OrderList>()
 const onRefresh = () => {
   setTimeout(() => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  queryOrderByStatus()
 }
+onMounted(() => {
+  queryOrderByStatus()
+})
 const onSearch = (val: any) => {
   showLoadingToast({
     message: '加载中...',
     forbidClick: true,
-    duration: 1000,
-    onOpened() {
-      // router.push('/search')
-      // router.push({ path: 'search', query: { keyword: value.value } })
-    }
+    duration: 1000
   })
+  const data: OrderListSearchParams = {
+    uid: currentUser.id,
+    name: val === '' ? undefined : val,
+    startTime: dateResult.value ? dateResult.value : undefined,
+    status: queryStatus.value
+  }
+  queryByMultiple(data)
 }
 //设置成本地时间
 const currentDate = ref([
@@ -38,13 +52,50 @@ const currentTime = ref([new Date().getHours().toString(), new Date().getMinutes
 
 const onDateConfirm = () => {
   // showSuccessToast(`${currentDate.value.join('/')} ${currentTime.value.join(':')}`)
-  dateResult.value = `${currentDate.value.join('/')} ${currentTime.value.join(':')}`
+  dateResult.value = `${currentDate.value.join('-')} ${currentTime.value.join(':')}` + ':00'
   showDatePicker.value = false
+  const data: OrderListSearchParams = {
+    uid: currentUser.id,
+    startTime: dateResult.value,
+    status: queryStatus.value
+  }
+  queryByMultiple(data)
 }
 
 const onConfirm = (result: any) => {
   address.value = result.selectedOptions.map((option: { text: string }) => option.text).join(' ')
   showPopup.value = false
+}
+
+const queryByMultiple = async (data: OrderListSearchParams) => {
+  orderList.value = []
+  console.log(data)
+  const res: OrderListResponse = await reqQueryOrderMultiple(data)
+  console.log(res)
+  if (res.code === 200) {
+    showSuccessToast('查询成功')
+    orderList.value = res.data
+  } else {
+    showFailToast('查询失败')
+  }
+}
+
+// 根据订单状态查询
+const queryOrderByStatus = async () => {
+  queryByMultiple({
+    uid: currentUser.id,
+    status: queryStatus.value
+  })
+}
+// 监听tabs的切换
+watch(active, () => {
+  queryStatus.value = active.value
+  queryOrderByStatus()
+})
+
+const detail = (item: Order) => {
+  console.log(item.oid)
+  router.push({ path: '/orderDetail', query: { id: item.oid as number } })
 }
 </script>
 
@@ -91,39 +142,54 @@ const onConfirm = (result: any) => {
       </van-popup>
 
       <van-tabs v-model:active="active" swipeable>
-        <van-tab title="全部" name="a">
+        <van-tab title="全部" :name="4">
           <div class="page">
-            <router-link to="/orderDetail">
-              <OrderItem v-for="(item, index) in 10" :key="index" />
-            </router-link>
+            <OrderItem
+              v-for="(item, index) in orderList"
+              :key="index"
+              :order="item"
+              @click="detail(item)"
+            />
           </div>
         </van-tab>
-        <van-tab title="已下单" name="b">
+        <van-tab title="已下单" :name="0">
           <div class="page">
-            <router-link to="/orderDetail">
-              <OrderItem v-for="(item, index) in 2" :key="index" />
-            </router-link>
+            <OrderItem
+              v-for="(item, index) in orderList"
+              :key="index"
+              :order="item"
+              @click="detail(item)"
+            />
           </div>
         </van-tab>
-        <van-tab title="已接单" name="b">
+        <van-tab title="已接单" :name="1">
           <div class="page">
-            <router-link to="/orderDetail">
-              <OrderItem v-for="(item, index) in 5" :key="index" />
-            </router-link>
+            <OrderItem
+              v-for="(item, index) in orderList"
+              :key="index"
+              :order="item"
+              @click="detail(item)"
+            />
           </div>
         </van-tab>
-        <van-tab title="进行中" name="b">
+        <van-tab title="进行中" :name="2">
           <div class="page">
-            <router-link to="/orderDetail">
-              <OrderItem v-for="(item, index) in 2" :key="index" />
-            </router-link>
+            <OrderItem
+              v-for="(item, index) in orderList"
+              :key="index"
+              :order="item"
+              @click="detail(item)"
+            />
           </div>
         </van-tab>
-        <van-tab title="已完成" name="b">
+        <van-tab title="已完成" :name="3">
           <div class="page">
-            <router-link to="/orderDetail">
-              <OrderItem v-for="(item, index) in 1" :key="index" />
-            </router-link>
+            <OrderItem
+              v-for="(item, index) in orderList"
+              :key="index"
+              :order="item"
+              @click="detail(item)"
+            />
           </div>
         </van-tab>
       </van-tabs>

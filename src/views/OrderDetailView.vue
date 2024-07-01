@@ -1,27 +1,16 @@
 <script setup lang="ts">
 import router from '@/router'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast } from 'vant'
-const overallRating = ref(0)
-const processRating = ref(0)
-const serviceRating = ref(0)
-const comment = ref('')
+import { getOrderStatus, type Order, type OrderDetail } from '@/api/order/type'
+import { reqQueryOrderById } from '@/api/order'
+import type { Escort, EscortResponseData } from '@/api/escort/type'
+import { getEscortById } from '@/api/escort'
+const route = useRoute()
+const order = ref<Order>()
 const showHelperInfo = ref(false)
-const orderInfo = ref({
-  serviceType: '协助挂号',
-  patientName: '王李芸',
-  gender: '女',
-  age: '58周岁',
-  phone: '134****2361',
-  relationship: '本人',
-  startTime: '2024/03/01 08:40',
-  endTime: '2024/03/01 19:30',
-  hospital: '福建医科大学附属协和医院',
-  orderId: '1532478569008',
-  remark: '无'
-})
-
+const escort = ref<Escort>()
 const showPopup = ref(false)
 
 const handleContactClick = () => {
@@ -38,6 +27,54 @@ const onRefresh = () => {
     showSuccessToast('刷新成功')
     loading.value = false
   }, 1000)
+  queryOrderDetails()
+
+}
+onMounted(() => {
+  queryOrderDetails()
+})
+
+const queryOrderDetails = async () => {
+  showLoadingToast({ message: '加载中...', forbidClick: true, duration: 1000 })
+  const data = route.query.id
+  if (!data) {
+    showFailToast('未找到订单信息')
+    return
+  }
+  try {
+    const id = parseInt(data as string)
+    const res: OrderDetail = await reqQueryOrderById(id)
+    if (res.code === 200) {
+      order.value = res.data
+      console.log(order.value)
+    } else {
+      showFailToast(res.message || '加载失败')
+    }
+  } catch (error) {
+    showFailToast('加载失败')
+  }
+}
+
+// 查询陪诊师信息
+const queryEscortInfo = async () => {
+  showLoadingToast({ message: '加载中...', forbidClick: true, duration: 1000 })
+  console.log(order.value?.eid)
+  // 如果没有陪诊师id，直接返回
+  if (!order.value?.eid) {
+    showFailToast('无陪诊师信息')
+    return
+  }
+  try {
+    const res: EscortResponseData = await getEscortById(order.value?.eid as number)
+    if (res.code === 200) {
+      escort.value = res.data
+      showHelperInfo.value = true
+    } else {
+      showFailToast(res.message || '加载失败')
+    }
+  } catch (error) {
+    showFailToast('加载失败')
+  }
 }
 </script>
 
@@ -46,48 +83,48 @@ const onRefresh = () => {
     <van-nav-bar title="订单详情" left-text="返回" left-arrow @click-left="$router.go(-1)" />
     <div class="all">
       <div class="ordersWrapper">
-        <h3>已完成</h3>
-        <h5>陪诊师：林黄晓</h5>
-        <h5>2024-06-30 19:30:02</h5>
+        <h3>{{ getOrderStatus(order?.status ?? 4) }}</h3>
+        <h5>陪诊师：{{ order?.ename || '未有陪诊师接单' }}</h5>
+        <h5>{{ order?.updateTime }}</h5>
         <button
           class="select"
           style="margin-top: 20px; padding: 10px 0"
-          @click="showHelperInfo = true"
+          @click="queryEscortInfo()"
         >
           查看陪诊师详细信息
         </button>
-        <van-action-sheet v-model:show="showHelperInfo" title="陪诊人信息">
+        <van-action-sheet v-model:show="showHelperInfo" title="陪诊师信息">
           <van-cell-group>
-            <van-cell title="陪诊服务类型" :value="orderInfo.serviceType" />
-            <van-cell title="就诊人姓名" :value="orderInfo.patientName" />
-            <van-cell title="性别" :value="orderInfo.gender" />
-            <van-cell title="年龄" :value="orderInfo.age" />
-            <van-cell title="电话号码" :value="orderInfo.phone" />
-            <van-cell title="您与就诊人关系" :value="orderInfo.relationship" />
-            <van-cell title="开始时间" :value="orderInfo.startTime" />
-            <van-cell title="结束时间" :value="orderInfo.endTime" />
-            <van-cell title="就诊医院" :value="orderInfo.hospital" />
-            <van-cell title="订单id" :value="orderInfo.orderId" />
-            <van-cell title="备注" :value="orderInfo.remark" />
+            <van-cell title="姓名" :value="escort?.name" />
+            <van-cell title="性别" :value="escort?.gender === 1 ? '男' : '女'" />
+            <van-cell title="年龄" :value="escort?.age" />
+            <van-cell
+              title="电话号码"
+              :value="escort?.telephone"
+              is-link
+              @click="handleCall(escort?.telephone || '18005471144')"
+            />
+            <van-cell title="是否为医护工作者" :value="escort?.isMedicalWorker ? '是' : '否'" />
+            <van-cell title="工作部门" :value="escort?.workSection" />
           </van-cell-group>
         </van-action-sheet>
       </div>
       <div class="infoWrapper">
         <h4 style="padding: 0 16px">订单信息</h4>
         <van-cell-group>
-          <van-cell title="陪诊服务类型" :value="orderInfo.serviceType" />
-          <van-cell title="就诊人姓名" :value="orderInfo.patientName" />
-          <van-cell title="性别" :value="orderInfo.gender" />
-          <van-cell title="年龄" :value="orderInfo.age" />
-          <van-cell title="电话号码" :value="orderInfo.phone" />
-          <van-cell title="您与就诊人关系" :value="orderInfo.relationship" />
-          <van-cell title="开始时间" :value="orderInfo.startTime" />
-          <van-cell title="结束时间" :value="orderInfo.endTime" />
-          <van-cell title="就诊医院" :value="orderInfo.hospital" />
-          <van-cell title="订单id" :value="orderInfo.orderId" />
-          <van-cell title="备注" :value="orderInfo.remark" />
+          <van-cell title="陪诊服务类型" :value="order?.serverType" />
+          <van-cell title="就诊人姓名" :value="order?.pname" />
+          <van-cell title="就诊人性别" :value="order?.gender === 1 ? '男' : '女'" />
+          <van-cell title="就诊人年龄" :value="order?.age" />
+          <van-cell title="就诊人电话号码" :value="order?.telephoneNumber" />
+          <van-cell title="您与就诊人关系" :value="order?.relationship" />
+          <van-cell title="开始时间" :value="order?.startTime" />
+          <van-cell title="结束时间" :value="order?.endTime" />
+          <van-cell title="就诊医院" :value="order?.pname" />
+          <van-cell title="订单id" :value="order?.oid" />
+          <van-cell title="备注" :value="order?.requirement" />
         </van-cell-group>
-        <div class="amount">¥599.00</div>
+        <div class="amount">¥ {{ order?.money }}</div>
       </div>
       <div class="textWrapper">
         <div class="contact" @click="handleContactClick">
@@ -106,7 +143,6 @@ const onRefresh = () => {
             <van-icon name="phone-o" size="20" />
           </div>
         </div>
-
         <p class="puzzle">对订单有疑问？</p>
       </div>
       <button class="select" @click="router.push('/commentdetail')">提交评价</button>
@@ -115,13 +151,13 @@ const onRefresh = () => {
     <van-popup v-model:show="showPopup" position="bottom" name="联系我们" round closeable>
       <h3 style="text-align: center; margin-top: 20px; margin-bottom: 20px">联系我们</h3>
       <van-cell-group>
-        <van-cell
+        <!-- <van-cell
           readonly
           title="联系陪诊师"
           value="1234567890"
           is-link
           @click="handleCall('1234567890')"
-        />
+        /> -->
         <van-cell
           readonly
           title="联系总部"
