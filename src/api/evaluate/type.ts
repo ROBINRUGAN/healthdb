@@ -1,3 +1,4 @@
+import type { ResponseData } from '../type'
 
 export interface Evaluate {
   createTime: string
@@ -7,11 +8,16 @@ export interface Evaluate {
   processLevel: number
   serverLevel: number
   content: string
+  avatar?: string
+  isDelete?: number
+  nickname?: string
+  uid?: number
+  updateTime?: string
 }
 
 export type EvaluateList = Evaluate[]
 
-export interface EvaluateListResponseData {
+export interface EvaluateListResponseData extends ResponseData {
   data: EvaluateList
 }
 

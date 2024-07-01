@@ -9,33 +9,48 @@
     <div class="ratings">
       <div class="rating-item">
         <div>总体星级</div>
-        <van-rate v-model="ratings.overall" disabled />
+        <van-rate v-model="ratings.star" disabled />
       </div>
       <div class="rating-item">
-        <div>态度满意</div>
-        <van-rate v-model="ratings.attitude" disabled />
+        <div>整体流程</div>
+        <van-rate v-model="ratings.process" disabled />
       </div>
       <div class="rating-item">
         <div>服务态度</div>
-        <van-rate v-model="ratings.service" disabled />
+        <van-rate v-model="ratings.server" disabled />
       </div>
     </div>
 
-    <p class="comment">特别满意，随波逐浪般心，特别感谢！</p>
+    <p class="comment">{{ props.comment.content }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Evaluate } from '@/api/evaluate/type'
 import { ref } from 'vue'
 
-const username = '用户名'
-const phoneNumber = '手机号 13245367531'
-const date = '2023-01-04'
+const props = defineProps<{
+  comment: Evaluate
+}>()
+
+const username = props.comment.nickname
+const date = props.comment.createTime
 const ratings = ref({
-  overall: 3,
-  attitude: 4,
-  service: 5
+  server: props.comment.serverLevel,
+  process: props.comment.processLevel,
+  star: props.comment.starLevel
 })
+// function formatDate(isoString: string): string {
+//   const date = new Date(isoString)
+//   const year = date.getFullYear()
+//   const month = String(date.getMonth() + 1).padStart(2, '0')
+//   const day = String(date.getDate()).padStart(2, '0')
+//   const hours = String(date.getHours()).padStart(2, '0')
+//   const minutes = String(date.getMinutes()).padStart(2, '0')
+//   const seconds = String(date.getSeconds()).padStart(2, '0')
+
+//   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+// }
 </script>
 
 <style scoped>
