@@ -22,12 +22,13 @@ const images = [
   'https://t11.baidu.com/it/u=3118089460,219689805&fm=30&app=106&f=JPEG?w=640&h=427&s=5452578C1572739CDEA00553030080F2',
   'https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2024%2F0512%2Ffa19bf4bj00sdclk9001ud000xc00m6m.jpg&thumbnail=660x2147483647&quality=80&type=jpg'
 ]
+let userStore = useAuthStore()
 
 const showPopup = ref(false)
 const areaCode = ref('350100')
 const value = ref('')
-const selectedCity = ref('福州')
-let userStore = useAuthStore()
+const selectedCity = ref(userStore.selectedCity || '福州')
+
 const onSearch = (val: any) => {
   showLoadingToast({
     message: '加载中...',
