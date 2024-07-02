@@ -99,6 +99,14 @@
 ![Docker](https://img.shields.io/badge/-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Git](https://img.shields.io/badge/-Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 
+- 使用国产自研数据库SinoDB进行数据管理
+- 采用Vant4做移动端组件库，适配各手机、平板、电脑
+- 前端采用Vue3+TypeScript+Pinia+Axios+VueRouter五件套标准进行开发
+- Pinia进行持久化，Vant组件自动解包
+- 前后端均部署，后端采用docker集成
+- 后端采用SpringBoot+MybatisPlus+SpringSecurity三件套标准进行开发
+- 使用Capacitor实现原生Android，iOS跨平台APP
+
 ## 🗂️ 项目结构
 
 ```sh
