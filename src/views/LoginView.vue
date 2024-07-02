@@ -24,21 +24,23 @@ const onRefresh = () => {
 
 const login = async () => {
   await formRef.value?.validate()
-  const loadingToast = showLoadingToast({
-    message: '正在登录...',
-    duration: 3000,
-    forbidClick: true
-  })
-
   const loginParams: LoginParams = {
     telephone: phone.value,
     password: password.value
   }
-  try {
-    await useAuthStore().login(loginParams)
-  } catch (error) {
-    showFailToast('登录失败！')
-  }
+  showLoadingToast({
+    message: '正在登录...',
+    duration: 3000,
+    forbidClick: true,
+    onOpened: async () => {
+      try {
+        await useAuthStore().login(loginParams)
+      } catch (error) {
+        console.log(error)
+        showFailToast('登录失败！')
+      }
+    }
+  })
 }
 
 const phoneRules: FieldRule[] = [

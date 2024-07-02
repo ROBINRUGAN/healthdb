@@ -139,7 +139,7 @@ export const useAuthStore = defineStore(
     const login = async (data: LoginParams) => {
       try {
         const res: LoginResponseData = await reqLogin(data)
-        if (res.code === 200) {
+        if (res.code == 200) {
           const nickname = res.data.nickname || '用户 ' + res.data.id
           showSuccessToast('登录成功')
           setToken(res.data.token)
@@ -155,10 +155,11 @@ export const useAuthStore = defineStore(
           })
           refreshUserInfo()
         } else {
+          console.log(res)
           showFailToast(res.message || '登录失败！')
         }
       } catch (error) {
-        showFailToast('登录失败！')
+        showFailToast('登录错误！')
       }
     }
 
